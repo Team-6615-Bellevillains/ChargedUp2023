@@ -23,7 +23,7 @@ public class RobotContainer {
         swerveSubsystem,
         () -> -xboxController.getLeftY(),
         () -> -xboxController.getLeftX(),
-        () -> xboxController.getRightX(),
+        () -> -xboxController.getRightX(),
         () -> xboxController.leftBumper().getAsBoolean()));
 
     configureBindings();

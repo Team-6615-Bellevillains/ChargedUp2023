@@ -5,7 +5,6 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
@@ -58,10 +57,6 @@ public class SwerveJoystickCmd extends CommandBase {
         xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleOpMaxSpeedMetersPerSecond;
         ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleOpMaxSpeedMetersPerSecond;
         steerSpeed = steerLimiter.calculate(steerSpeed) * DriveConstants.kTeleOpMaxAngularSpeedRadiansPerSecond;
-
-        SmartDashboard.putNumber("xSpeed", xSpeed);
-        SmartDashboard.putNumber("ySpeed", ySpeed);
-        SmartDashboard.putNumber("steerSpeed", steerSpeed);
 
         /*
          * 4. Calculate ChassisSpeeds

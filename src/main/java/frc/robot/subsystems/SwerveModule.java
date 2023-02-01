@@ -10,7 +10,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.SwerveModuleConstants;
@@ -72,7 +71,6 @@ public class SwerveModule {
     }
 
     public Rotation2d getModuleRotation() {
-        SmartDashboard.putNumber(appendIdx("Counts: "), this.steerMotor.getSelectedSensorPosition());
         /*
          * Magnets that are read on absolute encoders are read as 0 on a random M_point
          * when assembled. We want this to be at the zero point of the wheels
@@ -89,11 +87,9 @@ public class SwerveModule {
          */
         if (offsetCounts < 0)
             offsetCounts = SwerveModuleConstants.maximumTotalCounts + offsetCounts;
-        SmartDashboard.putNumber(appendIdx("Offset counts: "), offsetCounts);
 
         // Convert to radians using the formula ((amount/maxAmount) * 2 * π)
         double radians = (offsetCounts / SwerveModuleConstants.maximumTotalCounts) * 2 * Math.PI;
-        SmartDashboard.putNumber(appendIdx("Curr rads: "), radians);
 
         // Convert to Rotation2d for use with other swerve drive methods
         return Rotation2d.fromRadians(radians);
@@ -105,19 +101,11 @@ public class SwerveModule {
             return;
         }
 
-        SmartDashboard.putString(appendIdx("Swerve state"), state.toString());
         state = SwerveModuleState.optimize(state, getModuleRotation());
-        SmartDashboard.putString(appendIdx("Swerve state [o]"), state.toString());
         driveMotor.set(state.speedMetersPerSecond /
                 DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        double steerRadians = state.angle.getRadians();
-        if (steerRadians < 0) {
-            steerRadians = (2 * Math.PI) + steerRadians;
-        }
-        SmartDashboard.putNumber(appendIdx("Desired rads"), steerRadians);
         double steerSpeedPercentage = steerPIDController.calculate(getModuleRotation().getRadians(),
                 state.angle.getRadians());
-        SmartDashboard.putNumber(appendIdx("Steer PID"), steerSpeedPercentage);
         steerMotor.set(steerSpeedPercentage);
     }
 
