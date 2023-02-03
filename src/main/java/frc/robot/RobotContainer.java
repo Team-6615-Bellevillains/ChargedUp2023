@@ -14,6 +14,8 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
 
+  private final ArmSubsystem armSubsystem = new ArmSubsystem();
+  
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
   private final CommandXboxController xboxController = new CommandXboxController(OIConstants.xboxControllerPort);
