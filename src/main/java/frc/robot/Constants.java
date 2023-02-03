@@ -67,4 +67,13 @@ public final class Constants {
         public static final int xboxControllerPort = 0;
     }
 
+    public static final class ArmConstants {
+        public static final double armMotor = ;
+        public static final double armEncoderPort1 = ;
+        public static final double armEncoderPort2 = ;
+        public static final double armEncoderRate = ;
+
+    }   
+
+
 }
