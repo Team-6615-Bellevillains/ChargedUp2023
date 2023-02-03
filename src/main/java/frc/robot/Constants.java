@@ -63,8 +63,14 @@ public final class Constants {
     }
 
     public static final class OIConstants {
-        public static final double kDeadband = 0.15;
-        public static final int xboxControllerPort = 0;
+        public static final double kDeadband = 0.06;
+        public static final int ps4ControllerPort = 0;
+
+        public static final int kLeftXAxis = 0;
+        public static final int kLeftYAxis = 1;
+        public static final int kRightXAxis = 2;
+        public static final int leftBumper = 5;
+        public static final int triangle = 4;
     }
 
 }
