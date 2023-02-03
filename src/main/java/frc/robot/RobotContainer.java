@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.StraightenRobotCmd;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -19,6 +20,7 @@ public class RobotContainer {
 
   private final Joystick ps4Controller = new Joystick(OIConstants.ps4ControllerPort);
   private final JoystickButton leftBumper = new JoystickButton(ps4Controller, OIConstants.leftBumper);
+  private final JoystickButton rightBumper = new JoystickButton(ps4Controller, OIConstants.rightBumper);
   private final JoystickButton triangleButton = new JoystickButton(ps4Controller, OIConstants.triangle);
 
   public RobotContainer() {
@@ -34,6 +36,8 @@ public class RobotContainer {
 
   private void configureBindings() {
     triangleButton.onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
+    rightBumper.whileTrue(new StraightenRobotCmd(swerveSubsystem));
+
   }
 
   public Command getAutonomousCommand() {

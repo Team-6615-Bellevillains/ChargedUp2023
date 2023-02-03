@@ -60,6 +60,11 @@ public final class Constants {
         public static final double kTeleOpMaxAccelerationUnitsPerSecond = 3;
         public static final double kTeleOpMaxAngularAccelerationUnitsPerSecond = 3;
 
+        // TODO: Tune
+        public static final double kPRotation = .5;
+        public static final double kIRotation = 0;
+        public static final double kDRotation = .3;
+
     }
 
     public static final class OIConstants {
@@ -69,7 +74,9 @@ public final class Constants {
         public static final int kLeftXAxis = 0;
         public static final int kLeftYAxis = 1;
         public static final int kRightXAxis = 2;
+
         public static final int leftBumper = 5;
+        public static final int rightBumper = 6;
         public static final int triangle = 4;
     }
 
