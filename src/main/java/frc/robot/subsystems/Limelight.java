@@ -5,7 +5,11 @@
 package frc.robot.subsystems;
 
 import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -13,30 +17,30 @@ public class Limelight extends SubsystemBase {
   /** Creates a new Limelight. */
   private PhotonCamera camera;
 
-  public Limelight() 
-  {
-    
+  public Limelight() {
+
     camera = new PhotonCamera("mrcrabs6615");
   }
 
   @Override
   public void periodic() {
+    System.out.println("Limelight running in periodic");
     // This method will be called once per scheduler run
-    
-    //Gets latest pipeline frm the camera
-    var result = camera.getLatestResult();
-    
-    //check to see if there is a target
-    if (result.hasTargets())
-    {
-      
-      //Get the best target
-      var target = result.getBestTarget();
 
-      //Get Target info
-      var yaw = target.getYaw();
-      var pitch = target.getPitch();
-      var camToTarget = target.getBestCameraToTarget();
+    // Gets latest pipeline frm the camera
+    var result = camera.getLatestResult();
+
+    // check to see if there is a target
+    if (result.hasTargets()) {
+
+      // Get the best target
+      PhotonTrackedTarget target = result.getBestTarget();
+
+      // Get Target info
+      double yaw = target.getYaw();
+      SmartDashboard.putNumber("Yaw", yaw);
+      double pitch = target.getPitch();
+      Transform3d camToTarget = target.getBestCameraToTarget();
 
     }
 

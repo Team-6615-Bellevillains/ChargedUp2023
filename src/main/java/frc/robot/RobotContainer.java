@@ -12,11 +12,13 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.StraightenRobotCmd;
 import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
 
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  private final Limelight limelight = new Limelight();
 
   private final Joystick ps4Controller = new Joystick(OIConstants.ps4ControllerPort);
   private final JoystickButton leftBumper = new JoystickButton(ps4Controller, OIConstants.leftBumper);
