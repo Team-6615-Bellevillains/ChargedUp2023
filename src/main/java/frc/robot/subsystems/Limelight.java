@@ -24,7 +24,6 @@ public class Limelight extends SubsystemBase {
 
   @Override
   public void periodic() {
-    System.out.println("Limelight running in periodic");
     // This method will be called once per scheduler run
 
     // Gets latest pipeline frm the camera
