@@ -32,9 +32,9 @@ public final class Constants {
                 new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
         public static final int kFrontLeftDriveMotorPort = 13;
-        public static final int kFrontRightDriveMotorPort = 11;
+        public static final int kFrontRightDriveMotorPort =9;
         public static final int kBackLeftDriveMotorPort = 12;
-        /*public static final int kBackRightDriveMotorPort = 10;*/
+        public static final int kBackRightDriveMotorPort = 10;
 
         public static final int kFrontLeftSteerMotorPort = 4;
         public static final int kFrontRightSteerMotorPort = 6;
@@ -69,12 +69,12 @@ public final class Constants {
     }
 
     public static final class ArmConstants {
-        public static final double armMotor = 10;
-        public static final double armEncoderPort1 = 0;
-        public static final double armEncoderPort2 = 1;
-        public static final double armEncoderPPR = 40;
-        public static final double armEncoderRateInDegrees = 360 / armEncoderPPR;
-        public static final double armEncoderTopValue = 360;
+        public static final int armMotor = 11;
+        public static final int armEncoderPort1 = 0;
+        public static final int armEncoderPort2 = 1;
+        public static final int armEncoderPPR = 100;
+        public static final int armEncoderRateInDegrees = 360 / armEncoderPPR;
+        public static final int armEncoderTopValue = 360;
 
     }   
 

@@ -9,9 +9,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ArmCommand;
 import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.Constants.ArmConstants;
 
 public class RobotContainer {
 
@@ -35,8 +36,9 @@ public class RobotContainer {
 
 
   private void configureBindings() {
+    xboxController2.a().onTrue( new ArmCommand(armSubsystem));
     xboxController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
-    xboxController2.a().whenPressed( new ArmCommand(armSubsystem));
+   
   }
 
   public Command getAutonomousCommand() {
