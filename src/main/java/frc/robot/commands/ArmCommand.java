@@ -26,8 +26,8 @@ public class ArmCommand extends CommandBase {
 
     @Override
     public void execute() {
-        if (armSubsystem.getDistance <= ArmConstants.armEncoderTopValue){
-            armSubsystem.armDown();
+        if (armSubsystem.getDistance < ArmConstants.armEncoderTopValue){
+            armSubsystem.armUp();
         } else {
             armSubsystem.stop();
         }

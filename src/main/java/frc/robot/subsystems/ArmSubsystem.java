@@ -26,11 +26,11 @@ public double armEncoderDistance(){
     return armEncoder.getDistance();
 }
 
-public void armUp(){
+public void armDown(){
     armMotor.set(.25);
 }
 
-public void armDown(){
+public void armUp(){
     armMotor.set(-.25);
 }
 
