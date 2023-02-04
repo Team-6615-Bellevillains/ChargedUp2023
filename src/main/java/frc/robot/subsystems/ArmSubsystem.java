@@ -18,18 +18,25 @@ public ArmSubsystem(){
     this.armMotor = new WPI_TalonSRX(ArmConstants.armMotor);
 
     this.armEncoder = new armEncoder(ArmConstants.armEncoderPort1,ArmConstants.armEncoderPort2);
-    this.armEncoder.setDistance(0);
-    this.armEncoder.setDistancePerPulse(ArmConstants.armEncoderRate)
+    this.armEncoder.reset();
+    this.armEncoder.setDistancePerPulse(ArmConstants.armEncoderRateInDegrees);
 }
 
-public boolean encoderDirection(){
-    return armEncoder.getDirection();
-}
-
-public double encoderDistance(){
+public double armEncoderDistance(){
     return armEncoder.getDistance();
 }
 
+public void armUp(){
+    armMotor.set(.25);
+}
+
+public void armDown(){
+    armMotor.set(-.25);
+}
+
+public void stop(){
+    armMotor.stop();
+}
 
     
 }

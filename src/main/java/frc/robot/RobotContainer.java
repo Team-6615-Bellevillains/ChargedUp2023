@@ -20,6 +20,7 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
   private final CommandXboxController xboxController = new CommandXboxController(OIConstants.xboxControllerPort);
+  private final CommandXboxController xboxController2 = new CommandXboxController(OIConstants.xboxControllerPort2);
 
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
@@ -32,8 +33,10 @@ public class RobotContainer {
     configureBindings();
   }
 
+
   private void configureBindings() {
     xboxController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
+    xboxController2.a().whenPressed( new ArmCommand(armSubsystem));
   }
 
   public Command getAutonomousCommand() {

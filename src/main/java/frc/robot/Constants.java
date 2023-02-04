@@ -34,7 +34,7 @@ public final class Constants {
         public static final int kFrontLeftDriveMotorPort = 13;
         public static final int kFrontRightDriveMotorPort = 11;
         public static final int kBackLeftDriveMotorPort = 12;
-        public static final int kBackRightDriveMotorPort = 10;
+        /*public static final int kBackRightDriveMotorPort = 10;*/
 
         public static final int kFrontLeftSteerMotorPort = 4;
         public static final int kFrontRightSteerMotorPort = 6;
@@ -65,13 +65,16 @@ public final class Constants {
     public static final class OIConstants {
         public static final double kDeadband = 0.15;
         public static final int xboxControllerPort = 0;
+        public static final int xboxControllerPort2 = 3;
     }
 
     public static final class ArmConstants {
-        public static final double armMotor = ;
-        public static final double armEncoderPort1 = ;
-        public static final double armEncoderPort2 = ;
-        public static final double armEncoderRate = ;
+        public static final double armMotor = 10;
+        public static final double armEncoderPort1 = 0;
+        public static final double armEncoderPort2 = 1;
+        public static final double armEncoderPPR = 40;
+        public static final double armEncoderRateInDegrees = 360 / armEncoderPPR;
+        public static final double armEncoderTopValue = 360;
 
     }   
 
