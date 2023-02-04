@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -37,7 +39,6 @@ public class RobotContainer {
   private void configureBindings() {
     triangleButton.onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
     rightBumper.whileTrue(new StraightenRobotCmd(swerveSubsystem));
-
   }
 
   public Command getAutonomousCommand() {

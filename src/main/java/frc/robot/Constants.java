@@ -10,7 +10,7 @@ public final class Constants {
         public static final double kWheelCircumference = Units.inchesToMeters(4) * Math.PI;
         public static final double kDriveMotorGearRatio = 6.67 / 1;
         public static final double kSteerMotorGearRatio = 48 / 40;
-        public static final double kPTurning = 1.7;
+        public static final double kPTurning = 1.75;
         public static final double kITurning = 0;
         public static final double kDTurning = 0;
 
@@ -42,14 +42,14 @@ public final class Constants {
         public static final int kBackRightSteerMotorPort = 5;
 
         public static final boolean kFrontLeftDriveMotorReversed = true;
-        public static final boolean kFrontRightDriveMotorReversed = false;
+        public static final boolean kFrontRightDriveMotorReversed = true;
         public static final boolean kBackLeftDriveMotorReversed = true;
-        public static final boolean kBackRightDriveMotorReversed = false;
+        public static final boolean kBackRightDriveMotorReversed = true;
 
-        public static final double kFrontLeftDriveAbsoluteEncoderOffsetCounts = 138;
-        public static final double kFrontRightDriveAbsoluteEncoderOffsetCounts = 349;
-        public static final double kBackLeftDriveAbsoluteEncoderOffsetCounts = 280;
-        public static final double kBackRightDriveAbsoluteEncoderOffsetCounts = 243;
+        public static final double kFrontLeftDriveAbsoluteEncoderOffsetCounts = 137;
+        public static final double kFrontRightDriveAbsoluteEncoderOffsetCounts = 857;
+        public static final double kBackLeftDriveAbsoluteEncoderOffsetCounts = 275;
+        public static final double kBackRightDriveAbsoluteEncoderOffsetCounts = 777;
 
         public static final double kPhysicalMaxSpeedMetersPerSecond = Units.feetToMeters(12);
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 90 / 60 * 2 * Math.PI;
@@ -61,9 +61,9 @@ public final class Constants {
         public static final double kTeleOpMaxAngularAccelerationUnitsPerSecond = 3;
 
         // TODO: Tune
-        public static final double kPRotation = .5;
+        public static final double kPRotation = .25;
         public static final double kIRotation = 0;
-        public static final double kDRotation = .3;
+        public static final double kDRotation = 0;
 
     }
 
