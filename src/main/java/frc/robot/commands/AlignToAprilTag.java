@@ -24,8 +24,8 @@ public class AlignToAprilTag extends CommandBase {
         this.limelightSubsystem = limelightSubsystem;
         this.swerveSubsystem = swerveSubsystem;
 
-        yawController = new PIDController(.05, 0, 0);
-        distanceController = new PIDController(.7, 0, 0);
+        yawController = new PIDController(AutoConstants.kPTrackingYaw, 0, 0);
+        distanceController = new PIDController(AutoConstants.kPTrackingDrive, 0, 0);
 
         addRequirements(limelightSubsystem);
         addRequirements(swerveSubsystem);
@@ -41,7 +41,7 @@ public class AlignToAprilTag extends CommandBase {
             double distanceToTarget = cameraTransform.getTranslation().getX();
 
             double rotationOutput = yawController.calculate(yaw, 0);
-            double distanceOutput = distanceController.calculate(distanceToTarget, .45);
+            double distanceOutput = distanceController.calculate(distanceToTarget, AutoConstants.kTrackingDistance);
 
             ChassisSpeeds chassisSpeeds = new ChassisSpeeds(
                     -MathUtil.clamp(distanceOutput, -AutoConstants.kAutoMaxSpeedMetersPerSecond,

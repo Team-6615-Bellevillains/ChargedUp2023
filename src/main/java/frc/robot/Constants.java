@@ -69,6 +69,10 @@ public final class Constants {
 
     public static final class AutoConstants {
         public static final double kAutoMaxSpeedMetersPerSecond = 0.5;
+
+        public static final double kPTrackingYaw = .05;
+        public static final double kPTrackingDrive = .7;
+        public static final double kTrackingDistance = .45;
     }
 
     public static final class OIConstants {
