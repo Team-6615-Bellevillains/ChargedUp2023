@@ -10,16 +10,21 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Limelight extends SubsystemBase {
+public class LimelightSubsystem extends SubsystemBase {
   /** Creates a new Limelight. */
   private PhotonCamera camera;
+  private PhotonTrackedTarget target;
 
-  public Limelight() {
+  public LimelightSubsystem() {
+    camera = new PhotonCamera("asdoija");
+  }
 
-    camera = new PhotonCamera("mrcrabs6615");
+  public PhotonTrackedTarget getBestTarget() {
+    return target;
   }
 
   @Override
@@ -28,12 +33,13 @@ public class Limelight extends SubsystemBase {
 
     // Gets latest pipeline frm the camera
     var result = camera.getLatestResult();
+    SmartDashboard.putNumber("PhotonTS", Timer.getFPGATimestamp());
 
     // check to see if there is a target
     if (result.hasTargets()) {
 
       // Get the best target
-      PhotonTrackedTarget target = result.getBestTarget();
+      this.target = result.getBestTarget();
 
       // Get Target info
       double yaw = target.getYaw();
