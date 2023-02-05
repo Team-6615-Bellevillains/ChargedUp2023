@@ -68,7 +68,6 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-
         public static final double kAutoMaxSpeedMetersPerSecond = 0.5;
     }
 
