@@ -37,6 +37,7 @@ public class LimelightSubsystem extends SubsystemBase {
       this.bestTarget = result.getBestTarget();
 
     } else {
+      // Remove tracking for target if we can't see it anymore
       this.bestTarget = null;
     }
 
