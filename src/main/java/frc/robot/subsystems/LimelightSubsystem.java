@@ -8,45 +8,36 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LimelightSubsystem extends SubsystemBase {
   /** Creates a new Limelight. */
   private PhotonCamera camera;
-  private PhotonTrackedTarget target;
+  private PhotonTrackedTarget bestTarget;
 
   public LimelightSubsystem() {
     camera = new PhotonCamera("asdoija");
   }
 
   public PhotonTrackedTarget getBestTarget() {
-    return target;
+    return bestTarget;
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-
     // Gets latest pipeline frm the camera
-    var result = camera.getLatestResult();
-    SmartDashboard.putNumber("PhotonTS", Timer.getFPGATimestamp());
+    PhotonPipelineResult result = camera.getLatestResult();
 
-    // check to see if there is a target
+    // Check if the camera sees any targets, if it loses track, the subsystem will
+    // expose a null target and tracking commands should halt.
     if (result.hasTargets()) {
 
-      // Get the best target
-      this.target = result.getBestTarget();
+      // Expose the target with the best tracking information available for use with
+      // autonomous commands.
+      this.bestTarget = result.getBestTarget();
 
-      // Get Target info
-      double yaw = target.getYaw();
-      SmartDashboard.putNumber("Yaw", yaw);
-      double pitch = target.getPitch();
-      Transform3d camToTarget = target.getBestCameraToTarget();
-
+    } else {
+      this.bestTarget = null;
     }
 
   }
