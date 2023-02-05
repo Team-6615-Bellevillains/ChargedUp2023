@@ -8,17 +8,19 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AlignToAprilTag;
 import frc.robot.commands.StraightenRobotCmd;
 import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
 
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  private final LimelightSubsystem limelight = new LimelightSubsystem();
 
   private final Joystick ps4Controller = new Joystick(OIConstants.ps4ControllerPort);
   private final JoystickButton leftBumper = new JoystickButton(ps4Controller, OIConstants.leftBumper);
@@ -42,6 +44,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return new AlignToAprilTag(limelight, swerveSubsystem);
   }
 }
