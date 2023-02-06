@@ -35,6 +35,13 @@ public class RobotContainer {
         () -> -ps4Controller.getRawAxis(OIConstants.kRightXAxis),
         () -> leftBumper.getAsBoolean()));
 
+        SmartDashboard.putData("Swerve Joystick Cmd", new SwerveJoystickCmd(
+          swerveSubsystem,
+          () -> -ps4Controller.getRawAxis(OIConstants.kLeftYAxis),
+          () -> -ps4Controller.getRawAxis(OIConstants.kLeftXAxis),
+          () -> -ps4Controller.getRawAxis(OIConstants.kRightXAxis),
+          () -> leftBumper.getAsBoolean()));
+
     configureBindings();
   }
 

@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SwerveModule;
@@ -49,7 +50,12 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kDriveKinematics, gyro.getRotation2d(),
             getModulePositions());
 
+    //Creates a display for the robot's position on the field
+    private final Field2d m_field = new Field2d();
+
     public SwerveSubsystem() {
+        //Sends display of field to smartdashboard and simulator
+        SmartDashboard.putData("Field", m_field);
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
@@ -92,6 +98,9 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Robot Heading", getHeading());
         SmartDashboard.putString("Robot Location",
                 getPose().getTranslation().toString());
+
+        m_field.setRobotPose(odometer.getPoseMeters());
+
     }
 
     public void stopModules() {
