@@ -68,15 +68,42 @@ public final class Constants {
         public static final int xboxControllerPort2 = 3;
     }
 
-    public static final class ArmConstants {
-        public static final int armMotor = 11;
-        public static final int armEncoderPort1 = 0;
-        public static final int armEncoderPort2 = 1;
-        public static final int armEncoderPPR = 100;
-        public static final int armEncoderRateInDegrees = 360 / armEncoderPPR;
-        public static final int armEncoderTopValue = 360;
+    public static final class ElevatorConstants {
+        /* We are unsure about the integer values needed here right now.*/
+        
+        //vertical elevator
+        public static final int vElevatorMotor1 = ;
+        public static final int vElevatorMotor2 = ;
+        public static final int vElevatorEncoderPort1 = ;
+        public static final int vElevatorEncoderPort2 = ;
+        public static final int vElevatorGearDiameter = ;
+        public static final int vElevatorEncoderPPR = 5; 
+        public static final double vElevatorEncoderDPR = ElevatorConstants.vElevatorGearDiameter * Math.PI/ElevatorConstants.vElevatorEncoderPPR;
+        public static final int vElevatorEncoderTopValue = ;
+        public static final double vElevatorEncoderBottomValue = 0;
+        
 
-    }   
+        //horizontal elevator
+        public static final int hElevatorMotor = ;
+        public static final int hElevatorEncoderPort1 = ;
+        public static final int hElevatorEncoderPort2 = ;
+        public static final int hElevatorGearDiameter = ;
+        public static final int hElevatorEncoderPPR = 5; //encoder pulses per rotation
+        public static final double hElevatorEncoderDPR = ElevatorConstants.hElevatorGearDiameter * Math.PI/ElevatorConstants.hElevatorEncoderPPR; // distance per encoder pulse
+        public static final int hElevatorEncoderTopValue = ;
+        public static final double hElevatorEncoderBottomValue = 0;
+        public static final double kIVertical = 0;
+        public static final double kDVertical = 0;
+        public static final double kPVertical = 0;
+        public static final double kPHorizontal = 0;
+        public static final double kIHorizontal = 0;
+        public static final double kDHorizontal = 0;
+    
+    
+    
+    } 
+    
+		  
 
 
 }
