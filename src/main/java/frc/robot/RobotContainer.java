@@ -14,6 +14,9 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToAprilTag;
 import frc.robot.commands.StraightenRobotCmd;
 import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.commands.grabber.EjectObjectCmd;
+import frc.robot.commands.grabber.SuckObjectCmd;
+import frc.robot.subsystems.GrabberSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -21,26 +24,35 @@ public class RobotContainer {
 
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   private final LimelightSubsystem limelight = new LimelightSubsystem();
+  private final GrabberSubsystem grabberSubsystem = new GrabberSubsystem();
 
-  private final Joystick ps4Controller = new Joystick(OIConstants.ps4ControllerPort);
-  private final JoystickButton leftBumper = new JoystickButton(ps4Controller, OIConstants.leftBumper);
-  private final JoystickButton rightBumper = new JoystickButton(ps4Controller, OIConstants.rightBumper);
-  private final JoystickButton triangleButton = new JoystickButton(ps4Controller, OIConstants.triangle);
+  private final Joystick driverController = new Joystick(OIConstants.kDriverControllerPort);
+  private final JoystickButton driverLeftBumper = new JoystickButton(driverController, OIConstants.leftBumper);
+  private final JoystickButton driverRightBumper = new JoystickButton(driverController, OIConstants.rightBumper);
+  private final JoystickButton driverTriangleButton = new JoystickButton(driverController, OIConstants.triangle);
+
+  private final Joystick operatorController = new Joystick(OIConstants.kOperatorControllerPort);
+  private final JoystickButton operatorLeftBumper = new JoystickButton(operatorController, OIConstants.leftBumper);
+  private final JoystickButton operatorRightBumper = new JoystickButton(operatorController, OIConstants.rightBumper);
+  
 
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
         swerveSubsystem,
-        () -> -ps4Controller.getRawAxis(OIConstants.kLeftYAxis),
-        () -> -ps4Controller.getRawAxis(OIConstants.kLeftXAxis),
-        () -> -ps4Controller.getRawAxis(OIConstants.kRightXAxis),
-        () -> leftBumper.getAsBoolean()));
+        () -> -driverController.getRawAxis(OIConstants.kLeftYAxis),
+        () -> -driverController.getRawAxis(OIConstants.kLeftXAxis),
+        () -> -driverController.getRawAxis(OIConstants.kRightXAxis),
+        () -> driverLeftBumper.getAsBoolean()));
 
     configureBindings();
   }
 
   private void configureBindings() {
-    triangleButton.onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
-    rightBumper.whileTrue(new StraightenRobotCmd(swerveSubsystem));
+    driverTriangleButton.onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
+    driverRightBumper.whileTrue(new StraightenRobotCmd(swerveSubsystem));
+
+    operatorLeftBumper.onTrue(new SuckObjectCmd(grabberSubsystem));
+    operatorRightBumper.onTrue(new EjectObjectCmd(grabberSubsystem));
   }
 
   public Command getAutonomousCommand() {

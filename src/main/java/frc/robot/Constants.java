@@ -65,6 +65,16 @@ public final class Constants {
 
     }
 
+    public static final class GrabberConstants {
+        public static final int kLeftRollerMotorPort = 0;
+        public static final int kRightRollerMotorPort = 0;
+
+        public static final double kPFlip = 0.1;
+        public static final double kIFlip = 0.1;
+        public static final double kDFlip = 0.1;
+    }
+
+
     public static final class AutoConstants {
         public static final double kAutoMaxSpeedMetersPerSecond = 0.5;
 
@@ -75,7 +85,8 @@ public final class Constants {
 
     public static final class OIConstants {
         public static final double kDeadband = 0.06;
-        public static final int ps4ControllerPort = 1;
+        public static final int kDriverControllerPort = 1;
+        public static final int kOperatorControllerPort = 3;
 
         public static final int kLeftXAxis = 0;
         public static final int kLeftYAxis = 1;
