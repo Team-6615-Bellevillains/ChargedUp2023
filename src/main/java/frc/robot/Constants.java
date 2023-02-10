@@ -66,8 +66,13 @@ public final class Constants {
     }
 
     public static final class GrabberConstants {
-        public static final int kLeftRollerMotorPort = 0;
-        public static final int kRightRollerMotorPort = 0;
+        public static final int kLeftRollerMotorPort = 15;
+        public static final int kRightRollerMotorPort = 16;
+
+        public static final int kLeftSolenoidForwardChannel = 1;
+        public static final int kLeftSolenoidReverseChannel = 2;
+        public static final int kRightSolenoidForwardChannel = 3;
+        public static final int kRightSolenoidReverseChannel = 4;
 
         public static final double kPFlip = 0.1;
         public static final double kIFlip = 0.1;
@@ -95,6 +100,8 @@ public final class Constants {
         public static final int leftBumper = 5;
         public static final int rightBumper = 6;
         public static final int triangle = 4;
+        public static final int shareButton = 7;
+        public static final int optionsButton = 8;
     }
 
 }

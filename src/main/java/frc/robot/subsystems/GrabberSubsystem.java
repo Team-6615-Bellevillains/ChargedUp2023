@@ -32,8 +32,8 @@ public class GrabberSubsystem extends SubsystemBase {
     //Find out ports later!!
     //Compressor and Solenoids
     compressor = new Compressor(PneumaticsModuleType.CTREPCM);
-    leftSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 2);
-    rightSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 2);
+    leftSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kLeftSolenoidForwardChannel, GrabberConstants.kLeftSolenoidReverseChannel);
+    rightSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kRightSolenoidForwardChannel, GrabberConstants.kRightSolenoidReverseChannel);
     
     //Roller Motors
     leftMotorRoller = new CANSparkMax(GrabberConstants.kLeftRollerMotorPort, MotorType.kBrushless);

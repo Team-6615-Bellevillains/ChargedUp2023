@@ -14,7 +14,9 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToAprilTag;
 import frc.robot.commands.StraightenRobotCmd;
 import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.commands.grabber.ClampGrabberCmd;
 import frc.robot.commands.grabber.EjectObjectCmd;
+import frc.robot.commands.grabber.OpenGrabberCmd;
 import frc.robot.commands.grabber.SuckObjectCmd;
 import frc.robot.subsystems.GrabberSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
@@ -34,6 +36,13 @@ public class RobotContainer {
   private final Joystick operatorController = new Joystick(OIConstants.kOperatorControllerPort);
   private final JoystickButton operatorLeftBumper = new JoystickButton(operatorController, OIConstants.leftBumper);
   private final JoystickButton operatorRightBumper = new JoystickButton(operatorController, OIConstants.rightBumper);
+  private final JoystickButton operatorShareButton = new JoystickButton(operatorController, OIConstants.shareButton);
+  private final JoystickButton operatorOptionsButton = new JoystickButton(operatorController, OIConstants.optionsButton);
+  
+  private final SuckObjectCmd suckObjectCmd = new SuckObjectCmd(grabberSubsystem);
+  private final EjectObjectCmd ejectObjectCmd = new EjectObjectCmd(grabberSubsystem);
+  private final OpenGrabberCmd openGrabberCmd = new OpenGrabberCmd(grabberSubsystem);
+  private final ClampGrabberCmd clampGrabberCmd = new ClampGrabberCmd(grabberSubsystem);
   
 
   public RobotContainer() {
@@ -48,11 +57,19 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+    
     driverTriangleButton.onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
     driverRightBumper.whileTrue(new StraightenRobotCmd(swerveSubsystem));
 
-    operatorLeftBumper.onTrue(new SuckObjectCmd(grabberSubsystem));
-    operatorRightBumper.onTrue(new EjectObjectCmd(grabberSubsystem));
+    operatorLeftBumper.onTrue(suckObjectCmd);
+    operatorRightBumper.onTrue(ejectObjectCmd);
+    operatorShareButton.onTrue(openGrabberCmd);
+    operatorOptionsButton.onTrue(clampGrabberCmd);
+
+    //Simulatator Cmd Sends
+    SmartDashboard.putData("Open Grabber", openGrabberCmd);
+    SmartDashboard.putData("Clamp Grabber", clampGrabberCmd);
+
   }
 
   public Command getAutonomousCommand() {
