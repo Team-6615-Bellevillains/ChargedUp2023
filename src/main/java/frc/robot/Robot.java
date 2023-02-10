@@ -4,7 +4,17 @@
 
 package frc.robot;
 
+import java.util.List;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -12,10 +22,30 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  private Field2d m_field;
+  private TrajectoryConfig trajectoryConfig;
+  private Trajectory trajectory;
 
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
+    trajectoryConfig = new TrajectoryConfig(Constants.AutoConstants.kAutoMaxSpeedMetersPerSecond, 
+    Constants.AutoConstants.kAutoMaxAccelerationMetersPerSecondSquared).setKinematics(Constants.DriveConstants.kDriveKinematics);
+
+     // 2. Generate trajectory
+      trajectory = TrajectoryGenerator.generateTrajectory(
+      new Pose2d(0, 0, new Rotation2d(0)),
+      List.of(
+              new Translation2d(1, 0),
+              new Translation2d(1, -1)),
+      new Pose2d(2, -1, Rotation2d.fromDegrees(180)),
+      trajectoryConfig);
+
+      m_field = new Field2d();
+      SmartDashboard.putData(m_field);
+  
+      // Push the trajectory to Field2d.
+      m_field.getObject("traj").setTrajectory(trajectory);
   }
 
   @Override
