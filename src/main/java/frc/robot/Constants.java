@@ -10,9 +10,9 @@ public final class Constants {
         public static final double kWheelCircumference = Units.inchesToMeters(4) * Math.PI;
         public static final double kDriveMotorGearRatio = 6.67 / 1;
         public static final double kSteerMotorGearRatio = 48 / 40;
-        public static final double kPTurning = 1.75;
-        public static final double kITurning = 0;
-        public static final double kDTurning = 0;
+        public static final double kPTurning = 1.7;
+        public static final double kITurning = 1;
+        public static final double kDTurning = 0.0;
 
         public static final double kDriveEncoderRot2Meter = kWheelCircumference / kDriveMotorGearRatio;
         public static final double kSteerEncoderRot2Rad = 2 * Math.PI / kSteerMotorGearRatio;
@@ -44,9 +44,9 @@ public final class Constants {
         public static final boolean kBackLeftDriveMotorReversed = true;
         public static final boolean kBackRightDriveMotorReversed = true;
 
-        public static final double kFrontLeftDriveAbsoluteEncoderOffsetCounts = 137;
+        public static final double kFrontLeftDriveAbsoluteEncoderOffsetCounts = 135;
         public static final double kFrontRightDriveAbsoluteEncoderOffsetCounts = 857;
-        public static final double kBackLeftDriveAbsoluteEncoderOffsetCounts = 275;
+        public static final double kBackLeftDriveAbsoluteEncoderOffsetCounts = 282;
         public static final double kBackRightDriveAbsoluteEncoderOffsetCounts = 777;
 
         public static final double kPhysicalMaxSpeedMetersPerSecond = Units.feetToMeters(12);
@@ -74,7 +74,7 @@ public final class Constants {
     }
 
     public static final class OIConstants {
-        public static final double kDeadband = 0.06;
+        public static final double kDeadband = 0.07;
         public static final int ps4ControllerPort = 1;
 
         public static final int kLeftXAxis = 0;
