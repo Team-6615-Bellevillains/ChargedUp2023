@@ -5,12 +5,10 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -27,38 +25,38 @@ public class GrabberSubsystem extends SubsystemBase {
   private CANSparkMax leftMotorRoller;
   private CANSparkMax rightMotorRoller;
   private WPI_TalonSRX flipMotor;
-  private PIDController flipPIDController;
 
-  public GrabberSubsystem() 
-  {
-    //Find out ports later!!
-    //Compressor and Solenoids
+  public GrabberSubsystem() {
+    // Find out ports later!!
+    // Compressor and Solenoids
     compressor = new Compressor(PneumaticsModuleType.CTREPCM);
-    leftSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kLeftSolenoidForwardChannel, GrabberConstants.kLeftSolenoidReverseChannel);
-    rightSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kRightSolenoidForwardChannel, GrabberConstants.kRightSolenoidReverseChannel);
-    
-    //Roller Motors
+    leftSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kLeftSolenoidForwardChannel,
+        GrabberConstants.kLeftSolenoidReverseChannel);
+    rightSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kRightSolenoidForwardChannel,
+        GrabberConstants.kRightSolenoidReverseChannel);
+
+    // Roller Motors
     leftMotorRoller = new CANSparkMax(GrabberConstants.kLeftRollerMotorPort, MotorType.kBrushless);
     rightMotorRoller = new CANSparkMax(GrabberConstants.kRightRollerMotorPort, MotorType.kBrushless);
 
     leftMotorRoller.setInverted(true);
 
-    //flipMotor
+    // flipMotor
     flipMotor = new WPI_TalonSRX(GrabberConstants.kFlipMotorPort);
     flipMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
-    
-    //Sets flipMotor's thresholds to prevent mechanism from breaking 
+
+    // Sets flipMotor's thresholds to prevent mechanism from breaking
     flipMotor.configReverseSoftLimitThreshold(GrabberConstants.kFlipReverseThreshold, 10);
     flipMotor.configForwardSoftLimitThreshold(GrabberConstants.kFlipReverseThreshold, 10);
 
-    //Enables or Disables flipMotor's thresholds
+    // Enables or Disables flipMotor's thresholds
     flipMotor.configReverseSoftLimitEnable(false);
     flipMotor.configForwardSoftLimitEnable(false);
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Compressor Pressure", compressor.getCurrent()); 
+    SmartDashboard.putNumber("Compressor Pressure", compressor.getCurrent());
     SmartDashboard.putNumber("Flip Encoder Position", getFlipEncoderPosition());
   }
 
@@ -70,8 +68,7 @@ public class GrabberSubsystem extends SubsystemBase {
   public void setCompressorState(boolean on) {
     if (on) {
       compressor.enableDigital();
-    } 
-    else {
+    } else {
       compressor.disable();
     }
   }
@@ -81,21 +78,16 @@ public class GrabberSubsystem extends SubsystemBase {
     rightSolenoid.set(state);
   }
 
-  public void setFlipMotorSpeed(double speed)
-  {
+  public void setFlipMotorSpeed(double speed) {
     flipMotor.set(speed);
   }
-  public double getFlipEncoderPosition()
-  {
-   return flipMotor.getSelectedSensorPosition(); 
+
+  public double getFlipEncoderPosition() {
+    return flipMotor.getSelectedSensorPosition();
   }
 
-  public void resetFlipEncoder()
-  {
+  public void resetFlipEncoder() {
     flipMotor.setSelectedSensorPosition(0, 0, 10);
   }
 
-
-
-  
 }

@@ -9,32 +9,31 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.GrabberConstants;
 import frc.robot.subsystems.GrabberSubsystem;
 
-public class setFlipPosition extends CommandBase {
+public class FlipGrabberCmd extends CommandBase {
   /** Creates a new setFlipPosition. */
   private GrabberSubsystem grabberSubsystem;
   private PIDController flipPIDController;
 
-  public setFlipPosition(GrabberSubsystem grabberSubsystem, double setpoint) {
+  public FlipGrabberCmd(GrabberSubsystem grabberSubsystem, double setpoint) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.grabberSubsystem = grabberSubsystem;
+
     flipPIDController = new PIDController(GrabberConstants.kPFlip, GrabberConstants.kIFlip, GrabberConstants.kDFlip);
     flipPIDController.setSetpoint(setpoint);
-    addRequirements(grabberSubsystem);
 
+    addRequirements(grabberSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() 
-  {
+  public void initialize() {
     System.out.println("PID Flipper Works!");
     flipPIDController.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() 
-  {
+  public void execute() {
     double speed = flipPIDController.calculate(grabberSubsystem.getFlipEncoderPosition());
     grabberSubsystem.setFlipMotorSpeed(speed);
 
@@ -42,10 +41,9 @@ public class setFlipPosition extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) 
-  {
+  public void end(boolean interrupted) {
     System.out.println("Flip finished!");
-    grabberSubsystem.setFlipMotorSpeed(0); 
+    grabberSubsystem.setFlipMotorSpeed(0);
   }
 
   // Returns true when the command should end.

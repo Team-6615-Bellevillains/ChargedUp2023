@@ -18,7 +18,7 @@ import frc.robot.commands.grabber.ClampGrabberCmd;
 import frc.robot.commands.grabber.EjectObjectCmd;
 import frc.robot.commands.grabber.OpenGrabberCmd;
 import frc.robot.commands.grabber.SuckObjectCmd;
-import frc.robot.commands.grabber.setFlipPosition;
+import frc.robot.commands.grabber.FlipGrabberCmd;
 import frc.robot.subsystems.GrabberSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -38,13 +38,14 @@ public class RobotContainer {
   private final JoystickButton operatorLeftBumper = new JoystickButton(operatorController, OIConstants.leftBumper);
   private final JoystickButton operatorRightBumper = new JoystickButton(operatorController, OIConstants.rightBumper);
   private final JoystickButton operatorShareButton = new JoystickButton(operatorController, OIConstants.shareButton);
-  private final JoystickButton operatorOptionsButton = new JoystickButton(operatorController, OIConstants.optionsButton);
-  
+  private final JoystickButton operatorOptionsButton = new JoystickButton(operatorController,
+      OIConstants.optionsButton);
+
   private final SuckObjectCmd suckObjectCmd = new SuckObjectCmd(grabberSubsystem);
   private final EjectObjectCmd ejectObjectCmd = new EjectObjectCmd(grabberSubsystem);
   private final OpenGrabberCmd openGrabberCmd = new OpenGrabberCmd(grabberSubsystem);
   private final ClampGrabberCmd clampGrabberCmd = new ClampGrabberCmd(grabberSubsystem);
-  
+  private final FlipGrabberCmd flipGrabberCmd = new FlipGrabberCmd(grabberSubsystem, 2009);
 
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
@@ -58,7 +59,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    
+
     driverTriangleButton.onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
     driverRightBumper.whileTrue(new StraightenRobotCmd(swerveSubsystem));
 
@@ -67,10 +68,10 @@ public class RobotContainer {
     operatorShareButton.onTrue(openGrabberCmd);
     operatorOptionsButton.onTrue(clampGrabberCmd);
 
-    //Simulatator Cmd Sends
+    // Simulatator Cmd Sends
     SmartDashboard.putData("Open Grabber", openGrabberCmd);
     SmartDashboard.putData("Clamp Grabber", clampGrabberCmd);
-    SmartDashboard.putData("setFlipPosition", new setFlipPosition(grabberSubsystem, 2009));
+    SmartDashboard.putData("Flip Grabber", flipGrabberCmd);
 
   }
 

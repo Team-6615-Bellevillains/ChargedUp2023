@@ -77,10 +77,10 @@ public final class Constants {
         public static final double kPFlip = 0.1;
         public static final double kIFlip = 0.1;
         public static final double kDFlip = 0.1;
+
         public static final int kFlipMotorPort = 23;
         public static final double kFlipReverseThreshold = 0;
     }
-
 
     public static final class AutoConstants {
         public static final double kAutoMaxSpeedMetersPerSecond = 0.5;
