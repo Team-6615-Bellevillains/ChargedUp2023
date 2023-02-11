@@ -18,6 +18,7 @@ import frc.robot.commands.grabber.ClampGrabberCmd;
 import frc.robot.commands.grabber.EjectObjectCmd;
 import frc.robot.commands.grabber.OpenGrabberCmd;
 import frc.robot.commands.grabber.SuckObjectCmd;
+import frc.robot.commands.grabber.setFlipPosition;
 import frc.robot.subsystems.GrabberSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -69,6 +70,7 @@ public class RobotContainer {
     //Simulatator Cmd Sends
     SmartDashboard.putData("Open Grabber", openGrabberCmd);
     SmartDashboard.putData("Clamp Grabber", clampGrabberCmd);
+    SmartDashboard.putData("setFlipPosition", new setFlipPosition(grabberSubsystem, 2009));
 
   }
 

@@ -1,5 +1,52 @@
 {
   "HALProvider": {
+    "Other Devices": {
+      "Talon SRX[1]/Fwd Limit": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[1]/Quad Encoder": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[1]/Rev Limit": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[23]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[23]/Analog In": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[23]/Fwd Limit": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[23]/Pulse Width Input": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[23]/Quad Encoder": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[23]/Rev Limit": {
+        "header": {
+          "open": true
+        }
+      }
+    },
     "Solenoids": {
       "0": {
         "header": {
@@ -14,6 +61,7 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/LiveWindow/SwerveSubsystem": "Subsystem",
       "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
@@ -24,12 +72,14 @@
       "/LiveWindow/Ungrouped/PIDController[8]": "PIDController",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/LiveWindow/Ungrouped/Talon SRX [1]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon SRX [23]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon SRX [4]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon SRX [5]": "Motor Controller",
       "/LiveWindow/Ungrouped/Talon SRX [6]": "Motor Controller",
       "/LiveWindow/Ungrouped/navX-Sensor[4]": "Gyro",
       "/SmartDashboard/Clamp Grabber": "Command",
-      "/SmartDashboard/Open Grabber": "Command"
+      "/SmartDashboard/Open Grabber": "Command",
+      "/SmartDashboard/setFlipPosition": "Command"
     },
     "windows": {
       "/SmartDashboard/Clamp Grabber": {
@@ -38,6 +88,11 @@
         }
       },
       "/SmartDashboard/Open Grabber": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/setFlipPosition": {
         "window": {
           "visible": true
         }

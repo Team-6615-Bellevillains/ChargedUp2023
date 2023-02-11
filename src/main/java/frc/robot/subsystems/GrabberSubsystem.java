@@ -4,7 +4,9 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -24,8 +26,8 @@ public class GrabberSubsystem extends SubsystemBase {
   private DoubleSolenoid rightSolenoid;
   private CANSparkMax leftMotorRoller;
   private CANSparkMax rightMotorRoller;
-
-  private PIDController flipPIDController = new PIDController(GrabberConstants.kPFlip, GrabberConstants.kIFlip, GrabberConstants.kDFlip);
+  private WPI_TalonSRX flipMotor;
+  private PIDController flipPIDController;
 
   public GrabberSubsystem() 
   {
@@ -41,11 +43,23 @@ public class GrabberSubsystem extends SubsystemBase {
 
     leftMotorRoller.setInverted(true);
 
+    //flipMotor
+    flipMotor = new WPI_TalonSRX(GrabberConstants.kFlipMotorPort);
+    flipMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+    
+    //Sets flipMotor's thresholds to prevent mechanism from breaking 
+    flipMotor.configReverseSoftLimitThreshold(GrabberConstants.kFlipReverseThreshold, 10);
+    flipMotor.configForwardSoftLimitThreshold(GrabberConstants.kFlipReverseThreshold, 10);
+
+    //Enables or Disables flipMotor's thresholds
+    flipMotor.configReverseSoftLimitEnable(false);
+    flipMotor.configForwardSoftLimitEnable(false);
   }
 
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Compressor Pressure", compressor.getCurrent()); 
+    SmartDashboard.putNumber("Flip Encoder Position", getFlipEncoderPosition());
   }
 
   public void setRollerSpeeds(double speed) {
@@ -66,6 +80,22 @@ public class GrabberSubsystem extends SubsystemBase {
     leftSolenoid.set(state);
     rightSolenoid.set(state);
   }
+
+  public void setFlipMotorSpeed(double speed)
+  {
+    flipMotor.set(speed);
+  }
+  public double getFlipEncoderPosition()
+  {
+   return flipMotor.getSelectedSensorPosition(); 
+  }
+
+  public void resetFlipEncoder()
+  {
+    flipMotor.setSelectedSensorPosition(0, 0, 10);
+  }
+
+
 
   
 }
