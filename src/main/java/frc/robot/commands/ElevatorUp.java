@@ -25,7 +25,7 @@ public class ElevatorUp extends CommandBase {
     @Override
     public void execute() {
         if (elevatorSubsystem.vElevatorEncoderDistance() < ElevatorConstants.vElevatorEncoderTopValue){
-            elevatorSubsystem.vElevatorUp();
+            elevatorSubsystem.vElevatorUp(0.25);
         } else {
             elevatorSubsystem.stopVElevator();
         }

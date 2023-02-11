@@ -18,7 +18,7 @@ private final Encoder hElevatorEncoder;
 private final PIDController vPIDController; // v = vertical
 private final PIDController hPIDController; // h = horizontal
 
-public ElevatorSubsystem(WPI_TalonSRX vElevatorMotor, Encoder vElevatorEncoder, WPI_TalonSRX hElevatorMotor, Encoder hElevatorEncoder, PIDController vPIDController, PIDController hPidController){
+public ElevatorSubsystem(WPI_TalonSRX vElevatorMotor, Encoder vElevatorEncoder, WPI_TalonSRX hElevatorMotor, Encoder hElevatorEncoder, PIDController vPIDController, PIDController hPidController) {
 
     this.vElevatorMotor1 = new WPI_TalonSRX(ElevatorConstants.vElevatorMotor1);
     this.vElevatorMotor2 = new WPI_TalonSRX(ElevatorConstants.vElevatorMotor2);

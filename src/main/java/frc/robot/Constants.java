@@ -69,28 +69,28 @@ public final class Constants {
     }
 
     public static final class ElevatorConstants {
-        /* We are unsure about the integer values needed here right now.*/
+        /* We are unsure about the integer values needed here right now. Temp values are in place */
         
         //vertical elevator
-        public static final int vElevatorMotor1 = ;
-        public static final int vElevatorMotor2 = ;
-        public static final int vElevatorEncoderPort1 = ;
-        public static final int vElevatorEncoderPort2 = ;
-        public static final int vElevatorGearDiameter = ;
-        public static final int vElevatorEncoderPPR = 5; 
-        public static final double vElevatorEncoderDPR = ElevatorConstants.vElevatorGearDiameter * Math.PI/ElevatorConstants.vElevatorEncoderPPR;
-        public static final int vElevatorEncoderTopValue = ;
+        public static final int vElevatorMotor1 = 0;
+        public static final int vElevatorMotor2 = 0;
+        public static final int vElevatorEncoderPort1 = 0;
+        public static final int vElevatorEncoderPort2 = 0;
+        public static final int vElevatorGearDiameter = 10;
+        public static final int vElevatorEncoderPPR = 5; //Encodrer Pulses /Rotation
+        public static final double vElevatorEncoderDPR = ElevatorConstants.vElevatorGearDiameter * Math.PI/ElevatorConstants.vElevatorEncoderPPR; //Dist. per pulse
+        public static final int vElevatorEncoderTopValue = 100;
         public static final double vElevatorEncoderBottomValue = 0;
         
 
         //horizontal elevator
-        public static final int hElevatorMotor = ;
-        public static final int hElevatorEncoderPort1 = ;
-        public static final int hElevatorEncoderPort2 = ;
-        public static final int hElevatorGearDiameter = ;
+        public static final int hElevatorMotor = 0;
+        public static final int hElevatorEncoderPort1 = 0;
+        public static final int hElevatorEncoderPort2 = 0;
+        public static final int hElevatorGearDiameter = 10;
         public static final int hElevatorEncoderPPR = 5; //encoder pulses per rotation
         public static final double hElevatorEncoderDPR = ElevatorConstants.hElevatorGearDiameter * Math.PI/ElevatorConstants.hElevatorEncoderPPR; // distance per encoder pulse
-        public static final int hElevatorEncoderTopValue = ;
+        public static final int hElevatorEncoderTopValue = 100;
         public static final double hElevatorEncoderBottomValue = 0;
         public static final double kIVertical = 0;
         public static final double kDVertical = 0;
