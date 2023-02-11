@@ -74,11 +74,9 @@ public final class Constants {
         //vertical elevator
         public static final int vElevatorMotor1 = 0;
         public static final int vElevatorMotor2 = 0;
-        public static final int vElevatorEncoderPort1 = 0;
-        public static final int vElevatorEncoderPort2 = 0;
-        public static final int vElevatorGearDiameter = 10;
-        public static final int vElevatorEncoderPPR = 5; //Encodrer Pulses /Rotation
-        public static final double vElevatorEncoderDPR = ElevatorConstants.vElevatorGearDiameter * Math.PI/ElevatorConstants.vElevatorEncoderPPR; //Dist. per pulse
+        public static final double vElevatorGearDiameter = 1.76;
+        public static final int vElevatorEncoderPPR = 25; //Encodrer Pulses /Rotation
+        public static final double vElevatorEncoderDPP = ElevatorConstants.vElevatorGearDiameter * Math.PI/ElevatorConstants.vElevatorEncoderPPR; //Dist. per pulse
         public static final int vElevatorEncoderTopValue = 100;
         public static final double vElevatorEncoderBottomValue = 0;
         public static final double kIVertical = 0;
@@ -87,11 +85,9 @@ public final class Constants {
 
         //horizontal elevator
         public static final int hElevatorMotor = 0;
-        public static final int hElevatorEncoderPort1 = 0;
-        public static final int hElevatorEncoderPort2 = 0;
-        public static final int hElevatorGearDiameter = 10;
-        public static final int hElevatorEncoderPPR = 5; //encoder pulses per rotation
-        public static final double hElevatorEncoderDPR = ElevatorConstants.hElevatorGearDiameter * Math.PI/ElevatorConstants.hElevatorEncoderPPR; // distance per encoder pulse
+        public static final double hElevatorGearDiameter = 1.76;
+        public static final int hElevatorEncoderPPR = 25; //encoder pulses per rotation
+        public static final double hElevatorEncoderDPP = ElevatorConstants.hElevatorGearDiameter * Math.PI/ElevatorConstants.hElevatorEncoderPPR; // distance per encoder pulse
         public static final int hElevatorEncoderTopValue = 100;
         public static final double hElevatorEncoderBottomValue = 0;
         public static final double kPHorizontal = 0;

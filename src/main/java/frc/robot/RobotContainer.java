@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.ElevatorUp;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -21,7 +20,6 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
   private final CommandXboxController xboxController = new CommandXboxController(OIConstants.xboxControllerPort);
-  private final CommandXboxController xboxController2 = new CommandXboxController(OIConstants.xboxControllerPort2);
 
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
@@ -36,7 +34,6 @@ public class RobotContainer {
 
 
   private void configureBindings() {
-    xboxController2.a().onTrue( new ElevatorUp(elevatorSubsystem));
     xboxController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
    
   }
