@@ -81,7 +81,9 @@ public final class Constants {
         public static final double vElevatorEncoderDPR = ElevatorConstants.vElevatorGearDiameter * Math.PI/ElevatorConstants.vElevatorEncoderPPR; //Dist. per pulse
         public static final int vElevatorEncoderTopValue = 100;
         public static final double vElevatorEncoderBottomValue = 0;
-        
+        public static final double kIVertical = 0;
+        public static final double kDVertical = 0;
+        public static final double kPVertical = 0;
 
         //horizontal elevator
         public static final int hElevatorMotor = 0;
@@ -92,9 +94,6 @@ public final class Constants {
         public static final double hElevatorEncoderDPR = ElevatorConstants.hElevatorGearDiameter * Math.PI/ElevatorConstants.hElevatorEncoderPPR; // distance per encoder pulse
         public static final int hElevatorEncoderTopValue = 100;
         public static final double hElevatorEncoderBottomValue = 0;
-        public static final double kIVertical = 0;
-        public static final double kDVertical = 0;
-        public static final double kPVertical = 0;
         public static final double kPHorizontal = 0;
         public static final double kIHorizontal = 0;
         public static final double kDHorizontal = 0;
