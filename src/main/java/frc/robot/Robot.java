@@ -32,14 +32,15 @@ public class Robot extends TimedRobot {
     trajectoryConfig = new TrajectoryConfig(Constants.AutoConstants.kAutoMaxSpeedMetersPerSecond, 
     Constants.AutoConstants.kAutoMaxAccelerationMetersPerSecondSquared).setKinematics(Constants.DriveConstants.kDriveKinematics);
 
-     // 2. Generate trajectory
-      trajectory = TrajectoryGenerator.generateTrajectory(
-      new Pose2d(0, 0, new Rotation2d(0)),
-      List.of(
-              new Translation2d(1, 0),
-              new Translation2d(1, -1)),
-      new Pose2d(2, -1, Rotation2d.fromDegrees(180)),
-      trajectoryConfig);
+        // 2. Generate trajectory
+        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+          new Pose2d(0, 0, new Rotation2d(0)),
+          List.of(
+                  new Translation2d(5, 0),
+                  new Translation2d(8, 0)),
+                 
+          new Pose2d(9, 0, new Rotation2d((Math.PI/2))),
+          trajectoryConfig);
 
       m_field = new Field2d();
       SmartDashboard.putData(m_field);

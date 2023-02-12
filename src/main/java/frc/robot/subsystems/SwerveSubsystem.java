@@ -54,8 +54,6 @@ public class SwerveSubsystem extends SubsystemBase {
     private final Field2d m_field = new Field2d();
 
     public SwerveSubsystem() {
-        //Sends display of field to smartdashboard and simulator
-        SmartDashboard.putData("Field", m_field);
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
