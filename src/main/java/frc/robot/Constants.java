@@ -10,8 +10,8 @@ public final class Constants {
         public static final double kWheelCircumference = Units.inchesToMeters(4) * Math.PI;
         public static final double kDriveMotorGearRatio = 6.67 / 1;
         public static final double kSteerMotorGearRatio = 48 / 40;
-        public static final double kPTurning = 1.7;
-        public static final double kITurning = 1;
+        public static final double kPTurning = 1.75;
+        public static final double kITurning = 0;
         public static final double kDTurning = 0.0;
 
         public static final double kDriveEncoderRot2Meter = kWheelCircumference / kDriveMotorGearRatio;
