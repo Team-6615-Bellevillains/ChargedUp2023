@@ -49,8 +49,25 @@ public final class Constants {
         public static final double kBackLeftDriveAbsoluteEncoderOffsetCounts = 282;
         public static final double kBackRightDriveAbsoluteEncoderOffsetCounts = 777;
 
-        public static final double kPhysicalMaxSpeedMetersPerSecond = Units.feetToMeters(12);
-        public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 90 / 60 * 2 * Math.PI;
+        /*
+         * wheelPoint = (0,0) or (0,kWheelBase) or (kTrackWidth, 0) or (kTrackWidth,
+         * kWheelBase)
+         * centerPoint = (kTrackWidth/2, kWheelBase/2)
+         * a = abs(centerPoint_x-wheelPoint_x) -> evaluates to kTrackWidth/2
+         * b = abs(centerPoint_y-wheelPoint_y) -> evaluates to kWheelBase/2
+         * kWheelDistanceFromCenter^2 = a^2 + b^2
+         * kWheelDistanceFromCenter = sqrt(a^2+b^2)
+         */
+        public static final double kWheelDistanceFromCenter = Units
+                .inchesToMeters(Math.sqrt(Math.pow(kTrackWidth / 2, 2) + Math.pow(kWheelBase / 2, 2)));
+
+        public static final double kPhysicalMaxSpeedMetersPerSecond = Units.feetToMeters(13.5);
+        /*
+         * Circumference of the circle created by robot rotation aka the distance
+         * travelled in one rotation / max speed
+         */
+        public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * Math.PI * kWheelDistanceFromCenter
+                / kPhysicalMaxSpeedMetersPerSecond;
 
         public static final double kTeleOpMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 4;
         public static final double kTeleOpMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond
