@@ -22,24 +22,24 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   private final LimelightSubsystem limelight = new LimelightSubsystem();
 
-  private final Joystick ps4Controller = new Joystick(OIConstants.ps4ControllerPort);
-  private final JoystickButton leftBumper = new JoystickButton(ps4Controller, OIConstants.leftBumper);
-  private final JoystickButton rightBumper = new JoystickButton(ps4Controller, OIConstants.rightBumper);
-  private final JoystickButton triangleButton = new JoystickButton(ps4Controller, OIConstants.triangle);
+  private final Joystick xboxController = new Joystick(OIConstants.xboxControllerPort);
+  private final JoystickButton leftBumper = new JoystickButton(xboxController, OIConstants.leftBumper);
+  private final JoystickButton rightBumper = new JoystickButton(xboxController, OIConstants.rightBumper);
+  private final JoystickButton yButton = new JoystickButton(xboxController, OIConstants.yButton);
 
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
         swerveSubsystem,
-        () -> -ps4Controller.getRawAxis(OIConstants.kLeftYAxis),
-        () -> -ps4Controller.getRawAxis(OIConstants.kLeftXAxis),
-        () -> -ps4Controller.getRawAxis(OIConstants.kRightXAxis),
+        () -> -xboxController.getRawAxis(OIConstants.kLeftYAxis),
+        () -> -xboxController.getRawAxis(OIConstants.kLeftXAxis),
+        () -> -xboxController.getRawAxis(OIConstants.kRightXAxis),
         () -> leftBumper.getAsBoolean()));
 
     configureBindings();
   }
 
   private void configureBindings() {
-    triangleButton.onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
+    yButton.onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
     rightBumper.whileTrue(new StraightenRobotCmd(swerveSubsystem));
   }
 
