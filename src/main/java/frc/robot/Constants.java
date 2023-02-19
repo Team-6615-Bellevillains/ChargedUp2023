@@ -82,6 +82,40 @@ public final class Constants {
 
     }
 
+    public static final class GrabberConstants {
+        public static final int kLeftRollerMotorPort = 15;
+        public static final int kRightRollerMotorPort = 16;
+
+        public static final int kLeftSolenoidForwardChannel = 1;
+        public static final int kLeftSolenoidReverseChannel = 2;
+        public static final int kRightSolenoidForwardChannel = 3;
+        public static final int kRightSolenoidReverseChannel = 4;
+
+        public static final int kFlipMotorPort = 23;
+        public static final double kFlipReverseThreshold = 0;
+
+        /*
+         * Dr. Blake "MillieB" Miller Expert Calculation
+         * (PhD in Mechanical Engineering)
+         * 
+         * Motor drives 12 tooth gear that drives a 60 tooth gear that is coaxial with a
+         * 16 tooth gear that drives a 58 tooth gear that is coaxial with a 12 tooth
+         * gear that drives a 30 tooth gear via chain. :')
+         */
+        public static final double kFlipGearRatio = (12 / 60) * (16 / 58) * (12 / 30);
+        public static final double kFlipMaxRotation = Units.degreesToRadians(100);
+
+        public static final int flipPulsesPerRevolution = 5;
+        public static final double flipRotationsToRadians = 2 * Math.PI / kFlipGearRatio;
+
+        public static final double kPFlip = 0.1;
+        public static final double kIFlip = 0.1;
+        public static final double kDFlip = 0.1;
+
+        public static final double grabberOutSetpoint = Units.degreesToRadians(100);
+        public static final double grabberInSetpoint = 0;
+    }
+
     public static final class AutoConstants {
         public static final double kAutoMaxSpeedMetersPerSecond = 0.5;
 
