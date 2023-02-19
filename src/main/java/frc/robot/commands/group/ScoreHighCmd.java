@@ -53,7 +53,6 @@ public class ScoreHighCmd extends CommandBase {
                         .andThen(clampGrabberCmd)
                         .andThen(Commands.parallel(flipGrabberInCmd, armInCmd, verticalElevatorLowCmd)))
                 .schedule();
-
     }
 
 }
