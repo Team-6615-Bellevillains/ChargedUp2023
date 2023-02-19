@@ -15,10 +15,10 @@ import frc.robot.commands.AlignToAprilTag;
 import frc.robot.commands.StraightenRobotCmd;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.grabber.ClampGrabberCmd;
-import frc.robot.commands.grabber.EjectObjectCmd;
+import frc.robot.commands.grabber.ShootPieceCmd;
 import frc.robot.commands.grabber.OpenGrabberCmd;
 import frc.robot.commands.grabber.SuckObjectCmd;
-import frc.robot.commands.grabber.FlipGrabberCmd;
+import frc.robot.commands.grabber.FlipGrabberOutCmd;
 import frc.robot.subsystems.GrabberSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -42,10 +42,10 @@ public class RobotContainer {
       OIConstants.optionsButton);
 
   private final SuckObjectCmd suckObjectCmd = new SuckObjectCmd(grabberSubsystem);
-  private final EjectObjectCmd ejectObjectCmd = new EjectObjectCmd(grabberSubsystem);
+  private final ShootPieceCmd ejectObjectCmd = new ShootPieceCmd(grabberSubsystem);
   private final OpenGrabberCmd openGrabberCmd = new OpenGrabberCmd(grabberSubsystem);
   private final ClampGrabberCmd clampGrabberCmd = new ClampGrabberCmd(grabberSubsystem);
-  private final FlipGrabberCmd flipGrabberCmd = new FlipGrabberCmd(grabberSubsystem, 2009);
+  private final FlipGrabberOutCmd flipGrabberOutCmd = new FlipGrabberOutCmd(grabberSubsystem);
 
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
@@ -71,7 +71,7 @@ public class RobotContainer {
     // Simulatator Cmd Sends
     SmartDashboard.putData("Open Grabber", openGrabberCmd);
     SmartDashboard.putData("Clamp Grabber", clampGrabberCmd);
-    SmartDashboard.putData("Flip Grabber", flipGrabberCmd);
+    SmartDashboard.putData("Flip Grabber Out", flipGrabberOutCmd);
 
   }
 
