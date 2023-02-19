@@ -85,7 +85,7 @@ public final class Constants {
         public static final double verticalGearDiameter = Units.inchesToMeters(1.76);
 
         public static final int verticalEncoderPulsesPerRevolution = 5; // CIMCoder Pulses per Rotation
-        public static final double verticalEncoderPulsesToDistance = verticalGearDiameter * Math.PI
+        public static final double verticalRotationsToDistance = verticalGearDiameter * Math.PI
                 / verticalGearRatio;
 
         public static final double kPVerticalElevator = 0;
@@ -102,7 +102,7 @@ public final class Constants {
         public static final double horizontalGearDiameter = Units.inchesToMeters(1.76);
 
         public static final int horizontalEncoderPulsesPerRevolution = 5; // CIMCoder Pulses per Rotation
-        public static final double horizontalEncoderPulsesToDistance = horizontalGearDiameter * Math.PI
+        public static final double horizontalRotationsToDistance = horizontalGearDiameter * Math.PI
                 / horizontalGearRatio;
 
         public static final double kPHorizontal = 0;
