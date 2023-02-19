@@ -7,7 +7,7 @@ import frc.robot.commands.grabber.OpenGrabberCmd;
 import frc.robot.commands.grabber.ClampGrabberCmd;
 import frc.robot.subsystems.GrabberSubsystem;
 
-public class IntakeCone extends CommandBase {
+public class IntakeConeCmd extends CommandBase {
 
     private GrabberSubsystem grabberSubsystem;
 
@@ -15,7 +15,7 @@ public class IntakeCone extends CommandBase {
     private SuckObjectCmd suckObjectCmd = new SuckObjectCmd(grabberSubsystem, 500);
     private ClampGrabberCmd clampGrabberCmd = new ClampGrabberCmd(grabberSubsystem);
 
-    public IntakeCone(GrabberSubsystem grabberSubsystem) {
+    public IntakeConeCmd(GrabberSubsystem grabberSubsystem) {
         this.grabberSubsystem = grabberSubsystem;
 
         addRequirements(grabberSubsystem);

@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.AlignToAprilTag;
+import frc.robot.commands.AlignToAprilTagCmd;
 import frc.robot.commands.drive.StraightenRobotCmd;
 import frc.robot.commands.drive.SwerveJoystickCmd;
 import frc.robot.subsystems.GrabberSubsystem;
@@ -49,6 +49,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new AlignToAprilTag(limelight, swerveSubsystem);
+    return new AlignToAprilTagCmd(limelight, swerveSubsystem);
   }
 }

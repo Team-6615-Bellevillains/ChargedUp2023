@@ -12,7 +12,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class AlignToAprilTag extends CommandBase {
+public class AlignToAprilTagCmd extends CommandBase {
 
     private LimelightSubsystem limelightSubsystem;
     private SwerveSubsystem swerveSubsystem;
@@ -22,7 +22,7 @@ public class AlignToAprilTag extends CommandBase {
     private PIDController yawController;
     private PIDController distanceController;
 
-    public AlignToAprilTag(LimelightSubsystem limelightSubsystem, SwerveSubsystem swerveSubsystem) {
+    public AlignToAprilTagCmd(LimelightSubsystem limelightSubsystem, SwerveSubsystem swerveSubsystem) {
         this.limelightSubsystem = limelightSubsystem;
         this.swerveSubsystem = swerveSubsystem;
 
