@@ -14,65 +14,39 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToAprilTag;
 import frc.robot.commands.StraightenRobotCmd;
 import frc.robot.commands.SwerveJoystickCmd;
-import frc.robot.commands.grabber.ClampGrabberCmd;
-import frc.robot.commands.grabber.ShootPieceCmd;
-import frc.robot.commands.grabber.OpenGrabberCmd;
-import frc.robot.commands.grabber.SuckObjectCmd;
-import frc.robot.commands.grabber.FlipGrabberOutCmd;
 import frc.robot.subsystems.GrabberSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
 
+  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+  
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   private final LimelightSubsystem limelight = new LimelightSubsystem();
   private final GrabberSubsystem grabberSubsystem = new GrabberSubsystem();
-
-  private final Joystick driverController = new Joystick(OIConstants.kDriverControllerPort);
-  private final JoystickButton driverLeftBumper = new JoystickButton(driverController, OIConstants.leftBumper);
-  private final JoystickButton driverRightBumper = new JoystickButton(driverController, OIConstants.rightBumper);
-  private final JoystickButton driverTriangleButton = new JoystickButton(driverController, OIConstants.triangle);
-
-  private final Joystick operatorController = new Joystick(OIConstants.kOperatorControllerPort);
-  private final JoystickButton operatorLeftBumper = new JoystickButton(operatorController, OIConstants.leftBumper);
-  private final JoystickButton operatorRightBumper = new JoystickButton(operatorController, OIConstants.rightBumper);
-  private final JoystickButton operatorShareButton = new JoystickButton(operatorController, OIConstants.shareButton);
-  private final JoystickButton operatorOptionsButton = new JoystickButton(operatorController,
-      OIConstants.optionsButton);
-
-  private final SuckObjectCmd suckObjectCmd = new SuckObjectCmd(grabberSubsystem);
-  private final ShootPieceCmd ejectObjectCmd = new ShootPieceCmd(grabberSubsystem);
-  private final OpenGrabberCmd openGrabberCmd = new OpenGrabberCmd(grabberSubsystem);
-  private final ClampGrabberCmd clampGrabberCmd = new ClampGrabberCmd(grabberSubsystem);
-  private final FlipGrabberOutCmd flipGrabberOutCmd = new FlipGrabberOutCmd(grabberSubsystem);
+  
+  private final Joystick xboxController = new Joystick(OIConstants.xboxControllerPort);
+  private final JoystickButton leftBumper = new JoystickButton(xboxController, OIConstants.leftBumper);
+  private final JoystickButton rightBumper = new JoystickButton(xboxController, OIConstants.rightBumper);
+  private final JoystickButton yButton = new JoystickButton(xboxController, OIConstants.yButton);
 
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
         swerveSubsystem,
-        () -> -driverController.getRawAxis(OIConstants.kLeftYAxis),
-        () -> -driverController.getRawAxis(OIConstants.kLeftXAxis),
-        () -> -driverController.getRawAxis(OIConstants.kRightXAxis),
-        () -> driverLeftBumper.getAsBoolean()));
+        () -> -xboxController.getRawAxis(OIConstants.kLeftYAxis),
+        () -> -xboxController.getRawAxis(OIConstants.kLeftXAxis),
+        () -> -xboxController.getRawAxis(OIConstants.kRightXAxis),
+        () -> leftBumper.getAsBoolean()));
 
     configureBindings();
   }
 
+
   private void configureBindings() {
-
-    driverTriangleButton.onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
-    driverRightBumper.whileTrue(new StraightenRobotCmd(swerveSubsystem));
-
-    operatorLeftBumper.onTrue(suckObjectCmd);
-    operatorRightBumper.onTrue(ejectObjectCmd);
-    operatorShareButton.onTrue(openGrabberCmd);
-    operatorOptionsButton.onTrue(clampGrabberCmd);
-
-    // Simulatator Cmd Sends
-    SmartDashboard.putData("Open Grabber", openGrabberCmd);
-    SmartDashboard.putData("Clamp Grabber", clampGrabberCmd);
-    SmartDashboard.putData("Flip Grabber Out", flipGrabberOutCmd);
-
+    yButton.onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
+    rightBumper.whileTrue(new StraightenRobotCmd(swerveSubsystem));
   }
 
   public Command getAutonomousCommand() {

@@ -12,7 +12,7 @@ public final class Constants {
         public static final double kSteerMotorGearRatio = 48 / 40;
         public static final double kPTurning = 1.75;
         public static final double kITurning = 0;
-        public static final double kDTurning = 0;
+        public static final double kDTurning = 0.0;
 
         public static final double kDriveEncoderRot2Meter = kWheelCircumference / kDriveMotorGearRatio;
         public static final double kSteerEncoderRot2Rad = 2 * Math.PI / kSteerMotorGearRatio;
@@ -30,7 +30,7 @@ public final class Constants {
                 new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
         public static final int kFrontLeftDriveMotorPort = 13;
-        public static final int kFrontRightDriveMotorPort = 11;
+        public static final int kFrontRightDriveMotorPort = 9;
         public static final int kBackLeftDriveMotorPort = 12;
         public static final int kBackRightDriveMotorPort = 10;
 
@@ -44,13 +44,30 @@ public final class Constants {
         public static final boolean kBackLeftDriveMotorReversed = true;
         public static final boolean kBackRightDriveMotorReversed = true;
 
-        public static final double kFrontLeftDriveAbsoluteEncoderOffsetCounts = 137;
+        public static final double kFrontLeftDriveAbsoluteEncoderOffsetCounts = 135;
         public static final double kFrontRightDriveAbsoluteEncoderOffsetCounts = 857;
-        public static final double kBackLeftDriveAbsoluteEncoderOffsetCounts = 275;
+        public static final double kBackLeftDriveAbsoluteEncoderOffsetCounts = 282;
         public static final double kBackRightDriveAbsoluteEncoderOffsetCounts = 777;
 
-        public static final double kPhysicalMaxSpeedMetersPerSecond = Units.feetToMeters(12);
-        public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 90 / 60 * 2 * Math.PI;
+        /*
+         * wheelPoint = (0,0) or (0,kWheelBase) or (kTrackWidth, 0) or (kTrackWidth,
+         * kWheelBase)
+         * centerPoint = (kTrackWidth/2, kWheelBase/2)
+         * a = abs(centerPoint_x-wheelPoint_x) -> evaluates to kTrackWidth/2
+         * b = abs(centerPoint_y-wheelPoint_y) -> evaluates to kWheelBase/2
+         * kWheelDistanceFromCenter^2 = a^2 + b^2
+         * kWheelDistanceFromCenter = sqrt(a^2+b^2)
+         */
+        public static final double kWheelDistanceFromCenter = Units
+                .inchesToMeters(Math.sqrt(Math.pow(kTrackWidth / 2, 2) + Math.pow(kWheelBase / 2, 2)));
+
+        public static final double kPhysicalMaxSpeedMetersPerSecond = Units.feetToMeters(13.5);
+        /*
+         * Circumference of the circle created by robot rotation aka the distance
+         * travelled in one rotation / max speed
+         */
+        public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * Math.PI * kWheelDistanceFromCenter
+                / kPhysicalMaxSpeedMetersPerSecond;
 
         public static final double kTeleOpMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 4;
         public static final double kTeleOpMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond
@@ -108,19 +125,65 @@ public final class Constants {
     }
 
     public static final class OIConstants {
-        public static final double kDeadband = 0.06;
-        public static final int kDriverControllerPort = 1;
-        public static final int kOperatorControllerPort = 3;
-
+        public static final double kDeadband = 0.07;
+        public static final int xboxControllerPort = 0;
+        
         public static final int kLeftXAxis = 0;
         public static final int kLeftYAxis = 1;
         public static final int kRightXAxis = 4;
+        public static final int kRightYAxis = 5;
+
+        public static final int leftTrigger = 2;
+        public static final int rightTrigger = 3;
 
         public static final int leftBumper = 5;
         public static final int rightBumper = 6;
-        public static final int triangle = 4;
-        public static final int shareButton = 7;
-        public static final int optionsButton = 8;
+        public static final int yButton = 4;
+        public static final int aButton = 1;
+        public static final int bButton = 2;
+        public static final int xButton = 3;
+    }
+
+    public static final class ElevatorConstants {
+        /*
+         * We are unsure about the integer values needed here right now. Temp values are
+         * in place
+         */
+
+        // Begin Vertical
+        public static final int verticalMotorAPort = 0;
+        public static final int verticalMotorBPort = 0;
+        public static final int verticalEncoderPortA = 0;
+        public static final int verticalEncoderPortB = 0;
+
+        public static final double verticalGearRatio = 12 / 60;
+        public static final double verticalMaxLength = Units.inchesToMeters(30);
+        public static final double verticalGearDiameter = Units.inchesToMeters(1.76);
+
+        public static final int verticalEncoderPulsesPerRevolution = 5; // CIMCoder Pulses per Rotation
+        public static final double verticalRotationsToDistance = verticalGearDiameter * Math.PI
+                / verticalGearRatio;
+
+        public static final double kPVerticalElevator = 0;
+        public static final double kIVerticalElevator = 0;
+        public static final double kDVerticalElevator = 0;
+
+        // Begin Horizontal
+        public static final int horizontalMotorPort = 0;
+        public static final int horizonalEncoderPortA = 0;
+        public static final int horizonalEncoderPortB = 0;
+
+        public static final double horizontalGearRatio = 12 / 60;
+        public static final double horizontalMaxExtensionLength = Units.inchesToMeters(15);
+        public static final double horizontalGearDiameter = Units.inchesToMeters(1.76);
+
+        public static final int horizontalEncoderPulsesPerRevolution = 5; // CIMCoder Pulses per Rotation
+        public static final double horizontalRotationsToDistance = horizontalGearDiameter * Math.PI
+                / horizontalGearRatio;
+
+        public static final double kPHorizontal = 0;
+        public static final double kIHorizontal = 0;
+        public static final double kDHorizontal = 0;
     }
 
 }
