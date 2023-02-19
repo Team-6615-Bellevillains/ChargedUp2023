@@ -32,7 +32,7 @@ public final class Constants {
                 new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
         public static final int kFrontLeftDriveMotorPort = 13;
-        public static final int kFrontRightDriveMotorPort =9;
+        public static final int kFrontRightDriveMotorPort = 9;
         public static final int kBackLeftDriveMotorPort = 12;
         public static final int kBackRightDriveMotorPort = 10;
 
@@ -69,36 +69,45 @@ public final class Constants {
     }
 
     public static final class ElevatorConstants {
-        /* We are unsure about the integer values needed here right now. Temp values are in place */
-        
-        //vertical elevator
-        public static final int vElevatorMotor1 = 0;
-        public static final int vElevatorMotor2 = 0;
-        public static final double vElevatorGearDiameter = 1.76;
-        public static final int vElevatorEncoderPPR = 25; //Encodrer Pulses /Rotation
-        public static final double vElevatorEncoderDPP = ElevatorConstants.vElevatorGearDiameter * Math.PI/ElevatorConstants.vElevatorEncoderPPR; //Dist. per pulse
-        public static final int vElevatorEncoderTopValue = 100;
-        public static final double vElevatorEncoderBottomValue = 0;
-        public static final double kIVertical = 0;
-        public static final double kDVertical = 0;
-        public static final double kPVertical = 0;
+        /*
+         * We are unsure about the integer values needed here right now. Temp values are
+         * in place
+         */
 
-        //horizontal elevator
-        public static final int hElevatorMotor = 0;
-        public static final double hElevatorGearDiameter = 1.76;
-        public static final int hElevatorEncoderPPR = 25; //encoder pulses per rotation
-        public static final double hElevatorEncoderDPP = ElevatorConstants.hElevatorGearDiameter * Math.PI/ElevatorConstants.hElevatorEncoderPPR; // distance per encoder pulse
-        public static final int hElevatorEncoderTopValue = 100;
-        public static final double hElevatorEncoderBottomValue = 0;
+        // Begin Vertical
+        public static final int verticalMotorAPort = 0;
+        public static final int verticalMotorBPort = 0;
+        public static final int verticalEncoderPortA = 0;
+        public static final int verticalEncoderPortB = 0;
+
+        public static final double verticalGearRatio = 12 / 60;
+        public static final double verticalMaxLength = Units.inchesToMeters(30);
+        public static final double verticalGearDiameter = Units.inchesToMeters(1.76);
+
+        public static final int verticalEncoderPulsesPerRevolution = 5; // CIMCoder Pulses per Rotation
+        public static final double verticalEncoderPulsesToDistance = verticalGearDiameter * Math.PI
+                / verticalGearRatio;
+
+        public static final double kPVerticalElevator = 0;
+        public static final double kIVerticalElevator = 0;
+        public static final double kDVerticalElevator = 0;
+
+        // Begin Horizontal
+        public static final int horizontalMotorPort = 0;
+        public static final int horizonalEncoderPortA = 0;
+        public static final int horizonalEncoderPortB = 0;
+
+        public static final double horizontalGearRatio = 12 / 60;
+        public static final double horizontalMaxExtensionLength = Units.inchesToMeters(15);
+        public static final double horizontalGearDiameter = Units.inchesToMeters(1.76);
+
+        public static final int horizontalEncoderPulsesPerRevolution = 5; // CIMCoder Pulses per Rotation
+        public static final double horizontalEncoderPulsesToDistance = horizontalGearDiameter * Math.PI
+                / horizontalGearRatio;
+
         public static final double kPHorizontal = 0;
         public static final double kIHorizontal = 0;
         public static final double kDHorizontal = 0;
-    
-    
-    
-    } 
-    
-		  
-
+    }
 
 }
