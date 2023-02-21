@@ -9,11 +9,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.GrabberConstants;
 import frc.robot.subsystems.GrabberSubsystem;
 
-public class FlipGrabberOutCmd extends CommandBase {
+public class FlipGrabberIntakeCmd extends CommandBase {
   private GrabberSubsystem grabberSubsystem;
   private PIDController flipPIDController;
 
-  public FlipGrabberOutCmd(GrabberSubsystem grabberSubsystem) {
+  public FlipGrabberIntakeCmd(GrabberSubsystem grabberSubsystem) {
     this.grabberSubsystem = grabberSubsystem;
 
     flipPIDController = new PIDController(GrabberConstants.kPFlip, GrabberConstants.kIFlip, GrabberConstants.kDFlip);
