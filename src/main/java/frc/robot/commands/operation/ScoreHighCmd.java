@@ -5,8 +5,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.drive.MoveDistanceCmd;
-import frc.robot.commands.elevator.ArmInCmd;
-import frc.robot.commands.elevator.ArmOutCmd;
+import frc.robot.commands.elevator.HorizontalElevatorInCmd;
+import frc.robot.commands.elevator.HorizontalElevatorOutCmd;
 import frc.robot.commands.elevator.VerticalElevatorLowCmd;
 import frc.robot.commands.elevator.VerticalElevatorMidCmd;
 import frc.robot.commands.grabber.ClampGrabberCmd;
@@ -23,13 +23,13 @@ public class ScoreHighCmd extends CommandBase {
     private SwerveSubsystem swerveSubsystem;
 
     private VerticalElevatorMidCmd verticalElevatorMidCmd = new VerticalElevatorMidCmd(elevatorSubsystem);
-    private ArmOutCmd armOutCmd = new ArmOutCmd(elevatorSubsystem);
+    private HorizontalElevatorOutCmd horizontalElevatorOutCmd = new HorizontalElevatorOutCmd(elevatorSubsystem);
 
     private OpenGrabberCmd openGrabberCmd = new OpenGrabberCmd(grabberSubsystem);
     private ClampGrabberCmd clampGrabberCmd = new ClampGrabberCmd(grabberSubsystem);
     private FlipGrabberInCmd flipGrabberInCmd = new FlipGrabberInCmd(grabberSubsystem);
 
-    private ArmInCmd armInCmd = new ArmInCmd(elevatorSubsystem);
+    private HorizontalElevatorInCmd horizontalElevatorInCmd = new HorizontalElevatorInCmd(elevatorSubsystem);
     private VerticalElevatorLowCmd verticalElevatorLowCmd = new VerticalElevatorLowCmd(elevatorSubsystem);
 
     // TODO: Find Distances
@@ -50,11 +50,11 @@ public class ScoreHighCmd extends CommandBase {
     @Override
     public void initialize() {
         routine = moveDistanceCmd
-                .andThen(Commands.parallel(verticalElevatorMidCmd, armOutCmd))
+                .andThen(Commands.parallel(verticalElevatorMidCmd, horizontalElevatorOutCmd))
                 .andThen(openGrabberCmd)
                 .andThen(new WaitCommand(0.5))
                 .andThen(clampGrabberCmd)
-                .andThen(Commands.parallel(flipGrabberInCmd, armInCmd, verticalElevatorLowCmd));
+                .andThen(Commands.parallel(flipGrabberInCmd, horizontalElevatorInCmd, verticalElevatorLowCmd));
 
         routine.schedule();
     }
