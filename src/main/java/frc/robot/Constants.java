@@ -83,11 +83,21 @@ public final class Constants {
         public static final double kIRotation = 0;
         public static final double kDRotation = 0;
 
+        // TODO: Tune
+        public static final double kPMoveXDistance = 0;
+        public static final double kIMoveXDistance = 0;
+        public static final double kDMoveXDistance = 0;
+
+        // TODO: Tune
+        public static final double kPMoveYDistance = 0;
+        public static final double kIMoveYDistance = 0;
+        public static final double kDMoveYDistance = 0;
+
     }
 
     public static final class GrabberConstants {
         public static final int kLeftRollerMotorPort = 15;
-        public static final int kRightRollerMotorPort = 16;
+        public static final int kRightRollerMotorPort = 14;
 
         public static final int kLeftSolenoidForwardChannel = 1;
         public static final int kLeftSolenoidReverseChannel = 2;
@@ -106,7 +116,6 @@ public final class Constants {
          * gear that drives a 30 tooth gear via chain. :')
          */
         public static final double kFlipGearRatio = (12 / 60) * (16 / 58) * (12 / 30);
-        public static final double kFlipMaxRotation = Units.degreesToRadians(100);
 
         public static final int flipPulsesPerRevolution = kCimcoder256PulsesPerRevolution;
         public static final double flipRotationsToRadians = 2 * Math.PI / kFlipGearRatio;
@@ -115,12 +124,14 @@ public final class Constants {
         public static final double kIFlip = 0.1;
         public static final double kDFlip = 0.1;
 
-        public static final double grabberOutSetpoint = Units.degreesToRadians(100);
         public static final double grabberInSetpoint = 0;
+        public static final double grabberShootSetpoint = Units.degreesToRadians(118 - 25);
+        public static final double grabberIntakeSetpoint = Units.degreesToRadians(118 + 27);
     }
 
     public static final class AutoConstants {
-        public static final double kAutoMaxSpeedMetersPerSecond = 0.5;
+        public static final double kAutoMaxSpeedMetersPerSecond = 1;
+        public static final double kAutoMaxAccelerationMetersPerSecond = 0.5;
 
         public static final double kPTrackingYaw = .05;
         public static final double kPTrackingDrive = .7;

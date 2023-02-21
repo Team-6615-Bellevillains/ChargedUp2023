@@ -17,7 +17,7 @@ public class FlipGrabberOutCmd extends CommandBase {
     this.grabberSubsystem = grabberSubsystem;
 
     flipPIDController = new PIDController(GrabberConstants.kPFlip, GrabberConstants.kIFlip, GrabberConstants.kDFlip);
-    flipPIDController.setSetpoint(GrabberConstants.grabberOutSetpoint);
+    flipPIDController.setSetpoint(GrabberConstants.grabberIntakeSetpoint);
 
     addRequirements(grabberSubsystem);
   }
