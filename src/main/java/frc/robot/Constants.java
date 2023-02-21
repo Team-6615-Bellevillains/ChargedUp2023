@@ -6,6 +6,9 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
+    public static final int kCimcoderPulsesPerRevolution = 20;
+    public static final int kCimcoder256PulsesPerRevolution = 256;
+
     public static final class SwerveModuleConstants {
         public static final double kWheelCircumference = Units.inchesToMeters(4) * Math.PI;
         public static final double kDriveMotorGearRatio = 6.67 / 1;
@@ -17,7 +20,7 @@ public final class Constants {
         public static final double kDriveEncoderRot2Meter = kWheelCircumference / kDriveMotorGearRatio;
         public static final double kSteerEncoderRot2Rad = 2 * Math.PI / kSteerMotorGearRatio;
 
-        public static final double maximumTotalCounts = 1024;
+        public static final int maximumTotalCounts = 1024;
     }
 
     public static final class DriveConstants {
@@ -105,7 +108,7 @@ public final class Constants {
         public static final double kFlipGearRatio = (12 / 60) * (16 / 58) * (12 / 30);
         public static final double kFlipMaxRotation = Units.degreesToRadians(100);
 
-        public static final int flipPulsesPerRevolution = 5;
+        public static final int flipPulsesPerRevolution = kCimcoder256PulsesPerRevolution;
         public static final double flipRotationsToRadians = 2 * Math.PI / kFlipGearRatio;
 
         public static final double kPFlip = 0.1;
@@ -127,7 +130,7 @@ public final class Constants {
     public static final class OIConstants {
         public static final double kDeadband = 0.07;
         public static final int xboxControllerPort = 0;
-        
+
         public static final int kLeftXAxis = 0;
         public static final int kLeftYAxis = 1;
         public static final int kRightXAxis = 4;
@@ -153,14 +156,12 @@ public final class Constants {
         // Begin Vertical
         public static final int verticalMotorAPort = 0;
         public static final int verticalMotorBPort = 0;
-        public static final int verticalEncoderPortA = 0;
-        public static final int verticalEncoderPortB = 0;
 
         public static final double verticalGearRatio = 12 / 60;
         public static final double verticalMaxLength = Units.inchesToMeters(30);
         public static final double verticalGearDiameter = Units.inchesToMeters(1.76);
 
-        public static final int verticalEncoderPulsesPerRevolution = 5; // CIMCoder Pulses per Rotation
+        public static final int verticalEncoderPulsesPerRevolution = kCimcoderPulsesPerRevolution;
         public static final double verticalRotationsToDistance = verticalGearDiameter * Math.PI
                 / verticalGearRatio;
 
@@ -177,7 +178,7 @@ public final class Constants {
         public static final double horizontalMaxExtensionLength = Units.inchesToMeters(15);
         public static final double horizontalGearDiameter = Units.inchesToMeters(1.76);
 
-        public static final int horizontalEncoderPulsesPerRevolution = 5; // CIMCoder Pulses per Rotation
+        public static final int horizontalEncoderPulsesPerRevolution = kCimcoder256PulsesPerRevolution;
         public static final double horizontalRotationsToDistance = horizontalGearDiameter * Math.PI
                 / horizontalGearRatio;
 

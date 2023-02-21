@@ -13,81 +13,54 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final WPI_TalonSRX verticalMotorB;
     private final WPI_TalonSRX hElevatorMotor;
 
-    private final Encoder verticalEncoder;
     private final Encoder horizontalEncoder;
 
     public ElevatorSubsystem() {
-
-        this.verticalMotorA = new WPI_TalonSRX(ElevatorConstants.verticalMotorAPort); // only one
-                                                                                      // encoder
-        // for the two
-        // motors
+        // The A motor has an encoder, the B motor does not.
+        this.verticalMotorA = new WPI_TalonSRX(ElevatorConstants.verticalMotorAPort);
         this.verticalMotorB = new WPI_TalonSRX(ElevatorConstants.verticalMotorBPort);
+
         this.hElevatorMotor = new WPI_TalonSRX(ElevatorConstants.horizontalMotorPort);
 
-        this.verticalEncoder = new Encoder(ElevatorConstants.verticalEncoderPortA,
-                ElevatorConstants.verticalEncoderPortB);
         this.horizontalEncoder = new Encoder(ElevatorConstants.horizonalEncoderPortA,
                 ElevatorConstants.horizonalEncoderPortB);
+        this.horizontalEncoder.setDistancePerPulse(ElevatorConstants.horizontalRotationsToDistance
+                / ElevatorConstants.horizontalEncoderPulsesPerRevolution);
     }
 
-    // VERITCAL
-    public double vElevatorEncoderPosition() {
-        return verticalMotorA.getSelectedSensorPosition();
-    }
-
-    public void vElevatorEncoderReset() {
-        verticalMotorA.setSelectedSensorPosition(0);
-    }
-
-    public void vElevatorSpeed(double speed) {
+    public void setVerticalElevatorSpeed(double speed) {
         verticalMotorA.set(speed);
         verticalMotorB.set(speed);
     }
-    /*
-     * public void vElevatorDown(){
-     * 
-     * verticalElevatorMotorA.set(.25);
-     * verticalElevatorMotorB.set(.25);
-     * }
-     * 
-     * public void vElevatorUp(double speed) {
-     * verticalElevatorMotorA.set(speed);
-     * verticalElevatorMotorB.set(speed);
-     * }
-     * 
-     * public void stopVElevator(){
-     * verticalElevatorMotorA.set(0);
-     * verticalElevatorMotorB.set(0);
-     * }
-     */
 
-    // HORRIZONTAL
-
-    public double hElevatorEncoderPosition() {
-        return hElevatorMotor.getSelectedSensorPosition();
+    public double getVerticalElevatorPosition() {
+        return verticalMotorA.getSelectedSensorPosition() * ElevatorConstants.verticalRotationsToDistance
+                / ElevatorConstants.verticalEncoderPulsesPerRevolution;
     }
 
-    public void hElevatorEncoderReset() {
-        hElevatorMotor.setSelectedSensorPosition(0);
+    public double getVerticalElevatorVelocity() {
+        return verticalMotorA.getSelectedSensorVelocity() * (ElevatorConstants.verticalRotationsToDistance
+                / ElevatorConstants.verticalEncoderPulsesPerRevolution) / 60;
     }
 
-    public void hElevatorSpeed(double speed) {
+    public void resetVerticalElevatorEncoder() {
+        verticalMotorA.setSelectedSensorPosition(0);
+    }
+
+    public void setHorizontalElevatorSpeed(double speed) {
         hElevatorMotor.set(speed);
     }
 
-    /*
-     * public void hElevatorOut(){
-     * hElevatorMotor.set(.25);
-     * }
-     * 
-     * public void hElevatorIn(){
-     * hElevatorMotor.set(-.25);
-     * }
-     * 
-     * public void stopHElevator(){
-     * hElevatorMotor.set(0);
-     * }
-     */
+    public double getHorizontalElevatorPosition() {
+        return horizontalEncoder.getDistance();
+    }
+
+    public double getHorizontalElevatorVelocity() {
+        return horizontalEncoder.getRate();
+    }
+
+    public void resetHorizontalElevatorEncoder() {
+        horizontalEncoder.reset();
+    }
 
 }
