@@ -1,8 +1,10 @@
-package frc.robot.commands.group;
+package frc.robot.commands.operation;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.drive.MoveDistanceCmd;
 import frc.robot.commands.elevator.ArmInCmd;
 import frc.robot.commands.elevator.ArmOutCmd;
 import frc.robot.commands.elevator.VerticalElevatorLowCmd;
@@ -12,11 +14,13 @@ import frc.robot.commands.grabber.FlipGrabberInCmd;
 import frc.robot.commands.grabber.OpenGrabberCmd;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
+import frc.robot.subsystems.SwerveSubsystem;
 
-public class ScoreMidCmd extends CommandBase {
+public class ScoreHighCmd extends CommandBase {
 
     private ElevatorSubsystem elevatorSubsystem;
     private GrabberSubsystem grabberSubsystem;
+    private SwerveSubsystem swerveSubsystem;
 
     private VerticalElevatorMidCmd verticalElevatorMidCmd = new VerticalElevatorMidCmd(elevatorSubsystem);
     private ArmOutCmd armOutCmd = new ArmOutCmd(elevatorSubsystem);
@@ -28,20 +32,43 @@ public class ScoreMidCmd extends CommandBase {
     private ArmInCmd armInCmd = new ArmInCmd(elevatorSubsystem);
     private VerticalElevatorLowCmd verticalElevatorLowCmd = new VerticalElevatorLowCmd(elevatorSubsystem);
 
-    public ScoreMidCmd(ElevatorSubsystem elevatorSubsystem, GrabberSubsystem grabberSubsystem) {
+    // TODO: Find Distances
+    private MoveDistanceCmd moveDistanceCmd = new MoveDistanceCmd(swerveSubsystem, .5, 0);
+
+    private Command routine;
+
+    public ScoreHighCmd(
+            ElevatorSubsystem elevatorSubsystem, GrabberSubsystem grabberSubsystem,
+            SwerveSubsystem swerveSubsystem) {
         this.elevatorSubsystem = elevatorSubsystem;
         this.grabberSubsystem = grabberSubsystem;
+        this.swerveSubsystem = swerveSubsystem;
 
-        addRequirements(elevatorSubsystem, grabberSubsystem);
+        addRequirements(elevatorSubsystem, grabberSubsystem, swerveSubsystem);
     }
 
     @Override
     public void initialize() {
-        Commands.parallel(verticalElevatorMidCmd, armOutCmd)
+        routine = moveDistanceCmd
+                .andThen(Commands.parallel(verticalElevatorMidCmd, armOutCmd))
                 .andThen(openGrabberCmd)
                 .andThen(new WaitCommand(0.5))
                 .andThen(clampGrabberCmd)
-                .andThen(Commands.parallel(flipGrabberInCmd, armInCmd, verticalElevatorLowCmd)).schedule();
+                .andThen(Commands.parallel(flipGrabberInCmd, armInCmd, verticalElevatorLowCmd));
+
+        routine.schedule();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        if (interrupted) {
+            routine.end(true);
+        }
+    }
+
+    @Override
+    public boolean isFinished() {
+        return routine.isFinished();
     }
 
 }

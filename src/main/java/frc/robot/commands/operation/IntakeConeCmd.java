@@ -1,5 +1,6 @@
-package frc.robot.commands.group;
+package frc.robot.commands.operation;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.grabber.SuckObjectCmd;
@@ -15,6 +16,8 @@ public class IntakeConeCmd extends CommandBase {
     private SuckObjectCmd suckObjectCmd = new SuckObjectCmd(grabberSubsystem, 500);
     private ClampGrabberCmd clampGrabberCmd = new ClampGrabberCmd(grabberSubsystem);
 
+    private Command routine;
+
     public IntakeConeCmd(GrabberSubsystem grabberSubsystem) {
         this.grabberSubsystem = grabberSubsystem;
 
@@ -23,10 +26,25 @@ public class IntakeConeCmd extends CommandBase {
 
     @Override
     public void initialize() {
-        openGrabberCmd
+        routine = openGrabberCmd
                 .andThen(new WaitCommand(0.5))
                 .andThen(suckObjectCmd)
                 .andThen(new WaitCommand(0.5))
-                .andThen(clampGrabberCmd).schedule();
+                .andThen(clampGrabberCmd);
+
+        routine.schedule();
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        if (interrupted) {
+            routine.end(true);
+        }
+    }
+
+    @Override
+    public boolean isFinished() {
+        return routine.isFinished();
+    }
+
 }
