@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -45,9 +46,8 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kBackRightDriveAbsoluteEncoderOffsetCounts);
 
     private final AHRS gyro = new AHRS(SPI.Port.kMXP);
-    private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(
-            DriveConstants.kDriveKinematics, gyro.getRotation2d(),
-            getModulePositions());
+    private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics,
+            getRotation2d(), getModulePositions(), new Pose2d());
 
     public SwerveSubsystem() {
         new Thread(() -> {
@@ -79,16 +79,16 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public Pose2d getPose() {
-        return odometer.getPoseMeters();
+        return poseEstimator.getEstimatedPosition();
     }
 
-    public void resetOdometry(Pose2d pose) {
-        odometer.resetPosition(getRotation2d(), getModulePositions(), pose);
+    public void resetPoseEstimator(Pose2d pose) {
+        poseEstimator.resetPosition(getRotation2d(), getModulePositions(), pose);
     }
 
     @Override
     public void periodic() {
-        odometer.update(getRotation2d(), getModulePositions());
+        poseEstimator.update(getRotation2d(), getModulePositions());
         SmartDashboard.putNumber("Robot Heading", getHeading());
         SmartDashboard.putString("Robot Location",
                 getPose().getTranslation().toString());
