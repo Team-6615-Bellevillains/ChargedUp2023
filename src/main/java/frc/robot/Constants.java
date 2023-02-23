@@ -129,6 +129,10 @@ public final class Constants {
         public static final double grabberIntakeSetpoint = Units.degreesToRadians(118 + 27);
     }
 
+    public static final class LimelightConstants {
+        public static final String kCameraName = "asdoija";
+    }
+
     public static final class AutoConstants {
         public static final double kAutoMaxSpeedMetersPerSecond = 1;
         public static final double kAutoMaxAccelerationMetersPerSecond = 0.5;

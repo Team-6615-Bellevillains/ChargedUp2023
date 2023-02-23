@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import frc.robot.Constants.LimelightConstants;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -16,7 +17,7 @@ public class LimelightSubsystem extends SubsystemBase {
   private PhotonTrackedTarget bestTarget;
 
   public LimelightSubsystem() {
-    camera = new PhotonCamera("asdoija");
+    camera = new PhotonCamera(LimelightConstants.kCameraName);
   }
 
   public PhotonTrackedTarget getBestTarget() {
