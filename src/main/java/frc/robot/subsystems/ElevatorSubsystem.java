@@ -18,9 +18,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         this.verticalMotorA = new WPI_TalonSRX(ElevatorConstants.verticalMotorAPort);
         this.verticalMotorB = new WPI_TalonSRX(ElevatorConstants.verticalMotorBPort);
 
-        this.verticalMotorA.setInverted(true); // TODO: Find if the other motor needs to be inverteed, and how this affects encoding
+        this.verticalMotorA.setInverted(true);
 
         this.hElevatorMotor = new WPI_TalonSRX(ElevatorConstants.horizontalMotorPort);
+        this.hElevatorMotor.setInverted(true);
     }
 
     public void setVerticalElevatorSpeed(double speed) {
