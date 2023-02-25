@@ -5,12 +5,27 @@ import frc.robot.subsystems.ElevatorSubsystem;
 
 public class VerticalElevatorHighCmd extends CommandBase {
 
-    private ElevatorSubsystem elevatorSubsystem;
+    private final VerticalElevatorToSetpointCmd verticalElevatorToSetpointCmd;
 
     public VerticalElevatorHighCmd(ElevatorSubsystem elevatorSubsystem) {
-        this.elevatorSubsystem = elevatorSubsystem;
+        this.verticalElevatorToSetpointCmd = new VerticalElevatorToSetpointCmd(elevatorSubsystem, ElevatorConstants.verticalMaxHeight);
 
         addRequirements(elevatorSubsystem);
+    }
+
+    @Override
+    public void initialize() {
+        verticalElevatorToSetpointCmd.initialize();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        verticalElevatorToSetpointCmd.end(interrupted);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return verticalElevatorToSetpointCmd.isFinished();
     }
 
 }

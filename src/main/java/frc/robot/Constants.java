@@ -160,7 +160,7 @@ public final class Constants {
         /*
          * Dr. Blake "MillieB" Miller Expert Calculation
          * (PhD in Mechanical Engineering)
-         * 
+         *
          * Motor drives 12 tooth gear that drives a 60 tooth gear that is coaxial with a
          * 16 tooth gear that drives a 58 tooth gear that is coaxial with a 12 tooth
          * gear that drives a 30 tooth gear via chain. :')
