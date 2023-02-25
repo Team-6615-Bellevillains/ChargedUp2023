@@ -145,21 +145,6 @@ public final class Constants {
     public static final class OIConstants {
         public static final double kDeadband = 0.07;
         public static final int xboxControllerPort = 0;
-
-        public static final int kLeftXAxis = 0;
-        public static final int kLeftYAxis = 1;
-        public static final int kRightXAxis = 4;
-        public static final int kRightYAxis = 5;
-
-        public static final int leftTrigger = 2;
-        public static final int rightTrigger = 3;
-
-        public static final int leftBumper = 5;
-        public static final int rightBumper = 6;
-        public static final int yButton = 4;
-        public static final int aButton = 1;
-        public static final int bButton = 2;
-        public static final int xButton = 3;
     }
 
     public static final class ElevatorConstants {
