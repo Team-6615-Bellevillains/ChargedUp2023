@@ -4,12 +4,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToAprilTagCmd;
 import frc.robot.commands.drive.StraightenRobotCmd;
@@ -21,31 +18,28 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
 
-  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
-
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   private final LimelightSubsystem limelight = new LimelightSubsystem();
   private final GrabberSubsystem grabberSubsystem = new GrabberSubsystem();
+  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
 
-  private final Joystick xboxController = new Joystick(OIConstants.xboxControllerPort);
-  private final JoystickButton leftBumper = new JoystickButton(xboxController, OIConstants.leftBumper);
-  private final JoystickButton rightBumper = new JoystickButton(xboxController, OIConstants.rightBumper);
-  private final JoystickButton yButton = new JoystickButton(xboxController, OIConstants.yButton);
+
+  private final CommandXboxController xboxController = new CommandXboxController(OIConstants.xboxControllerPort);
 
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
         swerveSubsystem,
-        () -> -xboxController.getRawAxis(OIConstants.kLeftYAxis),
-        () -> -xboxController.getRawAxis(OIConstants.kLeftXAxis),
-        () -> -xboxController.getRawAxis(OIConstants.kRightXAxis),
-        () -> leftBumper.getAsBoolean()));
+        () -> -xboxController.getLeftY(),
+        () -> -xboxController.getLeftX(),
+        () -> -xboxController.getRightX(),
+        () -> xboxController.leftBumper().getAsBoolean()));
 
     configureBindings();
   }
 
   private void configureBindings() {
-    yButton.onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
-    rightBumper.whileTrue(new StraightenRobotCmd(swerveSubsystem));
+    xboxController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
+    xboxController.rightBumper().whileTrue(new StraightenRobotCmd(swerveSubsystem));
   }
 
   public Command getAutonomousCommand() {
