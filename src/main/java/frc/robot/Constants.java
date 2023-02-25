@@ -64,9 +64,9 @@ public final class Constants {
         public static final double kWheelDistanceFromCenter = Math.sqrt(Math.pow(kTrackWidth / 2, 2) + Math.pow(kWheelBase / 2, 2));
 
         public static final double kPhysicalMaxSpeedMetersPerSecond = Units.feetToMeters(13.5);
+
         /*
-         * Circumference of the circle created by robot rotation aka the distance
-         * travelled in one rotation / max speed
+         * 2pi radians / (Circumference of the circle created by robot rotation aka the distance travelled in one rotation / max speed)
          */
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * Math.PI / (kWheelDistanceFromCenter / kPhysicalMaxSpeedMetersPerSecond);
 
