@@ -194,7 +194,8 @@ public final class Constants {
 
     public static final class OIConstants {
         public static final double kDeadband = 0.07;
-        public static final int xboxControllerPort = 0;
+        public static final int kDriverControllerPort = 0;
+        public static final int kOperatorControllerPort = 1;
     }
 
 }

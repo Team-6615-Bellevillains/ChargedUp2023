@@ -2,16 +2,16 @@ package frc.robot.commands.elevator;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ElevatorConstants;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.HorizontalElevatorSubsystem;
 
 public class HorizontalElevatorOutCmd extends CommandBase {
 
     private final HorizontalElevatorToSetpointCmd horizontalElevatorToSetpointCmd;
 
-    public HorizontalElevatorOutCmd(ElevatorSubsystem elevatorSubsystem) {
-        this.horizontalElevatorToSetpointCmd = new HorizontalElevatorToSetpointCmd(elevatorSubsystem, ElevatorConstants.horizontalOutLength);
+    public HorizontalElevatorOutCmd(HorizontalElevatorSubsystem horizontalElevatorSubsystem) {
+        this.horizontalElevatorToSetpointCmd = new HorizontalElevatorToSetpointCmd(horizontalElevatorSubsystem, ElevatorConstants.horizontalOutLength);
 
-        addRequirements(elevatorSubsystem);
+        addRequirements(horizontalElevatorSubsystem);
     }
 
     @Override

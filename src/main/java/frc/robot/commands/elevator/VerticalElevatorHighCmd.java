@@ -1,16 +1,17 @@
 package frc.robot.commands.elevator;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.VerticalElevatorSubsystem;
+import frc.robot.Constants.ElevatorConstants;
 
 public class VerticalElevatorHighCmd extends CommandBase {
 
     private final VerticalElevatorToSetpointCmd verticalElevatorToSetpointCmd;
 
-    public VerticalElevatorHighCmd(ElevatorSubsystem elevatorSubsystem) {
-        this.verticalElevatorToSetpointCmd = new VerticalElevatorToSetpointCmd(elevatorSubsystem, ElevatorConstants.verticalMaxHeight);
+    public VerticalElevatorHighCmd(VerticalElevatorSubsystem verticalElevatorSubsystem) {
+        this.verticalElevatorToSetpointCmd = new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalMaxHeight);
 
-        addRequirements(elevatorSubsystem);
+        addRequirements(verticalElevatorSubsystem);
     }
 
     @Override
