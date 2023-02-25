@@ -13,19 +13,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final WPI_TalonSRX verticalMotorB;
     private final WPI_TalonSRX hElevatorMotor;
 
-    private final Encoder horizontalEncoder;
-
     public ElevatorSubsystem() {
         // The A motor has an encoder, the B motor does not.
         this.verticalMotorA = new WPI_TalonSRX(ElevatorConstants.verticalMotorAPort);
         this.verticalMotorB = new WPI_TalonSRX(ElevatorConstants.verticalMotorBPort);
 
         this.hElevatorMotor = new WPI_TalonSRX(ElevatorConstants.horizontalMotorPort);
-
-        this.horizontalEncoder = new Encoder(ElevatorConstants.horizonalEncoderPortA,
-                ElevatorConstants.horizonalEncoderPortB);
-        this.horizontalEncoder.setDistancePerPulse(ElevatorConstants.horizontalRotationsToDistance
-                / ElevatorConstants.horizontalEncoderPulsesPerRevolution);
     }
 
     public void setVerticalElevatorSpeed(double speed) {
@@ -52,15 +45,17 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public double getHorizontalElevatorPosition() {
-        return horizontalEncoder.getDistance();
+        return hElevatorMotor.getSelectedSensorPosition() * ElevatorConstants.horizontalRotationsToDistance
+                / ElevatorConstants.horizontalEncoderPulsesPerRevolution;
     }
 
     public double getHorizontalElevatorVelocity() {
-        return horizontalEncoder.getRate();
+        return hElevatorMotor.getSelectedSensorVelocity() * (ElevatorConstants.horizontalRotationsToDistance
+                / ElevatorConstants.horizontalEncoderPulsesPerRevolution) / 60;
     }
 
     public void resetHorizontalElevatorEncoder() {
-        horizontalEncoder.reset();
+        hElevatorMotor.setSelectedSensorPosition(0);
     }
 
 }
