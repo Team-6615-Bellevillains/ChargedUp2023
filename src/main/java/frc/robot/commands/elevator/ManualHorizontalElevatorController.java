@@ -23,7 +23,7 @@ public class ManualHorizontalElevatorController extends CommandBase {
 
     @Override
     public void execute() {
-        double power = powerOutputLimiter.calculate(controllerPowerOutput.get()*12);
+        double power = controllerPowerOutput.get()*12/2;
         SmartDashboard.putNumber("Power to horizontal", power);
         horizontalElevatorSubsystem.setHorizontalElevatorVoltage(power);
     }
