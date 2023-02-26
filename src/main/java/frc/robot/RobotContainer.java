@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToAprilTagCmd;
+import frc.robot.commands.AlignToMidRungCmd;
 import frc.robot.commands.drive.StraightenRobotCmd;
 import frc.robot.commands.drive.SwerveJoystickCmd;
 import frc.robot.subsystems.GrabberSubsystem;
@@ -20,8 +21,8 @@ public class RobotContainer {
 
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   private final LimelightSubsystem limelight = new LimelightSubsystem();
-//  private final GrabberSubsystem grabberSubsystem = new GrabberSubsystem();
-//  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+  // private final GrabberSubsystem grabberSubsystem = new GrabberSubsystem();
+  // private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
 
 
   private final CommandXboxController xboxController = new CommandXboxController(OIConstants.xboxControllerPort);
@@ -43,6 +44,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new AlignToAprilTagCmd(limelight, swerveSubsystem);
+    return new AlignToMidRungCmd(limelight, swerveSubsystem);
   }
 }
