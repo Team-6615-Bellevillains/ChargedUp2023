@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToAprilTagCmd;
+import frc.robot.commands.AlignToAprilTagCubeCmd;
 import frc.robot.commands.AlignToMidRungCmd;
 import frc.robot.commands.drive.StraightenRobotCmd;
 import frc.robot.commands.drive.SwerveJoystickCmd;
@@ -57,6 +58,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new AlignToMidRungCmd(limelight, swerveSubsystem);
+    return new AlignToAprilTagCubeCmd(limelight, swerveSubsystem);
   }
 }
