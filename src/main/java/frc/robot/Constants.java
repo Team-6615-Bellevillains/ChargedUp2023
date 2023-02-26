@@ -27,8 +27,8 @@ public final class Constants {
     }
 
     public static final class DriveConstants {
-        public static final double kTrackWidth = Units.inchesToMeters(24); // Distance between right and left wheels
-        public static final double kWheelBase = Units.inchesToMeters(20); // Distance between front and back wheels
+        public static final double kTrackWidth = 0.662; // Distance between right and left wheels
+        public static final double kWheelBase = 0.504; // Distance between front and back wheels
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
                 new Translation2d(kWheelBase / 2, kTrackWidth / 2),
                 new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
@@ -64,20 +64,18 @@ public final class Constants {
          * kWheelDistanceFromCenter^2 = a^2 + b^2
          * kWheelDistanceFromCenter = sqrt(a^2+b^2)
          */
-        public static final double kWheelDistanceFromCenter = Units
-                .inchesToMeters(Math.sqrt(Math.pow(kTrackWidth / 2, 2) + Math.pow(kWheelBase / 2, 2)));
+        public static final double kWheelDistanceFromCenter = Math.sqrt(Math.pow(kTrackWidth / 2, 2) + Math.pow(kWheelBase / 2, 2));
 
         public static final double kPhysicalMaxSpeedMetersPerSecond = Units.feetToMeters(13.5);
+
         /*
-         * Circumference of the circle created by robot rotation aka the distance
-         * travelled in one rotation / max speed
+         * 2pi radians / (Circumference of the circle created by robot rotation aka the distance travelled in one rotation / max speed)
          */
-        public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * Math.PI * kWheelDistanceFromCenter
-                / kPhysicalMaxSpeedMetersPerSecond;
+        public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * Math.PI / (kWheelDistanceFromCenter / kPhysicalMaxSpeedMetersPerSecond);
 
         public static final double kTeleOpMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 4;
         public static final double kTeleOpMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond
-                / 4;
+                / 35;
         public static final double kTeleOpMaxAccelerationUnitsPerSecond = 3;
         public static final double kTeleOpMaxAngularAccelerationUnitsPerSecond = 3;
 
