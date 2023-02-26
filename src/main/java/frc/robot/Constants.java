@@ -18,17 +18,20 @@ public final class Constants {
         public static final double kSteerGearboxRatio = (71.0 / 1.0);
         public static final double kSteerModuleRatio = (48.0/40.0);
         public static final double kSteerPPR = 7;
+
         public static final double kPTurning = 5;
         public static final double kITurning = 0;
         public static final double kDTurning = 0.0;
+
+        public static final double kSTurning = 2.9466; // TODO: Tune with static test
+        public static final double kVTurning = 0.97146;
+        public static final double kATurning = 1.0961;
+
 
         public static final double kDriveEncoderRot2Meter = kWheelCircumference / kDriveMotorGearRatio;
         public static final double kSteerEncoderRot2Rad = 2 * Math.PI / ((kSteerGearboxRatio/kSteerModuleRatio)*kSteerPPR);
 
         public static final int maximumTotalCounts = 1024;
-        public static final double kSRotation = 2.9466;
-        public static final double kVRotation = 0.97146;
-        public static final double kARotation = 1.0961;
     }
 
     public static final class DriveConstants {
