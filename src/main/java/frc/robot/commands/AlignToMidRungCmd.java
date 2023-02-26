@@ -29,69 +29,59 @@ public class AlignToMidRungCmd extends CommandBase {
   private PIDController xdistanceController;
   private PIDController ydistanceController;
   private double setpoint;
-  private boolean end;
   private PhotonTrackedTarget target;
   private Pose2d currentPosition;
   private double currentYPosition;
+
   public AlignToMidRungCmd(LimelightSubsystem limelightSubsystem, SwerveSubsystem swerveSubsystem) {
-      this.limelightSubsystem = limelightSubsystem;
-      this.swerveSubsystem = swerveSubsystem;
+    this.limelightSubsystem = limelightSubsystem;
+    this.swerveSubsystem = swerveSubsystem;
 
-      yawController = new PIDController(AutoConstants.kPTrackingYaw, 0, 0);
-      xdistanceController = new PIDController(AutoConstants.kPTrackingDrive, 0, 0);
-      ydistanceController = new PIDController(AutoConstants.kPTrackingDriveY, 0, 0);
-      target = limelightSubsystem.getBestTarget();
-      setpoint = 0;
-      currentPosition = swerveSubsystem.getPose();
-      currentYPosition = currentPosition.getY();
+    yawController = new PIDController(AutoConstants.kPTrackingYaw, 0, 0);
+    xdistanceController = new PIDController(AutoConstants.kPTrackingDrive, 0, 0);
+    ydistanceController = new PIDController(AutoConstants.kPTrackingDriveY, 0, 0);
+    target = limelightSubsystem.getBestTarget();
+    setpoint = 0;
+    currentPosition = swerveSubsystem.getPose();
+    currentYPosition = currentPosition.getY();
 
-      
-
-      addRequirements(limelightSubsystem);
-      addRequirements(swerveSubsystem);
-
+    addRequirements(limelightSubsystem, swerveSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() 
-  {
+  public void initialize() {
     if (limelightSubsystem.getBestTarget() != null) {
       Transform3d cameraTransform = target.getBestCameraToTarget();
 
       setpoint = currentYPosition + (LimelightConstants.distanceFromAprilTagToRung - cameraTransform.getY());
-    } 
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() 
-  {
+  public void execute() {
     currentPosition = swerveSubsystem.getPose();
     currentYPosition = currentPosition.getY();
 
-      
-     
-      double rotationOutput = yawController.calculate(limelightSubsystem.getBestTarget().getYaw(), 0);
-      double ydistanceOutput = ydistanceController.calculate(currentYPosition ,setpoint);
+    double rotationOutput = yawController.calculate(limelightSubsystem.getBestTarget().getYaw(), 0);
+    double ydistanceOutput = ydistanceController.calculate(currentYPosition, setpoint);
 
-      // Convert P[ID] outputs to ChassisSpeed values, clamping the distance P[ID] to
-      // a max speed
-      ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0,
-              -MathUtil.clamp(ydistanceOutput, -AutoConstants.kAutoMaxSpeedMetersPerSecond,
-                      AutoConstants.kAutoMaxSpeedMetersPerSecond),        
-              rotationOutput);
+    // Convert P[ID] outputs to ChassisSpeed values, clamping the distance P[ID] to
+    // a max speed
+    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0,
+        -MathUtil.clamp(ydistanceOutput, -AutoConstants.kAutoMaxSpeedMetersPerSecond,
+            AutoConstants.kAutoMaxSpeedMetersPerSecond),
+        rotationOutput);
 
-      // Convert ChassisSpeeds to SwerveModuleStates and send them off through the
-      // SwerveSubsystem
-      swerveSubsystem.setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds));
-  } 
-  
+    // Convert ChassisSpeeds to SwerveModuleStates and send them off through the
+    // SwerveSubsystem
+    swerveSubsystem.setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds));
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) 
-  {
+  public void end(boolean interrupted) {
     swerveSubsystem.stopModules();
   }
 
