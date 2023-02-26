@@ -11,10 +11,13 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToAprilTagCmd;
 import frc.robot.commands.drive.StraightenRobotCmd;
 import frc.robot.commands.drive.SwerveJoystickCmd;
-import frc.robot.subsystems.GrabberSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.LimelightSubsystem;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.commands.elevator.ManualHorizontalElevatorController;
+import frc.robot.commands.elevator.ManualVerticalElevatorController;
+import frc.robot.commands.grabber.ManualGrabberFlipInCmd;
+import frc.robot.commands.grabber.ManualGrabberFlipOutCmd;
+import frc.robot.commands.grabber.ShootPieceCmd;
+import frc.robot.commands.grabber.SuckObjectCmd;
+import frc.robot.subsystems.*;
 
 public class RobotContainer {
 
@@ -25,22 +28,31 @@ public class RobotContainer {
   private final VerticalElevatorSubsystem verticalElevatorSubsystem = new VerticalElevatorSubsystem();
 
 
-  private final CommandXboxController xboxController = new CommandXboxController(OIConstants.xboxControllerPort);
+  private final CommandXboxController driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
+  private final CommandXboxController operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
 
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
         swerveSubsystem,
-        () -> -xboxController.getLeftY(),
-        () -> -xboxController.getLeftX(),
-        () -> -xboxController.getRightX(),
-        () -> xboxController.leftBumper().getAsBoolean()));
+        () -> -driverController.getLeftY(),
+        () -> -driverController.getLeftX(),
+        () -> -driverController.getRightX(),
+        () -> driverController.leftBumper().getAsBoolean()));
+
+    horizontalElevatorSubsystem.setDefaultCommand(new ManualHorizontalElevatorController(horizontalElevatorSubsystem, () -> -operatorController.getLeftY()));
+    verticalElevatorSubsystem.setDefaultCommand(new ManualVerticalElevatorController(verticalElevatorSubsystem, () -> -operatorController.getRightY()));
 
     configureBindings();
   }
 
   private void configureBindings() {
-    xboxController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
-    xboxController.rightBumper().whileTrue(new StraightenRobotCmd(swerveSubsystem));
+    driverController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
+    driverController.rightBumper().whileTrue(new StraightenRobotCmd(swerveSubsystem));
+
+    operatorController.a().whileTrue(new ManualGrabberFlipOutCmd(grabberSubsystem));
+    operatorController.b().whileTrue(new ManualGrabberFlipInCmd(grabberSubsystem));
+    operatorController.leftBumper().whileTrue(new SuckObjectCmd(grabberSubsystem));
+    operatorController.rightBumper().whileTrue(new ShootPieceCmd(grabberSubsystem));
   }
 
   public Command getAutonomousCommand() {

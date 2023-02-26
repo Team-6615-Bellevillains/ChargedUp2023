@@ -118,9 +118,9 @@ public final class Constants {
         public static final double kIVerticalElevator = 0;
         public static final double kDVerticalElevator = 0;
 
-        public static final double kSVerticalElevator = 0;
-        public static final double kGVerticalElevator = 0;
-        public static final double kVVerticalElevator = 0;
+        public static final double kSVerticalElevator = 3.750000;
+        public static final double kGVerticalElevator = 0.032000;
+        public static final double kVVerticalElevator = 2;
         public static final double kAVerticalElevator = 0;
 
         // Begin Horizontal
