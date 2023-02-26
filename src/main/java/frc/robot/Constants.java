@@ -136,7 +136,7 @@ public final class Constants {
         public static final double kIVerticalElevator = 0;
         public static final double kDVerticalElevator = 0;
 
-        public static final double kGVerticalElevator = 2.50000;
+        public static final double kGVerticalElevator = 2.50000; // TODO: Maximize this (instead of current minimization) in order to get down speed consistent with up
         public static final double kSVerticalElevator = 0.032000;
         public static final double kVVerticalElevator = 4;
         public static final double kAVerticalElevator = 0;
