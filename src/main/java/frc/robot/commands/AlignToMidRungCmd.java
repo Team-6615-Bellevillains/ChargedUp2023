@@ -59,7 +59,7 @@ public class AlignToMidRungCmd extends CommandBase {
     if (limelightSubsystem.getBestTarget() != null) {
       Transform3d cameraTransform = target.getBestCameraToTarget();
 
-      setpoint = currentYPosition + (-(LimelightConstants.distanceFromAprilTagToRung) + cameraTransform.getY()) + (0.331 - Units.inchesToMeters(17));
+      setpoint = currentYPosition + (-(LimelightConstants.distanceFromAprilTagToRung) + cameraTransform.getY()) + (0.331 - Units.inchesToMeters(17)); //0.331 is the camera offset and unit is offset
       xsetpoint = currentXPosition + (cameraTransform.getX() - 1);
     }
   }
