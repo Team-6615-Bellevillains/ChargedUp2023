@@ -12,25 +12,25 @@ import frc.robot.commands.elevator.VerticalElevatorMidCmd;
 import frc.robot.commands.grabber.ClampGrabberCmd;
 import frc.robot.commands.grabber.FlipGrabberInCmd;
 import frc.robot.commands.grabber.OpenGrabberCmd;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.HorizontalElevatorSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class ScoreHighCmd extends CommandBase {
 
-    private ElevatorSubsystem elevatorSubsystem;
+    private HorizontalElevatorSubsystem horizontalElevatorSubsystem;
     private GrabberSubsystem grabberSubsystem;
     private SwerveSubsystem swerveSubsystem;
 
-    private VerticalElevatorMidCmd verticalElevatorMidCmd = new VerticalElevatorMidCmd(elevatorSubsystem);
-    private HorizontalElevatorOutCmd horizontalElevatorOutCmd = new HorizontalElevatorOutCmd(elevatorSubsystem);
+    private VerticalElevatorMidCmd verticalElevatorMidCmd = new VerticalElevatorMidCmd(horizontalElevatorSubsystem);
+    private HorizontalElevatorOutCmd horizontalElevatorOutCmd = new HorizontalElevatorOutCmd(horizontalElevatorSubsystem);
 
     private OpenGrabberCmd openGrabberCmd = new OpenGrabberCmd(grabberSubsystem);
     private ClampGrabberCmd clampGrabberCmd = new ClampGrabberCmd(grabberSubsystem);
     private FlipGrabberInCmd flipGrabberInCmd = new FlipGrabberInCmd(grabberSubsystem);
 
-    private HorizontalElevatorInCmd horizontalElevatorInCmd = new HorizontalElevatorInCmd(elevatorSubsystem);
-    private VerticalElevatorLowCmd verticalElevatorLowCmd = new VerticalElevatorLowCmd(elevatorSubsystem);
+    private HorizontalElevatorInCmd horizontalElevatorInCmd = new HorizontalElevatorInCmd(horizontalElevatorSubsystem);
+    private VerticalElevatorLowCmd verticalElevatorLowCmd = new VerticalElevatorLowCmd(horizontalElevatorSubsystem);
 
     // TODO: Find Distances
     private MoveDistanceCmd moveDistanceCmd = new MoveDistanceCmd(swerveSubsystem, .5, 0);
@@ -38,13 +38,13 @@ public class ScoreHighCmd extends CommandBase {
     private Command routine;
 
     public ScoreHighCmd(
-            ElevatorSubsystem elevatorSubsystem, GrabberSubsystem grabberSubsystem,
+            HorizontalElevatorSubsystem horizontalElevatorSubsystem, GrabberSubsystem grabberSubsystem,
             SwerveSubsystem swerveSubsystem) {
-        this.elevatorSubsystem = elevatorSubsystem;
+        this.horizontalElevatorSubsystem = horizontalElevatorSubsystem;
         this.grabberSubsystem = grabberSubsystem;
         this.swerveSubsystem = swerveSubsystem;
 
-        addRequirements(elevatorSubsystem, grabberSubsystem, swerveSubsystem);
+        addRequirements(horizontalElevatorSubsystem, grabberSubsystem, swerveSubsystem);
     }
 
     @Override

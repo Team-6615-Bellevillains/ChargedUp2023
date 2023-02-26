@@ -11,31 +11,31 @@ import frc.robot.commands.elevator.VerticalElevatorMidCmd;
 import frc.robot.commands.grabber.ClampGrabberCmd;
 import frc.robot.commands.grabber.FlipGrabberInCmd;
 import frc.robot.commands.grabber.OpenGrabberCmd;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.HorizontalElevatorSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
 
 public class ScoreMidCmd extends CommandBase {
 
-    private ElevatorSubsystem elevatorSubsystem;
+    private HorizontalElevatorSubsystem horizontalElevatorSubsystem;
     private GrabberSubsystem grabberSubsystem;
 
-    private VerticalElevatorMidCmd verticalElevatorMidCmd = new VerticalElevatorMidCmd(elevatorSubsystem);
-    private HorizontalElevatorOutCmd horizontalElevatorOutCmd = new HorizontalElevatorOutCmd(elevatorSubsystem);
+    private VerticalElevatorMidCmd verticalElevatorMidCmd = new VerticalElevatorMidCmd(horizontalElevatorSubsystem);
+    private HorizontalElevatorOutCmd horizontalElevatorOutCmd = new HorizontalElevatorOutCmd(horizontalElevatorSubsystem);
 
     private OpenGrabberCmd openGrabberCmd = new OpenGrabberCmd(grabberSubsystem);
     private ClampGrabberCmd clampGrabberCmd = new ClampGrabberCmd(grabberSubsystem);
     private FlipGrabberInCmd flipGrabberInCmd = new FlipGrabberInCmd(grabberSubsystem);
 
-    private HorizontalElevatorInCmd horizontalElevatorInCmd = new HorizontalElevatorInCmd(elevatorSubsystem);
-    private VerticalElevatorLowCmd verticalElevatorLowCmd = new VerticalElevatorLowCmd(elevatorSubsystem);
+    private HorizontalElevatorInCmd horizontalElevatorInCmd = new HorizontalElevatorInCmd(horizontalElevatorSubsystem);
+    private VerticalElevatorLowCmd verticalElevatorLowCmd = new VerticalElevatorLowCmd(horizontalElevatorSubsystem);
 
     private Command routine;
 
-    public ScoreMidCmd(ElevatorSubsystem elevatorSubsystem, GrabberSubsystem grabberSubsystem) {
-        this.elevatorSubsystem = elevatorSubsystem;
+    public ScoreMidCmd(HorizontalElevatorSubsystem horizontalElevatorSubsystem, GrabberSubsystem grabberSubsystem) {
+        this.horizontalElevatorSubsystem = horizontalElevatorSubsystem;
         this.grabberSubsystem = grabberSubsystem;
 
-        addRequirements(elevatorSubsystem, grabberSubsystem);
+        addRequirements(horizontalElevatorSubsystem, grabberSubsystem);
     }
 
     @Override

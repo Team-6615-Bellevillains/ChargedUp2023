@@ -15,7 +15,7 @@ public class ShootPieceCmd extends CommandBase {
 
     @Override
     public void execute() {
-        grabberSubsystem.setRollerSpeeds(.5);
+        grabberSubsystem.setRollerSpeeds(.2);
     }
 
     @Override

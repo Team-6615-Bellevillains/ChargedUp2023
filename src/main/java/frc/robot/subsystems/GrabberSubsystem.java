@@ -29,11 +29,11 @@ public class GrabberSubsystem extends SubsystemBase {
   public GrabberSubsystem() {
     // Find out ports later!!
     // Compressor and Solenoids
-    compressor = new Compressor(PneumaticsModuleType.CTREPCM);
-    leftSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kLeftSolenoidForwardChannel,
-        GrabberConstants.kLeftSolenoidReverseChannel);
-    rightSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kRightSolenoidForwardChannel,
-        GrabberConstants.kRightSolenoidReverseChannel);
+//    compressor = new Compressor(PneumaticsModuleType.CTREPCM);
+//    leftSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kLeftSolenoidForwardChannel,
+//        GrabberConstants.kLeftSolenoidReverseChannel);
+//    rightSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kRightSolenoidForwardChannel,
+//        GrabberConstants.kRightSolenoidReverseChannel);
 
     // Roller Motors
     leftMotorRoller = new CANSparkMax(GrabberConstants.kLeftRollerMotorPort, MotorType.kBrushless);
@@ -56,7 +56,7 @@ public class GrabberSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Compressor Pressure", compressor.getCurrent());
+//    SmartDashboard.putNumber("Compressor Pressure", compressor.getCurrent());
     SmartDashboard.putNumber("Flip Encoder Position", getFlipEncoderPosition());
   }
 
@@ -65,25 +65,25 @@ public class GrabberSubsystem extends SubsystemBase {
     rightMotorRoller.set(speed);
   }
 
-  public void setCompressorState(boolean on) {
-    if (on) {
-      compressor.enableDigital();
-    } else {
-      compressor.disable();
-    }
-  }
+//  public void setCompressorState(boolean on) {
+//    if (on) {
+//      compressor.enableDigital();
+//    } else {
+//      compressor.disable();
+//    }
+//  }
 
-  public void setSolenoidStates(DoubleSolenoid.Value state) {
-    leftSolenoid.set(state);
-    rightSolenoid.set(state);
-  }
+//  public void setSolenoidStates(DoubleSolenoid.Value state) {
+//    leftSolenoid.set(state);
+//    rightSolenoid.set(state);
+//  }
 
   public void setFlipMotorSpeed(double speed) {
     flipMotor.set(speed);
   }
 
   public double getFlipEncoderPosition() {
-    return flipMotor.getSelectedSensorPosition();
+    return flipMotor.getSelectedSensorPosition() * GrabberConstants.flipRotationsToRadians/GrabberConstants.flipPulsesPerRevolution;
   }
 
   public void resetFlipEncoder() {

@@ -27,7 +27,7 @@ public class SuckObjectCmd extends CommandBase {
 
     @Override
     public void execute() {
-        grabberSubsystem.setRollerSpeeds(-0.5);
+        grabberSubsystem.setRollerSpeeds(-0.2);
     }
 
     @Override
