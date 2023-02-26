@@ -15,15 +15,20 @@ public final class Constants {
     public static final class SwerveModuleConstants {
         public static final double kWheelCircumference = Units.inchesToMeters(4) * Math.PI;
         public static final double kDriveMotorGearRatio = 6.67 / 1;
-        public static final double kSteerMotorGearRatio = 48.0 / 40.0;
-        public static final double kPTurning = 1.75;
+        public static final double kSteerGearboxRatio = (71.0 / 1.0);
+        public static final double kSteerModuleRatio = (48.0/40.0);
+        public static final double kSteerPPR = 7;
+        public static final double kPTurning = 5;
         public static final double kITurning = 0;
         public static final double kDTurning = 0.0;
 
         public static final double kDriveEncoderRot2Meter = kWheelCircumference / kDriveMotorGearRatio;
-        public static final double kSteerEncoderRot2Rad = 2 * Math.PI / kSteerMotorGearRatio;
+        public static final double kSteerEncoderRot2Rad = 2 * Math.PI / ((kSteerGearboxRatio/kSteerModuleRatio)*kSteerPPR);
 
         public static final int maximumTotalCounts = 1024;
+        public static final double kSRotation = 2.9466;
+        public static final double kVRotation = 0.97146;
+        public static final double kARotation = 1.0961;
     }
 
     public static final class DriveConstants {
@@ -44,6 +49,16 @@ public final class Constants {
         public static final int kFrontRightSteerMotorPort = 6;
         public static final int kBackLeftSteerMotorPort = 1;
         public static final int kBackRightSteerMotorPort = 5;
+
+        public static final int kFrontLeftEncoderAPort = 4;
+        public static final int kFrontLeftEncoderBPort = 5;
+        public static final int kFrontRightEncoderAPort = 6;
+        public static final int kFrontRightEncoderBPort = 7;
+        public static final int kBackLeftEncoderAPort = 2;
+        public static final int kBackLeftEncoderBPort = 3;
+        public static final int kBackRightEncoderAPort = 8;
+        public static final int kBackRightEncoderBPort = 9;
+
 
         public static final boolean kFrontLeftDriveMotorReversed = true;
         public static final boolean kFrontRightDriveMotorReversed = true;
