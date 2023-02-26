@@ -1,6 +1,9 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
@@ -12,15 +15,20 @@ public final class Constants {
     public static final class SwerveModuleConstants {
         public static final double kWheelCircumference = Units.inchesToMeters(4) * Math.PI;
         public static final double kDriveMotorGearRatio = 6.67 / 1;
-        public static final double kSteerMotorGearRatio = 48.0 / 40.0;
-        public static final double kPTurning = 1.75;
+        public static final double kSteerGearboxRatio = (71.0 / 1.0);
+        public static final double kSteerModuleRatio = (48.0/40.0);
+        public static final double kSteerPPR = 7;
+        public static final double kPTurning = 5;
         public static final double kITurning = 0;
         public static final double kDTurning = 0.0;
 
         public static final double kDriveEncoderRot2Meter = kWheelCircumference / kDriveMotorGearRatio;
-        public static final double kSteerEncoderRot2Rad = 2 * Math.PI / kSteerMotorGearRatio;
+        public static final double kSteerEncoderRot2Rad = 2 * Math.PI / ((kSteerGearboxRatio/kSteerModuleRatio)*kSteerPPR);
 
         public static final int maximumTotalCounts = 1024;
+        public static final double kSRotation = 2.9466;
+        public static final double kVRotation = 0.97146;
+        public static final double kARotation = 1.0961;
     }
 
     public static final class DriveConstants {
@@ -41,6 +49,16 @@ public final class Constants {
         public static final int kFrontRightSteerMotorPort = 6;
         public static final int kBackLeftSteerMotorPort = 1;
         public static final int kBackRightSteerMotorPort = 5;
+
+        public static final int kFrontLeftEncoderAPort = 4;
+        public static final int kFrontLeftEncoderBPort = 5;
+        public static final int kFrontRightEncoderAPort = 6;
+        public static final int kFrontRightEncoderBPort = 7;
+        public static final int kBackLeftEncoderAPort = 2;
+        public static final int kBackLeftEncoderBPort = 3;
+        public static final int kBackRightEncoderAPort = 8;
+        public static final int kBackRightEncoderBPort = 9;
+
 
         public static final boolean kFrontLeftDriveMotorReversed = true;
         public static final boolean kFrontRightDriveMotorReversed = true;
@@ -181,6 +199,19 @@ public final class Constants {
 
     public static final class LimelightConstants {
         public static final String kCameraName = "asdoija";
+        public static final double cameraHeight = 0.858;
+        public static final double midHeight = 0;
+        public static final double topHeight = 0;
+        public static final double cameraPitchRadians =  Units.degreesToRadians(0);
+        public static final double midGoalRange = 0;
+        public static final double distanceFromAprilTagToRung = Units.inchesToMeters(21.25);
+        public static Transform3d robotToCam = new Transform3d(
+            new Translation3d(-0.047, 0.331, 0.858),
+            new Rotation3d(
+                    0, 0,
+                    0)); // Cam mounted facing forward, -0.047 meters backwards of center, 0.858 meter up
+// from center.
+
     }
 
     public static final class AutoConstants {
@@ -188,8 +219,9 @@ public final class Constants {
         public static final double kAutoMaxAccelerationMetersPerSecond = 0.5;
 
         public static final double kPTrackingYaw = .05;
-        public static final double kPTrackingDrive = .7;
+        public static final double kPTrackingDrive = .4;
         public static final double kTrackingDistance = .45;
+        public static final double kPTrackingDriveY = .8;
     }
 
     public static final class OIConstants {
