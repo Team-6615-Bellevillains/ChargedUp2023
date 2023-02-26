@@ -6,7 +6,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,6 +13,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.SwerveModuleConstants;
 
@@ -24,14 +25,17 @@ public class SwerveModule {
 
     private final RelativeEncoder driveEncoder;
 
+    private final Encoder steerEncoder;
+
     private final ProfiledPIDController steerPIDController;
     private final SimpleMotorFeedforward steerFeedforward;
 
     private final double absoluteEncoderOffsetCounts;
 
     private final int idx;
+    private final double trueOffsetForRotation;
 
-    public SwerveModule(int idx, int driverMotorID, int steerMotorID, boolean isDriveMotorReversed,
+    public SwerveModule(int idx, int driverMotorID, int steerMotorID, int steerEncoderAPort, int steerEncoderBPort, boolean isDriveMotorReversed,
             double absoluteEncoderOffsetCounts) {
 
         this.idx = idx;
@@ -50,14 +54,19 @@ public class SwerveModule {
         this.driveEncoder.setPositionConversionFactor(SwerveModuleConstants.kDriveEncoderRot2Meter);
         this.driveEncoder.setVelocityConversionFactor(SwerveModuleConstants.kDriveEncoderRot2Meter / 60);
 
+        this.steerEncoder = new Encoder(steerEncoderAPort, steerEncoderBPort);
+        this.steerEncoder.setDistancePerPulse(SwerveModuleConstants.kSteerEncoderRot2Rad);
+        this.steerEncoder.reset();
+        this.trueOffsetForRotation = getRotationFromAbsolute().getRadians();
+
         this.driveMotor.setInverted(isDriveMotorReversed);
 
         this.steerPIDController = new ProfiledPIDController(SwerveModuleConstants.kPTurning,
                 SwerveModuleConstants.kITurning,
-                SwerveModuleConstants.kDTurning, new TrapezoidProfile.Constraints(80 * 2 * Math.PI/60, 80 * 2 * Math.PI/60));
+                SwerveModuleConstants.kDTurning, new TrapezoidProfile.Constraints(4 * 2 * Math.PI, 16 * 2 * Math.PI));
         this.steerPIDController.enableContinuousInput(0, 2 * Math.PI);
 
-        this.steerFeedforward = new SimpleMotorFeedforward(DriveConstants.kSRotation, DriveConstants.kVRotation, DriveConstants.kARotation);
+        this.steerFeedforward = new SimpleMotorFeedforward(SwerveModuleConstants.kSRotation, SwerveModuleConstants.kVRotation, SwerveModuleConstants.kARotation);
 
         this.driveEncoder.setPosition(0);
     }
@@ -65,7 +74,7 @@ public class SwerveModule {
     public SwerveModulePosition getPosition() {
         return new SwerveModulePosition(
                 getDistance(),
-                getModuleRotation());
+                Rotation2d.fromRadians(getSwerveEncoder()));
     }
 
     public double getDistance() {
@@ -76,7 +85,7 @@ public class SwerveModule {
         return String.format("[%s] %s", idx, input);
     }
 
-    public Rotation2d getModuleRotation() {
+    public Rotation2d getRotationFromAbsolute() {
         /*
          * Magnets that are read on absolute encoders are read as 0 on a random M_point
          * when assembled. We want this to be at the zero point of the wheels
@@ -101,18 +110,30 @@ public class SwerveModule {
         return Rotation2d.fromRadians(radians);
     }
 
+    public double getSwerveEncoder() {
+        double encoderRadians = Math.IEEEremainder(steerEncoder.getDistance() + trueOffsetForRotation, 2 * Math.PI);
+        if (encoderRadians < 0) {
+            encoderRadians += 2 * Math.PI;
+        }
+        return encoderRadians;
+    }
+
     public void setDesiredState(SwerveModuleState state) {
         if (Math.abs(state.speedMetersPerSecond) < 0.001) {
             stop();
             return;
         }
 
-        state = SwerveModuleState.optimize(state, getModuleRotation());
+        state = SwerveModuleState.optimize(state, Rotation2d.fromRadians(getSwerveEncoder()));
         driveMotor.set(state.speedMetersPerSecond /
                 DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        double steerPIDOut = steerPIDController.calculate(getModuleRotation().getRadians(),
+        SmartDashboard.putNumber(appendIdx("State"), getSwerveEncoder());
+        SmartDashboard.putNumber(appendIdx("Setpoint"), state.angle.getRadians());
+        double steerPIDOut = steerPIDController.calculate(getSwerveEncoder(),
                 state.angle.getRadians());
+        SmartDashboard.putNumber(appendIdx("Steer PID Out"), steerPIDOut);
         double feedforward = steerFeedforward.calculate(steerPIDController.getSetpoint().velocity);
+        SmartDashboard.putNumber(appendIdx("Steer Feedforward"), steerPIDOut);
         steerMotor.setVoltage(steerPIDOut + feedforward);
     }
 

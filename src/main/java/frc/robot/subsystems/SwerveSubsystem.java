@@ -20,6 +20,8 @@ public class SwerveSubsystem extends SubsystemBase {
             0,
             DriveConstants.kFrontLeftDriveMotorPort,
             DriveConstants.kFrontLeftSteerMotorPort,
+            DriveConstants.kFrontLeftEncoderAPort,
+            DriveConstants.kFrontLeftEncoderBPort,
             DriveConstants.kFrontLeftDriveMotorReversed,
             DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetCounts);
 
@@ -27,6 +29,8 @@ public class SwerveSubsystem extends SubsystemBase {
             1,
             DriveConstants.kFrontRightDriveMotorPort,
             DriveConstants.kFrontRightSteerMotorPort,
+            DriveConstants.kFrontRightEncoderAPort,
+            DriveConstants.kFrontRightEncoderBPort,
             DriveConstants.kFrontRightDriveMotorReversed,
             DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetCounts);
 
@@ -34,6 +38,8 @@ public class SwerveSubsystem extends SubsystemBase {
             2,
             DriveConstants.kBackLeftDriveMotorPort,
             DriveConstants.kBackLeftSteerMotorPort,
+            DriveConstants.kBackLeftEncoderAPort,
+            DriveConstants.kBackLeftEncoderBPort,
             DriveConstants.kBackLeftDriveMotorReversed,
             DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetCounts);
 
@@ -41,6 +47,8 @@ public class SwerveSubsystem extends SubsystemBase {
             3,
             DriveConstants.kBackRightDriveMotorPort,
             DriveConstants.kBackRightSteerMotorPort,
+            DriveConstants.kBackRightEncoderAPort,
+            DriveConstants.kBackRightEncoderBPort,
             DriveConstants.kBackRightDriveMotorReversed,
             DriveConstants.kBackRightDriveAbsoluteEncoderOffsetCounts);
 
