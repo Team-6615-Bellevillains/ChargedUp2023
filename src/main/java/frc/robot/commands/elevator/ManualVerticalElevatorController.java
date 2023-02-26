@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.HorizontalElevatorSubsystem;
 import frc.robot.subsystems.VerticalElevatorSubsystem;
-import frc.robot.utils.CustomElevatorFeedforward;
 
 import java.util.function.Supplier;
 
