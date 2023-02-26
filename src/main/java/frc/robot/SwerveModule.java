@@ -7,10 +7,13 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.SwerveModuleConstants;
 
@@ -21,7 +24,8 @@ public class SwerveModule {
 
     private final RelativeEncoder driveEncoder;
 
-    private final PIDController steerPIDController;
+    private final ProfiledPIDController steerPIDController;
+    private final SimpleMotorFeedforward steerFeedforward;
 
     private final double absoluteEncoderOffsetCounts;
 
@@ -48,10 +52,12 @@ public class SwerveModule {
 
         this.driveMotor.setInverted(isDriveMotorReversed);
 
-        this.steerPIDController = new PIDController(SwerveModuleConstants.kPTurning,
+        this.steerPIDController = new ProfiledPIDController(SwerveModuleConstants.kPTurning,
                 SwerveModuleConstants.kITurning,
-                SwerveModuleConstants.kDTurning);
+                SwerveModuleConstants.kDTurning, new TrapezoidProfile.Constraints(80 * 2 * Math.PI/60, 80 * 2 * Math.PI/60));
         this.steerPIDController.enableContinuousInput(0, 2 * Math.PI);
+
+        this.steerFeedforward = new SimpleMotorFeedforward(DriveConstants.kSRotation, DriveConstants.kVRotation, DriveConstants.kARotation);
 
         this.driveEncoder.setPosition(0);
     }
@@ -104,9 +110,10 @@ public class SwerveModule {
         state = SwerveModuleState.optimize(state, getModuleRotation());
         driveMotor.set(state.speedMetersPerSecond /
                 DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        double steerSpeedPercentage = steerPIDController.calculate(getModuleRotation().getRadians(),
+        double steerPIDOut = steerPIDController.calculate(getModuleRotation().getRadians(),
                 state.angle.getRadians());
-        steerMotor.set(steerSpeedPercentage);
+        double feedforward = steerFeedforward.calculate(steerPIDController.getSetpoint().velocity);
+        steerMotor.setVoltage(steerPIDOut + feedforward);
     }
 
     public void stop() {

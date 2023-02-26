@@ -13,7 +13,7 @@ public final class Constants {
         public static final double kWheelCircumference = Units.inchesToMeters(4) * Math.PI;
         public static final double kDriveMotorGearRatio = 6.67 / 1;
         public static final double kSteerMotorGearRatio = 48.0 / 40.0;
-        public static final double kPTurning = 1.75;
+        public static final double kPTurning = 0.01;
         public static final double kITurning = 0;
         public static final double kDTurning = 0.0;
 
@@ -80,6 +80,10 @@ public final class Constants {
         public static final double kPRotation = .25;
         public static final double kIRotation = 0;
         public static final double kDRotation = 0;
+
+        public static final double kSRotation = 2.3893;
+        public static final double kVRotation = 1.0307;
+        public static final double kARotation = 0.1525;
 
         // TODO: Tune
         public static final double kPMoveXDistance = 0;
