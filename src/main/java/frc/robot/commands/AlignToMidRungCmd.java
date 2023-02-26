@@ -54,7 +54,7 @@ public class AlignToMidRungCmd extends CommandBase {
     if (limelightSubsystem.getBestTarget() != null) {
       Transform3d cameraTransform = target.getBestCameraToTarget();
 
-      setpoint = currentYPosition + (LimelightConstants.distanceFromAprilTagToRung - cameraTransform.getY());
+      setpoint = currentYPosition + (LimelightConstants.distanceFromAprilTagToRung + cameraTransform.getY());
     }
   }
 
