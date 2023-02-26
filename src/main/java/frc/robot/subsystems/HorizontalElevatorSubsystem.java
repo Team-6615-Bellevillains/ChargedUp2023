@@ -17,7 +17,7 @@ public class HorizontalElevatorSubsystem extends SubsystemBase {
     }
 
     public void setHorizontalElevatorVoltage(double voltage) {
-        hElevatorMotor.set(voltage);
+        hElevatorMotor.setVoltage(voltage);
     }
 
     public double getHorizontalElevatorPosition() {
