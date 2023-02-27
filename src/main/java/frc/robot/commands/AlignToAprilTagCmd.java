@@ -26,8 +26,8 @@ public class AlignToAprilTagCmd extends CommandBase {
         this.limelightSubsystem = limelightSubsystem;
         this.swerveSubsystem = swerveSubsystem;
 
-        yawController = new PIDController(AutoConstants.kPTrackingYaw, 0, 0);
-        distanceController = new PIDController(AutoConstants.kPTrackingDrive, 0, 0);
+        yawController = new PIDController(AutoConstants.kPHeadingTrackingDrive, 0, 0);
+        distanceController = new PIDController(AutoConstants.kPXTrackingDrive, 0, 0);
 
         addRequirements(limelightSubsystem);
         addRequirements(swerveSubsystem);

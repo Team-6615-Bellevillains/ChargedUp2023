@@ -28,7 +28,7 @@ public class MoveDistanceCmd extends CommandBase {
                 DriveConstants.kDMoveXDistance,
                 new TrapezoidProfile.Constraints(
                         AutoConstants.kAutoMaxSpeedMetersPerSecond,
-                        AutoConstants.kAutoMaxAccelerationMetersPerSecond));
+                        AutoConstants.kAutoMaxAccelerationMetersPerSecondSquared));
 
         this.yProfiledPIDController = new ProfiledPIDController(
                 DriveConstants.kPMoveYDistance,
@@ -36,7 +36,7 @@ public class MoveDistanceCmd extends CommandBase {
                 DriveConstants.kDMoveYDistance,
                 new TrapezoidProfile.Constraints(
                         AutoConstants.kAutoMaxSpeedMetersPerSecond,
-                        AutoConstants.kAutoMaxAccelerationMetersPerSecond));
+                        AutoConstants.kAutoMaxAccelerationMetersPerSecondSquared));
 
         addRequirements(swerveSubsystem);
     }
