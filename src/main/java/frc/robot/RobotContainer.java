@@ -16,6 +16,7 @@ import frc.robot.commands.AlignToAprilTagCubeCmd;
 import frc.robot.commands.AlignToMidRungCmd;
 import frc.robot.commands.drive.StraightenRobotCmd;
 import frc.robot.commands.drive.SwerveJoystickCmd;
+import frc.robot.commands.drive.ZeroSwerveWheelsCmd;
 import frc.robot.commands.elevator.*;
 import frc.robot.commands.grabber.ManualGrabberFlipInCmd;
 import frc.robot.commands.grabber.ManualGrabberFlipOutCmd;
@@ -52,6 +53,7 @@ public class RobotContainer {
   private void configureBindings() {
     driverController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
     driverController.rightBumper().whileTrue(new StraightenRobotCmd(swerveSubsystem));
+    driverController.x().whileTrue(new ZeroSwerveWheelsCmd(swerveSubsystem));
 
 
     operatorController.leftBumper().whileTrue(new SuckObjectCmd(grabberSubsystem));

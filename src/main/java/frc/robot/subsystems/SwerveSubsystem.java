@@ -108,16 +108,16 @@ public class SwerveSubsystem extends SubsystemBase {
         backRight.stop();
     }
 
-    public void setModuleStates(SwerveModuleState[] desiredStates) {
+    public void setModuleStates(SwerveModuleState[] desiredStates, boolean ignoreLittle) {
         // If some wheels are set to a speed over their max speed, they will cap out at
         // their max speed.
         // This messes up the ratio of the wheel speeds to each other.
         // This code will scale down the speeds so they are all within the max speed.
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
 
-        frontLeft.setDesiredState(desiredStates[0]);
-        frontRight.setDesiredState(desiredStates[1]);
-        backLeft.setDesiredState(desiredStates[2]);
-        backRight.setDesiredState(desiredStates[3]);
+        frontLeft.setDesiredState(desiredStates[0], ignoreLittle);
+        frontRight.setDesiredState(desiredStates[1], ignoreLittle);
+        backLeft.setDesiredState(desiredStates[2], ignoreLittle);
+        backRight.setDesiredState(desiredStates[3], ignoreLittle);
     }
 }

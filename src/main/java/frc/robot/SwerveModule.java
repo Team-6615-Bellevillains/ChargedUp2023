@@ -108,8 +108,8 @@ public class SwerveModule {
         return Rotation2d.fromRadians(encoderRadians);
     }
 
-    public void setDesiredState(SwerveModuleState state) {
-        if (Math.abs(state.speedMetersPerSecond) < 0.001) {
+    public void setDesiredState(SwerveModuleState state, boolean ignoreLittle) {
+        if (ignoreLittle && Math.abs(state.speedMetersPerSecond) < 0.001) {
             stop();
             return;
         }
@@ -126,7 +126,7 @@ public class SwerveModule {
         double feedforward = steerFeedforward.calculate(steerPIDController.getSetpoint().velocity);
         SmartDashboard.putNumber(appendIdx("Steer Feedforward"), steerPIDOut);
 
-        driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+//        driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         steerMotor.setVoltage(steerPIDOut + feedforward);
     }
 

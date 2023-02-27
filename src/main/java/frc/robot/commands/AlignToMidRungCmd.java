@@ -84,7 +84,7 @@ public class AlignToMidRungCmd extends CommandBase {
 
     // Convert ChassisSpeeds to SwerveModuleStates and send them off through the
     // SwerveSubsystem
-    swerveSubsystem.setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds));
+    swerveSubsystem.setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds), true);
   }
 
   // Called once the command ends or is interrupted.
