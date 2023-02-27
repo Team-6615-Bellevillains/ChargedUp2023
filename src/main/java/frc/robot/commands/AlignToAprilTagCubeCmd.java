@@ -15,6 +15,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class AlignToAprilTagCubeCmd extends CommandBase {
   /** Creates a new AlignToMidRungCmd. */
@@ -45,8 +46,10 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
     double currentYPosition = currentPosition.getY();
     double currentXPosition = currentPosition.getX();
 
-    if (limelightSubsystem.getBestTarget() != null) {
-      Transform3d cameraTransform = limelightSubsystem.getBestTarget().getBestCameraToTarget();
+    PhotonTrackedTarget bestTarget = limelightSubsystem.getBestTarget();
+
+    if (bestTarget != null) {
+      Transform3d cameraTransform = bestTarget.getBestCameraToTarget();
 
       headingController.setGoal(0);
       yDistanceController.setGoal(currentYPosition + cameraTransform.getY() + 0.331);
