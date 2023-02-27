@@ -8,9 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.AlignToAprilTagCmd;
 import frc.robot.commands.AlignToAprilTagCubeCmd;
-import frc.robot.commands.AlignToMidRungCmd;
 import frc.robot.commands.drive.StraightenRobotCmd;
 import frc.robot.commands.drive.SwerveJoystickCmd;
 import frc.robot.commands.elevator.ManualHorizontalElevatorController;
@@ -19,12 +17,13 @@ import frc.robot.commands.grabber.ManualGrabberFlipInCmd;
 import frc.robot.commands.grabber.ManualGrabberFlipOutCmd;
 import frc.robot.commands.grabber.ShootPieceCmd;
 import frc.robot.commands.grabber.SuckObjectCmd;
+import frc.robot.commands.operation.ScoreCubeMidCmd;
 import frc.robot.subsystems.*;
 
 public class RobotContainer {
 
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-  private final LimelightSubsystem limelight = new LimelightSubsystem();
+  private final LimelightSubsystem limelightSubsystem = new LimelightSubsystem();
   private final GrabberSubsystem grabberSubsystem = new GrabberSubsystem();
   private final HorizontalElevatorSubsystem horizontalElevatorSubsystem = new HorizontalElevatorSubsystem();
   private final VerticalElevatorSubsystem verticalElevatorSubsystem = new VerticalElevatorSubsystem();
@@ -55,9 +54,10 @@ public class RobotContainer {
     operatorController.b().whileTrue(new ManualGrabberFlipInCmd(grabberSubsystem));
     operatorController.leftBumper().whileTrue(new SuckObjectCmd(grabberSubsystem));
     operatorController.rightBumper().whileTrue(new ShootPieceCmd(grabberSubsystem));
+    operatorController.y().whileTrue(new ScoreCubeMidCmd(horizontalElevatorSubsystem, verticalElevatorSubsystem, grabberSubsystem, swerveSubsystem, limelightSubsystem));
   }
 
   public Command getAutonomousCommand() {
-    return new AlignToAprilTagCubeCmd(limelight, swerveSubsystem);
+    return new AlignToAprilTagCubeCmd(limelightSubsystem, swerveSubsystem);
   }
 }
