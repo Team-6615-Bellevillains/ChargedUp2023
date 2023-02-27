@@ -4,13 +4,12 @@
 
 package frc.robot.commands;
 
-import org.photonvision.targeting.PhotonTrackedTarget;
-
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -24,61 +23,54 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
 
   // These PID controllers will calculate the velocities required to make the
   // robot move to a certain position at a certain angle
-  private PIDController yawController;
-  private PIDController xdistanceController;
-  private PIDController ydistanceController;
-  private double setpoint;
-  private double xsetpoint;
-  private PhotonTrackedTarget target;
-  private Pose2d currentPosition;
-  private double currentYPosition;
-  private double currentXPosition;
+  private ProfiledPIDController headingController;
+  private ProfiledPIDController xDistanceController;
+  private ProfiledPIDController yDistanceController;
 
   public AlignToAprilTagCubeCmd(LimelightSubsystem limelightSubsystem, SwerveSubsystem swerveSubsystem) {
     this.limelightSubsystem = limelightSubsystem;
     this.swerveSubsystem = swerveSubsystem;
 
-    //yawController = new PIDController(AutoConstants.kPTrackingYaw, 0, 0);
-    xdistanceController = new PIDController(AutoConstants.kPTrackingDrive, 0, 0);
-    ydistanceController = new PIDController(AutoConstants.kPTrackingDriveY, 0, 0);
-    target = limelightSubsystem.getBestTarget();
-    setpoint = 0;
-    xsetpoint = 0;
+    headingController = new ProfiledPIDController(AutoConstants.kPHeadingTrackingDrive, 0, 0, new TrapezoidProfile.Constraints(AutoConstants.kAutoMaxAngularSpeedRadiansPerSecond, AutoConstants.kAutoMaxAngularAccelerationRadiansPerSecondSquared));
+    yDistanceController = new ProfiledPIDController(AutoConstants.kPYTrackingDrive, 0, 0, new TrapezoidProfile.Constraints(AutoConstants.kAutoMaxSpeedMetersPerSecond, AutoConstants.kAutoMaxAngularAccelerationRadiansPerSecondSquared));
+    xDistanceController = new ProfiledPIDController(AutoConstants.kPXTrackingDrive, 0, 0, new TrapezoidProfile.Constraints(AutoConstants.kAutoMaxSpeedMetersPerSecond, AutoConstants.kAutoMaxAngularAccelerationRadiansPerSecondSquared));
 
-    currentPosition = swerveSubsystem.getPose();
-    currentYPosition = currentPosition.getY();
-    currentXPosition = currentPosition.getX();
     addRequirements(limelightSubsystem, swerveSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (limelightSubsystem.getBestTarget() != null) {
-      Transform3d cameraTransform = target.getBestCameraToTarget();
+    Pose2d currentPosition = swerveSubsystem.getPose();
+    double currentYPosition = currentPosition.getY();
+    double currentXPosition = currentPosition.getX();
 
-      setpoint = currentYPosition + cameraTransform.getY() + 0.331; 
-      xsetpoint = currentXPosition + (cameraTransform.getX() - 1);
+    if (limelightSubsystem.getBestTarget() != null) {
+      Transform3d cameraTransform = limelightSubsystem.getBestTarget().getBestCameraToTarget();
+
+      headingController.setGoal(0);
+      yDistanceController.setGoal(currentYPosition + cameraTransform.getY() + 0.331);
+      xDistanceController.setGoal(currentXPosition + (cameraTransform.getX() - 1));
+    } else {
+      this.end(false);
     }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    currentPosition = swerveSubsystem.getPose();
-    currentYPosition = currentPosition.getY();
+    Pose2d currentPosition = swerveSubsystem.getPose();
+    double currentHeading = swerveSubsystem.getHeading();
+    double currentYPosition = currentPosition.getY();
+    double currentXPosition = currentPosition.getX();
 
-    //double rotationOutput = yawController.calculate(limelightSubsystem.getBestTarget().getYaw(), 0);
-    double ydistanceOutput = ydistanceController.calculate(currentYPosition, setpoint);
-    double xdistanceOutput = xdistanceController.calculate(currentXPosition, xsetpoint);
+    double rotationOutput = headingController.calculate(currentHeading);
+    double ydistanceOutput = yDistanceController.calculate(currentYPosition);
+    double xdistanceOutput = xDistanceController.calculate(currentXPosition);
 
     // Convert P[ID] outputs to ChassisSpeed values, clamping the distance P[ID] to
     // a max speed
-    ChassisSpeeds chassisSpeeds = new ChassisSpeeds( MathUtil.clamp(xdistanceOutput, -AutoConstants.kAutoMaxSpeedMetersPerSecond,
-    AutoConstants.kAutoMaxSpeedMetersPerSecond),
-        MathUtil.clamp(ydistanceOutput, -AutoConstants.kAutoMaxSpeedMetersPerSecond,
-            AutoConstants.kAutoMaxSpeedMetersPerSecond),
-        0);
+    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xdistanceOutput, ydistanceOutput, rotationOutput);
 
     // Convert ChassisSpeeds to SwerveModuleStates and send them off through the
     // SwerveSubsystem
@@ -94,6 +86,6 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return ydistanceController.atSetpoint() && xdistanceController.atSetpoint();
+    return headingController.atGoal() && yDistanceController.atGoal() && xDistanceController.atGoal();
   }
 }

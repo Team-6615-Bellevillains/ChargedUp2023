@@ -216,12 +216,14 @@ public final class Constants {
 
     public static final class AutoConstants {
         public static final double kAutoMaxSpeedMetersPerSecond = 1;
-        public static final double kAutoMaxAccelerationMetersPerSecond = 0.5;
+        public static final double kAutoMaxAccelerationMetersPerSecondSquared = 0.5;
+        public static final double kAutoMaxAngularSpeedRadiansPerSecond = 1;
+        public static final double kAutoMaxAngularAccelerationRadiansPerSecondSquared = 0.5;
 
-        public static final double kPTrackingYaw = .05;
-        public static final double kPTrackingDrive = .4;
+        public static final double kPHeadingTrackingDrive = .25;
+        public static final double kPXTrackingDrive = .4;
         public static final double kTrackingDistance = .45;
-        public static final double kPTrackingDriveY = .8;
+        public static final double kPYTrackingDrive = .8;
     }
 
     public static final class OIConstants {
