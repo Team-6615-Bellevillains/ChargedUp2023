@@ -35,7 +35,7 @@ public class VerticalElevatorToSetpointCmd extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        verticalElevatorSubsystem.setVerticalElevatorVoltage(0); // TODO: Test if this needs to have a static value to keep the arm held up
+        verticalElevatorSubsystem.setVerticalElevatorVoltage(verticalElevatorSubsystem.getVerticalElevatorPosition() == 0 ? 0 : elevatorFeedforward.calculate(0));
     }
 
     @Override

@@ -32,7 +32,7 @@ public class ManualVerticalElevatorController extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        verticalElevatorSubsystem.setVerticalElevatorVoltage(elevatorFeedforward.calculate(0));
+        verticalElevatorSubsystem.setVerticalElevatorVoltage(verticalElevatorSubsystem.getVerticalElevatorPosition() == 0 ? 0 : elevatorFeedforward.calculate(0));
     }
 
 }
