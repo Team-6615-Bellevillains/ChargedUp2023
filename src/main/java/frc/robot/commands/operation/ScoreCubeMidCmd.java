@@ -15,39 +15,33 @@ import frc.robot.subsystems.*;
 
 public class ScoreCubeMidCmd extends CommandBase {
 
-    private HorizontalElevatorSubsystem horizontalElevatorSubsystem;
-    private VerticalElevatorSubsystem verticalElevatorSubsystem;
-    private GrabberSubsystem grabberSubsystem;
-    private SwerveSubsystem swerveSubsystem;
-    private LimelightSubsystem limelightSubsystem;
+    private final VerticalElevatorMidCmd verticalElevatorMidCmd;
+    private final HorizontalElevatorOutCmd horizontalElevatorOutCmd;
 
-    private VerticalElevatorMidCmd verticalElevatorMidCmd = new VerticalElevatorMidCmd(verticalElevatorSubsystem);
-    private HorizontalElevatorOutCmd horizontalElevatorOutCmd = new HorizontalElevatorOutCmd(horizontalElevatorSubsystem);
+    private final FlipGrabberInCmd flipGrabberInCmd;
+    private final ShootPieceCmd shootPieceCmd;
 
-    private FlipGrabberInCmd flipGrabberInCmd = new FlipGrabberInCmd(grabberSubsystem);
-    private ShootPieceCmd shootPieceCmd = new ShootPieceCmd(grabberSubsystem);
+    private final HorizontalElevatorInCmd horizontalElevatorInCmd;
+    private final VerticalElevatorLowCmd verticalElevatorLowCmd;
 
-    private HorizontalElevatorInCmd horizontalElevatorInCmd = new HorizontalElevatorInCmd(horizontalElevatorSubsystem);
-    private VerticalElevatorLowCmd verticalElevatorLowCmd = new VerticalElevatorLowCmd(verticalElevatorSubsystem);
+    private final AlignToAprilTagCubeCmd alignToAprilTagCubeCmd;
 
-    private AlignToAprilTagCubeCmd alignToAprilTagCubeCmd = new AlignToAprilTagCubeCmd(limelightSubsystem, swerveSubsystem);
-
-    private Command routine;
+    private final Command routine;
 
     public ScoreCubeMidCmd(
             HorizontalElevatorSubsystem horizontalElevatorSubsystem, VerticalElevatorSubsystem verticalElevatorSubsystem, GrabberSubsystem grabberSubsystem,
             SwerveSubsystem swerveSubsystem, LimelightSubsystem limelightSubsystem) {
-        this.horizontalElevatorSubsystem = horizontalElevatorSubsystem;
-        this.verticalElevatorSubsystem = verticalElevatorSubsystem;
-        this.grabberSubsystem = grabberSubsystem;
-        this.swerveSubsystem = swerveSubsystem;
-        this.limelightSubsystem = limelightSubsystem;
+        horizontalElevatorOutCmd = new HorizontalElevatorOutCmd(horizontalElevatorSubsystem);
+        horizontalElevatorInCmd = new HorizontalElevatorInCmd(horizontalElevatorSubsystem);
 
-        addRequirements(horizontalElevatorSubsystem, grabberSubsystem, swerveSubsystem);
-    }
+        verticalElevatorMidCmd = new VerticalElevatorMidCmd(verticalElevatorSubsystem);
+        verticalElevatorLowCmd = new VerticalElevatorLowCmd(verticalElevatorSubsystem);
 
-    @Override
-    public void initialize() {
+        shootPieceCmd = new ShootPieceCmd(grabberSubsystem);
+        flipGrabberInCmd = new FlipGrabberInCmd(grabberSubsystem);
+
+        alignToAprilTagCubeCmd = new AlignToAprilTagCubeCmd(limelightSubsystem, swerveSubsystem);
+
         routine = alignToAprilTagCubeCmd
                 .andThen(verticalElevatorMidCmd)
                 .andThen(horizontalElevatorOutCmd)
@@ -56,6 +50,11 @@ public class ScoreCubeMidCmd extends CommandBase {
                 .andThen(horizontalElevatorInCmd)
                 .andThen(verticalElevatorLowCmd);
 
+        addRequirements(horizontalElevatorSubsystem, verticalElevatorSubsystem, grabberSubsystem, swerveSubsystem, limelightSubsystem);
+    }
+
+    @Override
+    public void initialize() {
         routine.schedule();
     }
 
