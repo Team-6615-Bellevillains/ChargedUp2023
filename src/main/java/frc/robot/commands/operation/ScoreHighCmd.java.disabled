@@ -17,6 +17,7 @@ import frc.robot.subsystems.GrabberSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class ScoreHighCmd extends CommandBase {
+    // TODO: Move command initialization to constructor (otherwise subsystems are null), remove then unnecessary instance variables for subsystems
 
     private HorizontalElevatorSubsystem horizontalElevatorSubsystem;
     private GrabberSubsystem grabberSubsystem;
