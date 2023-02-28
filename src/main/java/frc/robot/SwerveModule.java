@@ -28,7 +28,7 @@ public class SwerveModule {
     private final Encoder steerEncoder;
 
     private final ProfiledPIDController steerPIDController;
-    private final SimpleMotorFeedforward steerFeedforward;
+    private SimpleMotorFeedforward steerFeedforward;
 
     private final double absoluteEncoderOffsetCounts;
 
@@ -63,12 +63,31 @@ public class SwerveModule {
 
         this.steerPIDController = new ProfiledPIDController(SwerveModuleConstants.kPTurning,
                 SwerveModuleConstants.kITurning,
-                SwerveModuleConstants.kDTurning, new TrapezoidProfile.Constraints(4 * 2 * Math.PI, 16 * 2 * Math.PI));
+                SwerveModuleConstants.kDTurning, new TrapezoidProfile.Constraints(SwerveModuleConstants.maxWheelVelocity, SwerveModuleConstants.maxWheelAcceleration));
         this.steerPIDController.enableContinuousInput(0, 2 * Math.PI);
 
         this.steerFeedforward = new SimpleMotorFeedforward(SwerveModuleConstants.kSTurning, SwerveModuleConstants.kVTurning, SwerveModuleConstants.kATurning);
 
         this.driveEncoder.setPosition(0);
+    }
+
+    public SimpleMotorFeedforward getSteerFeedforward() {
+        return steerFeedforward;
+    }
+
+    public ProfiledPIDController getSteerPIDController() {
+        return steerPIDController;
+    }
+
+    public void changeFeedforwardConstants(double kS, double kV, double kA) {
+        steerFeedforward = new SimpleMotorFeedforward(kS, kV, kA);
+    }
+    public void changePIDConstants(double kP, double kI, double kD, double maxVelo, double maxAccel) {
+        steerPIDController.setP(kP);
+        steerPIDController.setI(kI);
+        steerPIDController.setD(kD);
+        steerPIDController.setConstraints(new TrapezoidProfile.Constraints(maxVelo, maxAccel));
+        steerPIDController.reset(getModuleRotation2dFromPGEncoder().getRadians());
     }
 
     public SwerveModulePosition getPosition() {

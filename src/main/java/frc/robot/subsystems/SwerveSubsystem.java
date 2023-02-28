@@ -2,17 +2,28 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.SwerveModuleConstants;
 import frc.robot.SwerveModule;
 import frc.robot.Constants.DriveConstants;
+
+import java.lang.reflect.Field;
 
 public class SwerveSubsystem extends SubsystemBase {
 
@@ -56,7 +67,20 @@ public class SwerveSubsystem extends SubsystemBase {
     private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics,
             getRotation2d(), getModulePositions(), new Pose2d());
 
+    private final static NetworkTableInstance networkTableInstance = NetworkTableInstance.getDefault();
+    private final static NetworkTable tuningTable = networkTableInstance.getTable("tuning");
+    private final double lastUpdatedTS = Timer.getFPGATimestamp();
+
     public SwerveSubsystem() {
+        tuningTable.putValue("kPTurning", NetworkTableValue.makeDouble(SwerveModuleConstants.kPTurning));
+        tuningTable.putValue("kITurning", NetworkTableValue.makeDouble(SwerveModuleConstants.kITurning));
+        tuningTable.putValue("kDTurning", NetworkTableValue.makeDouble(SwerveModuleConstants.kDTurning));
+        tuningTable.putValue("maxWheelVelocity", NetworkTableValue.makeDouble(SwerveModuleConstants.maxWheelVelocity));
+        tuningTable.putValue("maxWheelAcceleration", NetworkTableValue.makeDouble(SwerveModuleConstants.maxWheelAcceleration));
+
+        tuningTable.putValue("kSTurning", NetworkTableValue.makeDouble(SwerveModuleConstants.kSTurning));
+        tuningTable.putValue("kVTurning", NetworkTableValue.makeDouble(SwerveModuleConstants.kVTurning));
+        tuningTable.putValue("kATurning", NetworkTableValue.makeDouble(SwerveModuleConstants.kATurning));
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
@@ -99,6 +123,50 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Robot Heading", getHeading());
         SmartDashboard.putString("Robot Location",
                 getPose().getTranslation().toString());
+
+
+        double nowTime = Timer.getFPGATimestamp();
+        if (nowTime - lastUpdatedTS >= 5) {
+            SimpleMotorFeedforward flFeedforward = frontLeft.getSteerFeedforward();
+            ProfiledPIDController flProfiledPIDController = frontLeft.getSteerPIDController();
+
+            double tableKP = tuningTable.getValue("kPTurning").getDouble();
+            double tableKI = tuningTable.getValue("kITurning").getDouble();
+            double tableKD = tuningTable.getValue("kDTurning").getDouble();
+            double tableMaxWheelVelocity = tuningTable.getValue("maxWheelVelocity").getDouble();
+            double tableMaxWheelAcceleration = tuningTable.getValue("maxWheelAcceleration").getDouble();
+
+            TrapezoidProfile.Constraints flProfilePIDControllerConstraints;
+            try {
+                Field constraintsField = ProfiledPIDController.class.getDeclaredField("m_constraints");
+                constraintsField.setAccessible(true);
+                flProfilePIDControllerConstraints = (TrapezoidProfile.Constraints) constraintsField.get(flProfiledPIDController);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+
+            double tableKS = tuningTable.getValue("kSTurning").getDouble();
+            double tableKV = tuningTable.getValue("kVTurning").getDouble();
+            double tableKA = tuningTable.getValue("kATurning").getDouble();
+
+            if (flProfiledPIDController.getP() != tableKP
+                    || flProfiledPIDController.getI() != tableKI
+                    || flProfiledPIDController.getD() != tableKD
+                    || flProfilePIDControllerConstraints.maxVelocity != tableMaxWheelVelocity
+                    || flProfilePIDControllerConstraints.maxAcceleration != tableMaxWheelAcceleration) {
+                frontLeft.changePIDConstants(tableKP, tableKI, tableKD, tableMaxWheelVelocity, tableMaxWheelAcceleration);
+                frontRight.changePIDConstants(tableKP, tableKI, tableKD, tableMaxWheelVelocity, tableMaxWheelAcceleration);
+                backLeft.changePIDConstants(tableKP, tableKI, tableKD, tableMaxWheelVelocity, tableMaxWheelAcceleration);
+                backRight.changePIDConstants(tableKP, tableKI, tableKD, tableMaxWheelVelocity, tableMaxWheelAcceleration);
+            }
+
+            if (flFeedforward.ks != tableKS || flFeedforward.kv != tableKV || flFeedforward.ka != tableKA) {
+                frontLeft.changeFeedforwardConstants(tableKS, tableKV, tableKA);
+                frontRight.changeFeedforwardConstants(tableKS, tableKV, tableKA);
+                backLeft.changeFeedforwardConstants(tableKS, tableKV, tableKA);
+                backRight.changeFeedforwardConstants(tableKS, tableKV, tableKA);
+            }
+        }
     }
 
     public void stopModules() {

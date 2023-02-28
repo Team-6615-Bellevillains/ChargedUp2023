@@ -27,6 +27,8 @@ public final class Constants {
         public static final double kVTurning = 0.97146;
         public static final double kATurning = 1.0961;
 
+        public static final double maxWheelVelocity = 90.0/*revolutions/minute*/ / 60.0/*seconds/minute*/ * 2 * Math.PI /*rads/revolution*/;
+        public static final double maxWheelAcceleration = maxWheelVelocity*4;
 
         public static final double kDriveEncoderRot2Meter = kWheelCircumference / kDriveMotorGearRatio;
         public static final double kSteerEncoderRot2Rad = 2 * Math.PI / ((kSteerGearboxRatio/kSteerModuleRatio)*kSteerPPR);
