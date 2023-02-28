@@ -72,15 +72,15 @@ public class SwerveSubsystem extends SubsystemBase {
     private double lastUpdatedTS = Timer.getFPGATimestamp();
 
     public SwerveSubsystem() {
-        tuningTable.putValue("kPTurning", NetworkTableValue.makeDouble(SwerveModuleConstants.kPTurning));
-        tuningTable.putValue("kITurning", NetworkTableValue.makeDouble(SwerveModuleConstants.kITurning));
-        tuningTable.putValue("kDTurning", NetworkTableValue.makeDouble(SwerveModuleConstants.kDTurning));
-        tuningTable.putValue("maxWheelVelocity", NetworkTableValue.makeDouble(SwerveModuleConstants.maxWheelVelocity));
-        tuningTable.putValue("maxWheelAcceleration", NetworkTableValue.makeDouble(SwerveModuleConstants.maxWheelAcceleration));
+        tuningTable.getEntry("kPTurning").setDouble(SwerveModuleConstants.kPTurning);
+        tuningTable.getEntry("kITurning").setDouble(SwerveModuleConstants.kITurning);
+        tuningTable.getEntry("kDTurning").setDouble(SwerveModuleConstants.kDTurning);
+        tuningTable.getEntry("maxWheelVelocity").setDouble(SwerveModuleConstants.maxWheelVelocity);
+        tuningTable.getEntry("maxWheelAcceleration").setDouble(SwerveModuleConstants.maxWheelAcceleration);
 
-        tuningTable.putValue("kSTurning", NetworkTableValue.makeDouble(SwerveModuleConstants.kSTurning));
-        tuningTable.putValue("kVTurning", NetworkTableValue.makeDouble(SwerveModuleConstants.kVTurning));
-        tuningTable.putValue("kATurning", NetworkTableValue.makeDouble(SwerveModuleConstants.kATurning));
+        tuningTable.getEntry("kSTurning").setDouble(SwerveModuleConstants.kSTurning);
+        tuningTable.getEntry("kVTurning").setDouble(SwerveModuleConstants.kVTurning);
+        tuningTable.getEntry("kATurning").setDouble(SwerveModuleConstants.kATurning);
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
