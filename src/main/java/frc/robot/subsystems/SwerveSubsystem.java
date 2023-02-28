@@ -69,7 +69,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     private final static NetworkTableInstance networkTableInstance = NetworkTableInstance.getDefault();
     private final static NetworkTable tuningTable = networkTableInstance.getTable("tuning");
-    private final double lastUpdatedTS = Timer.getFPGATimestamp();
+    private double lastUpdatedTS = Timer.getFPGATimestamp();
 
     public SwerveSubsystem() {
         tuningTable.putValue("kPTurning", NetworkTableValue.makeDouble(SwerveModuleConstants.kPTurning));
@@ -166,6 +166,8 @@ public class SwerveSubsystem extends SubsystemBase {
                 backLeft.changeFeedforwardConstants(tableKS, tableKV, tableKA);
                 backRight.changeFeedforwardConstants(tableKS, tableKV, tableKA);
             }
+
+            lastUpdatedTS = nowTime;
         }
     }
 
