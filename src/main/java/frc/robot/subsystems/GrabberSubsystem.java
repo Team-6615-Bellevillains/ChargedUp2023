@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -44,6 +45,8 @@ public class GrabberSubsystem extends SubsystemBase {
     // flipMotor
     flipMotor = new WPI_TalonSRX(GrabberConstants.kFlipMotorPort);
     flipMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+
+    flipMotor.setSensorPhase(true);
 
     // Sets flipMotor's thresholds to prevent mechanism from breaking
     flipMotor.configReverseSoftLimitThreshold(GrabberConstants.kFlipReverseThreshold, 10);
@@ -83,6 +86,9 @@ public class GrabberSubsystem extends SubsystemBase {
   }
 
   public double getFlipEncoderPosition() {
+    if (flipMotor.getSelectedSensorPosition() > Units.degreesToRadians(118)) {
+      flipMotor.setSelectedSensorPosition(0);
+    }
     return flipMotor.getSelectedSensorPosition() * GrabberConstants.flipRotationsToRadians/GrabberConstants.flipPulsesPerRevolution;
   }
 

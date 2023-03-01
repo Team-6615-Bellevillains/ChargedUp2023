@@ -146,10 +146,10 @@ public final class Constants {
 
         public static final double horizontalGearRatio = 12.0 / 60.0;
         public static final double horizontalMaxExtensionLength = Units.inchesToMeters(15);
-        public static final double horizontalGearDiameter = Units.inchesToMeters(1.76);
+        public static final double horizontalGearDiameter = Units.inchesToMeters(1.751);
 
         public static final int horizontalEncoderPulsesPerRevolution = kCimcoder256PulsesPerRevolution;
-        public static final double horizontalRotationsToDistance = horizontalGearDiameter * Math.PI * horizontalGearRatio;
+        public static final double horizontalRotationsToDistance = 3328.0/11585.0;
 
         public static final double horizontalInLength = 0;
         public static final double horizontalOutLength = horizontalMaxExtensionLength-Units.inchesToMeters(1);
@@ -157,6 +157,8 @@ public final class Constants {
         public static final double kPHorizontalElevator = 0;
         public static final double kIHorizontalElevator = 0;
         public static final double kDHorizontalElevator = 0;
+        public static final double kMaxVelocityHorizontalElevator = .1;
+        public static final double kMaxAccelerationHorizontalElevator = .05;
 
         public static final double kSHorizontalElevator = 0;
         public static final double kVHorizontalElevator = 0;
