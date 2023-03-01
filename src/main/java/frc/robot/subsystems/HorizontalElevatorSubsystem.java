@@ -109,6 +109,9 @@ public class HorizontalElevatorSubsystem extends SubsystemBase {
     }
 
     public double getHorizontalElevatorPosition() {
+        if (hElevatorMotor.getSelectedSensorPosition() < 0) {
+            hElevatorMotor.setSelectedSensorPosition(0);
+        }
         return hElevatorMotor.getSelectedSensorPosition() * ElevatorConstants.horizontalRotationsToDistance
                 / ElevatorConstants.horizontalEncoderPulsesPerRevolution;
     }
