@@ -13,6 +13,8 @@ import frc.robot.commands.AlignToAprilTagCubeCmd;
 import frc.robot.commands.AlignToMidRungCmd;
 import frc.robot.commands.drive.StraightenRobotCmd;
 import frc.robot.commands.drive.SwerveJoystickCmd;
+import frc.robot.commands.elevator.HorizontalElevatorInCmd;
+import frc.robot.commands.elevator.HorizontalElevatorOutCmd;
 import frc.robot.commands.elevator.ManualHorizontalElevatorController;
 import frc.robot.commands.elevator.ManualVerticalElevatorController;
 import frc.robot.commands.grabber.ManualGrabberFlipInCmd;
@@ -41,8 +43,9 @@ public class RobotContainer {
         () -> -driverController.getRightX(),
         () -> driverController.leftBumper().getAsBoolean()));
 
-    horizontalElevatorSubsystem.setDefaultCommand(new ManualHorizontalElevatorController(horizontalElevatorSubsystem, () -> -operatorController.getLeftY()));
-    verticalElevatorSubsystem.setDefaultCommand(new ManualVerticalElevatorController(verticalElevatorSubsystem, () -> -operatorController.getRightY()));
+    horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
+//    horizontalElevatorSubsystem.setDefaultCommand(new ManualHorizontalElevatorController(horizontalElevatorSubsystem, () -> -operatorController.getLeftY()));
+//    verticalElevatorSubsystem.setDefaultCommand(new ManualVerticalElevatorController(verticalElevatorSubsystem, () -> -operatorController.getRightY()));
 
     configureBindings();
   }
@@ -55,6 +58,8 @@ public class RobotContainer {
     operatorController.b().whileTrue(new ManualGrabberFlipInCmd(grabberSubsystem));
     operatorController.leftBumper().whileTrue(new SuckObjectCmd(grabberSubsystem));
     operatorController.rightBumper().whileTrue(new ShootPieceCmd(grabberSubsystem));
+    operatorController.y().whileTrue(new HorizontalElevatorOutCmd(horizontalElevatorSubsystem));
+    operatorController.x().whileTrue(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
   }
 
   public Command getAutonomousCommand() {
