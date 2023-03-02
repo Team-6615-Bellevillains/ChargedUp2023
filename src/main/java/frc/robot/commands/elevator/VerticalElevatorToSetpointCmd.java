@@ -10,14 +10,14 @@ import frc.robot.subsystems.VerticalElevatorSubsystem;
 public class VerticalElevatorToSetpointCmd extends CommandBase {
 
     private final VerticalElevatorSubsystem verticalElevatorSubsystem;
-
-    private final ProfiledPIDController profiledPIDController = new ProfiledPIDController(ElevatorConstants.kPVerticalElevator, ElevatorConstants.kIVerticalElevator, ElevatorConstants.kDVerticalElevator, new TrapezoidProfile.Constraints(0, 0));
-    private final ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kSVerticalElevator, ElevatorConstants.kGVerticalElevator, ElevatorConstants.kVVerticalElevator, ElevatorConstants.kAVerticalElevator);
+    private ProfiledPIDController profiledPIDController = new ProfiledPIDController(ElevatorConstants.kPVerticalElevator, ElevatorConstants.kIVerticalElevator, ElevatorConstants.kDVerticalElevator, new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVelocityVerticalElevator, ElevatorConstants.kMaxAccelerationVerticalElevator));
 
     public VerticalElevatorToSetpointCmd(VerticalElevatorSubsystem verticalElevatorSubsystem, double setpoint) {
+        profiledPIDController.setGoal(setpoint);
+
         this.verticalElevatorSubsystem = verticalElevatorSubsystem;
 
-        profiledPIDController.setGoal(new TrapezoidProfile.State(setpoint, 0));
+        addRequirements(verticalElevatorSubsystem);
     }
 
     @Override
@@ -28,14 +28,14 @@ public class VerticalElevatorToSetpointCmd extends CommandBase {
     @Override
     public void execute() {
         double pidOutput = profiledPIDController.calculate(verticalElevatorSubsystem.getVerticalElevatorPosition());
-        double feedforwardOutput = elevatorFeedforward.calculate(profiledPIDController.getSetpoint().velocity);
+        double feedforwardOutput = verticalElevatorSubsystem.calculateFeedforward(profiledPIDController.getSetpoint().velocity);
 
         verticalElevatorSubsystem.setVerticalElevatorVoltage(pidOutput + feedforwardOutput);
     }
 
     @Override
     public void end(boolean interrupted) {
-        verticalElevatorSubsystem.setVerticalElevatorVoltage(verticalElevatorSubsystem.getVerticalElevatorPosition() == 0 ? 0 : elevatorFeedforward.calculate(0));
+        verticalElevatorSubsystem.stopElevator();
     }
 
     @Override

@@ -20,6 +20,11 @@ public class VerticalElevatorLowCmd extends CommandBase {
     }
 
     @Override
+    public void execute() {
+        verticalElevatorToSetpointCmd.execute();
+    }
+
+    @Override
     public void end(boolean interrupted) {
         verticalElevatorToSetpointCmd.end(interrupted);
     }
