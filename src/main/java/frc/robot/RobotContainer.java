@@ -4,8 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToAprilTagCubeCmd;
@@ -17,6 +20,7 @@ import frc.robot.commands.grabber.ManualGrabberFlipInCmd;
 import frc.robot.commands.grabber.ManualGrabberFlipOutCmd;
 import frc.robot.commands.grabber.ShootPieceCmd;
 import frc.robot.commands.grabber.SuckObjectCmd;
+import frc.robot.commands.operation.ScoreCubeLowCmd;
 import frc.robot.commands.operation.ScoreCubeMidCmd;
 import frc.robot.subsystems.*;
 
@@ -27,7 +31,7 @@ public class RobotContainer {
   private final GrabberSubsystem grabberSubsystem = new GrabberSubsystem();
   private final HorizontalElevatorSubsystem horizontalElevatorSubsystem = new HorizontalElevatorSubsystem();
   private final VerticalElevatorSubsystem verticalElevatorSubsystem = new VerticalElevatorSubsystem();
-
+  private SendableChooser<Command> m_chooser;
 
   private final CommandXboxController driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
   private final CommandXboxController operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
@@ -42,6 +46,13 @@ public class RobotContainer {
 
     horizontalElevatorSubsystem.setDefaultCommand(new ManualHorizontalElevatorController(horizontalElevatorSubsystem, () -> -operatorController.getLeftY()));
     verticalElevatorSubsystem.setDefaultCommand(new ManualVerticalElevatorController(verticalElevatorSubsystem, () -> -operatorController.getRightY()));
+
+    //Adds a smartdashboard widget that will allow us to select the autonomous we want to use. 
+    m_chooser = new SendableChooser<>();
+    //Default Autonomous that will be run if no other auto is selected
+    m_chooser.setDefaultOption("AlignToAprilTagCubeCmd", new AlignToAprilTagCubeCmd(limelightSubsystem, swerveSubsystem));
+    m_chooser.addOption("ScoreCubeLowCmd", new ScoreCubeLowCmd(horizontalElevatorSubsystem, grabberSubsystem, swerveSubsystem, limelightSubsystem)); 
+    SmartDashboard.putData(m_chooser); 
 
     configureBindings();
   }
@@ -58,6 +69,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new AlignToAprilTagCubeCmd(limelightSubsystem, swerveSubsystem);
+    return m_chooser.getSelected();
   }
 }
