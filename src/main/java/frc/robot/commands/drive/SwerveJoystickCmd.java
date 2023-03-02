@@ -2,13 +2,9 @@ package frc.robot.commands.drive;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
@@ -71,7 +67,7 @@ public class SwerveJoystickCmd extends CommandBase {
          * object represents a universal container for linear and angular velocities
          * (strafing and rotation). See SwerveSubsystem.java for implementation.
          */
-        ChassisSpeeds chassisSpeeds = swerveSubsystem.calculateChassisSpeeds(xSpeed, ySpeed,
+        ChassisSpeeds chassisSpeeds = swerveSubsystem.calculateChassisSpeedsWithDriftCorrection(xSpeed, ySpeed,
                 steerSpeed, isFieldOrientedFunction.get());
 
         /*

@@ -99,6 +99,13 @@ public final class Constants {
         public static final double kTeleOpMaxAccelerationUnitsPerSecond = 3;
         public static final double kTeleOpMaxAngularAccelerationUnitsPerSecond = 3;
 
+        public static final double kPThetaCorrection = 5;
+        public static final double kIThetaCorrection = 0;
+        public static final double kDThetaCorrection = 0;
+        public static final double kMaxVelocityThetaCorrection = 1;
+        public static final double kMaxAccelerationThetaCorrection = 2;
+
+
         // TODO: Tune
         public static final double kPRotation = .25;
         public static final double kIRotation = 0;

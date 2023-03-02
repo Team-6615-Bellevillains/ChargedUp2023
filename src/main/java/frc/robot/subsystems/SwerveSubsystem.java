@@ -66,25 +66,12 @@ public class SwerveSubsystem extends SubsystemBase {
     private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics,
             getRotation2d(), getModulePositions(), new Pose2d());
 
-    private final static NetworkTableInstance networkTableInstance = NetworkTableInstance.getDefault();
-    private final static NetworkTable tuningTable = networkTableInstance.getTable("tuning");
-    private double lastUpdatedTS = Timer.getFPGATimestamp();
-
     private double lastKnownCorrectHeadingRadians;
-    private ProfiledPIDController thetaCorrectionPID = new ProfiledPIDController(5, 0, 0, new TrapezoidProfile.Constraints(1, 2));
+    private final ProfiledPIDController thetaCorrectionPID = new ProfiledPIDController(DriveConstants.kPThetaCorrection, DriveConstants.kIThetaCorrection, DriveConstants.kDThetaCorrection, new TrapezoidProfile.Constraints(DriveConstants.kMaxVelocityThetaCorrection, DriveConstants.kMaxAccelerationThetaCorrection));
 
     public SwerveSubsystem() {
-        tuningTable.getEntry("kPTurning").setDouble(SwerveModuleConstants.kPTurning);
-        tuningTable.getEntry("kITurning").setDouble(SwerveModuleConstants.kITurning);
-        tuningTable.getEntry("kDTurning").setDouble(SwerveModuleConstants.kDTurning);
-        tuningTable.getEntry("maxWheelVelocity").setDouble(SwerveModuleConstants.maxWheelVelocity);
-        tuningTable.getEntry("maxWheelAcceleration").setDouble(SwerveModuleConstants.maxWheelAcceleration);
-
-        tuningTable.getEntry("kSTurning").setDouble(SwerveModuleConstants.kSTurning);
-        tuningTable.getEntry("kVTurning").setDouble(SwerveModuleConstants.kVTurning);
-        tuningTable.getEntry("kATurning").setDouble(SwerveModuleConstants.kATurning);
-
         this.thetaCorrectionPID.enableContinuousInput(0, 2 * Math.PI);
+
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
@@ -134,51 +121,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Last known correct heading Rads", lastKnownCorrectHeadingRadians);
 
-
-        double nowTime = Timer.getFPGATimestamp();
-        if (nowTime - lastUpdatedTS >= 5) {
-            SimpleMotorFeedforward flFeedforward = frontLeft.getSteerFeedforward();
-            ProfiledPIDController flProfiledPIDController = frontLeft.getSteerPIDController();
-
-            double tableKP = tuningTable.getValue("kPTurning").getDouble();
-            double tableKI = tuningTable.getValue("kITurning").getDouble();
-            double tableKD = tuningTable.getValue("kDTurning").getDouble();
-            double tableMaxWheelVelocity = tuningTable.getValue("maxWheelVelocity").getDouble();
-            double tableMaxWheelAcceleration = tuningTable.getValue("maxWheelAcceleration").getDouble();
-
-            TrapezoidProfile.Constraints flProfilePIDControllerConstraints;
-            try {
-                Field constraintsField = ProfiledPIDController.class.getDeclaredField("m_constraints");
-                constraintsField.setAccessible(true);
-                flProfilePIDControllerConstraints = (TrapezoidProfile.Constraints) constraintsField.get(flProfiledPIDController);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-
-            double tableKS = tuningTable.getValue("kSTurning").getDouble();
-            double tableKV = tuningTable.getValue("kVTurning").getDouble();
-            double tableKA = tuningTable.getValue("kATurning").getDouble();
-
-            if (flProfiledPIDController.getP() != tableKP
-                    || flProfiledPIDController.getI() != tableKI
-                    || flProfiledPIDController.getD() != tableKD
-                    || flProfilePIDControllerConstraints.maxVelocity != tableMaxWheelVelocity
-                    || flProfilePIDControllerConstraints.maxAcceleration != tableMaxWheelAcceleration) {
-                frontLeft.changePIDConstants(tableKP, tableKI, tableKD, tableMaxWheelVelocity, tableMaxWheelAcceleration);
-                frontRight.changePIDConstants(tableKP, tableKI, tableKD, tableMaxWheelVelocity, tableMaxWheelAcceleration);
-                backLeft.changePIDConstants(tableKP, tableKI, tableKD, tableMaxWheelVelocity, tableMaxWheelAcceleration);
-                backRight.changePIDConstants(tableKP, tableKI, tableKD, tableMaxWheelVelocity, tableMaxWheelAcceleration);
-            }
-
-            if (flFeedforward.ks != tableKS || flFeedforward.kv != tableKV || flFeedforward.ka != tableKA) {
-                frontLeft.changeFeedforwardConstants(tableKS, tableKV, tableKA);
-                frontRight.changeFeedforwardConstants(tableKS, tableKV, tableKA);
-                backLeft.changeFeedforwardConstants(tableKS, tableKV, tableKA);
-                backRight.changeFeedforwardConstants(tableKS, tableKV, tableKA);
-            }
-
-            lastUpdatedTS = nowTime;
-        }
     }
 
     public void stopModules() {
@@ -188,7 +130,7 @@ public class SwerveSubsystem extends SubsystemBase {
         backRight.stop();
     }
 
-    public ChassisSpeeds calculateChassisSpeeds(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, boolean isFieldOriented) {
+    public ChassisSpeeds calculateChassisSpeedsWithDriftCorrection(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, boolean isFieldOriented) {
         if ((Math.abs(vxMetersPerSecond) > 0 || Math.abs(vyMetersPerSecond) > 0) && omegaRadiansPerSecond == 0) {
             double input = getRotation2d().getRadians();
             SmartDashboard.putNumber("Theta correction input", input);
