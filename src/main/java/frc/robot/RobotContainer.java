@@ -4,22 +4,14 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.AlignToAprilTagCmd;
 import frc.robot.commands.AlignToAprilTagCubeCmd;
-import frc.robot.commands.AlignToMidRungCmd;
 import frc.robot.commands.drive.StraightenRobotCmd;
 import frc.robot.commands.drive.SwerveJoystickCmd;
-import frc.robot.commands.drive.ZeroSwerveWheelsCmd;
 import frc.robot.commands.elevator.*;
-import frc.robot.commands.grabber.ManualGrabberFlipInCmd;
-import frc.robot.commands.grabber.ManualGrabberFlipOutCmd;
 import frc.robot.commands.grabber.ShootPieceCmd;
 import frc.robot.commands.grabber.SuckObjectCmd;
 import frc.robot.subsystems.*;
@@ -53,7 +45,6 @@ public class RobotContainer {
   private void configureBindings() {
     driverController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
     driverController.rightBumper().whileTrue(new StraightenRobotCmd(swerveSubsystem));
-    driverController.x().whileTrue(new ZeroSwerveWheelsCmd(swerveSubsystem));
 
 
     operatorController.leftBumper().whileTrue(new SuckObjectCmd(grabberSubsystem));

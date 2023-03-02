@@ -7,6 +7,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -14,11 +15,9 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.SwerveModuleConstants;
 import frc.robot.SwerveModule;
 import frc.robot.Constants.DriveConstants;
@@ -71,6 +70,9 @@ public class SwerveSubsystem extends SubsystemBase {
     private final static NetworkTable tuningTable = networkTableInstance.getTable("tuning");
     private double lastUpdatedTS = Timer.getFPGATimestamp();
 
+    private double lastKnownCorrectHeadingRadians;
+    private ProfiledPIDController thetaCorrectionPID = new ProfiledPIDController(5, 0, 0, new TrapezoidProfile.Constraints(1, 2));
+
     public SwerveSubsystem() {
         tuningTable.getEntry("kPTurning").setDouble(SwerveModuleConstants.kPTurning);
         tuningTable.getEntry("kITurning").setDouble(SwerveModuleConstants.kITurning);
@@ -81,11 +83,17 @@ public class SwerveSubsystem extends SubsystemBase {
         tuningTable.getEntry("kSTurning").setDouble(SwerveModuleConstants.kSTurning);
         tuningTable.getEntry("kVTurning").setDouble(SwerveModuleConstants.kVTurning);
         tuningTable.getEntry("kATurning").setDouble(SwerveModuleConstants.kATurning);
+
+        this.thetaCorrectionPID.enableContinuousInput(0, 2 * Math.PI);
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
                 zeroHeading();
+
+                lastKnownCorrectHeadingRadians = getRotation2d().getRadians();
+                this.thetaCorrectionPID.reset(lastKnownCorrectHeadingRadians);
             } catch (Exception e) {
+                Commands.print("Failed to zero gyro on startup!");
             }
         }).start();
     }
@@ -123,6 +131,8 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Robot Heading", getHeading());
         SmartDashboard.putString("Robot Location",
                 getPose().getTranslation().toString());
+
+        SmartDashboard.putNumber("Last known correct heading Rads", lastKnownCorrectHeadingRadians);
 
 
         double nowTime = Timer.getFPGATimestamp();
@@ -176,6 +186,27 @@ public class SwerveSubsystem extends SubsystemBase {
         frontRight.stop();
         backLeft.stop();
         backRight.stop();
+    }
+
+    public ChassisSpeeds calculateChassisSpeeds(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, boolean isFieldOriented) {
+        if ((Math.abs(vxMetersPerSecond) > 0 || Math.abs(vyMetersPerSecond) > 0) && omegaRadiansPerSecond == 0) {
+            double input = getRotation2d().getRadians();
+            SmartDashboard.putNumber("Theta correction input", input);
+            omegaRadiansPerSecond = thetaCorrectionPID.calculate(input, lastKnownCorrectHeadingRadians);
+            SmartDashboard.putNumber("Theta correction PID", omegaRadiansPerSecond);
+        } else {
+            lastKnownCorrectHeadingRadians = getRotation2d().getRadians();
+            thetaCorrectionPID.reset(lastKnownCorrectHeadingRadians);
+        }
+
+        if (isFieldOriented) {
+            return ChassisSpeeds.fromFieldRelativeSpeeds(vxMetersPerSecond, vyMetersPerSecond,
+                    omegaRadiansPerSecond,
+                    getRotation2d());
+        } else {
+            return new ChassisSpeeds(vxMetersPerSecond, vyMetersPerSecond,
+                    omegaRadiansPerSecond);
+        }
     }
 
     public void setModuleStates(SwerveModuleState[] desiredStates, boolean ignoreLittle) {

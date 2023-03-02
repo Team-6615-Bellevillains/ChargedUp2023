@@ -135,17 +135,17 @@ public class SwerveModule {
 
         state = SwerveModuleState.optimize(state, getModuleRotation2dFromPGEncoder());
 
-        SmartDashboard.putNumber(appendIdx("State"), getModuleRotation2dFromPGEncoder().getRadians());
-        SmartDashboard.putNumber(appendIdx("Setpoint"), state.angle.getRadians());
+//        SmartDashboard.putNumber(appendIdx("State"), getModuleRotation2dFromPGEncoder().getRadians());
+//        SmartDashboard.putNumber(appendIdx("Setpoint"), state.angle.getRadians());
 
         double steerPIDOut = steerPIDController.calculate(getModuleRotation2dFromPGEncoder().getRadians(),
                 state.angle.getRadians());
-        SmartDashboard.putNumber(appendIdx("Steer PID Out"), steerPIDOut);
+//        SmartDashboard.putNumber(appendIdx("Steer PID Out"), steerPIDOut);
 
         double feedforward = steerFeedforward.calculate(steerPIDController.getSetpoint().velocity);
-        SmartDashboard.putNumber(appendIdx("Steer Feedforward"), steerPIDOut);
+//        SmartDashboard.putNumber(appendIdx("Steer Feedforward"), steerPIDOut);
 
-//        driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         steerMotor.setVoltage(steerPIDOut + feedforward);
     }
 

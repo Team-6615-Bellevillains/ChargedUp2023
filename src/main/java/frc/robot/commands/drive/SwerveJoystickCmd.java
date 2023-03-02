@@ -2,9 +2,13 @@ package frc.robot.commands.drive;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
@@ -18,8 +22,8 @@ public class SwerveJoystickCmd extends CommandBase {
     private final SlewRateLimiter xLimiter, yLimiter, steerLimiter;
 
     public SwerveJoystickCmd(SwerveSubsystem swerveSubsystem,
-            Supplier<Double> xSpeedFunction, Supplier<Double> ySpeedFunction, Supplier<Double> steerSpeedFunction,
-            Supplier<Boolean> isFieldOrientedFunction) {
+                             Supplier<Double> xSpeedFunction, Supplier<Double> ySpeedFunction, Supplier<Double> steerSpeedFunction,
+                             Supplier<Boolean> isFieldOrientedFunction) {
         this.swerveSubsystem = swerveSubsystem;
         this.xSpeedFunction = xSpeedFunction;
         this.ySpeedFunction = ySpeedFunction;
@@ -28,12 +32,14 @@ public class SwerveJoystickCmd extends CommandBase {
         this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleOpMaxAccelerationUnitsPerSecond);
         this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleOpMaxAccelerationUnitsPerSecond);
         this.steerLimiter = new SlewRateLimiter(DriveConstants.kTeleOpMaxAngularAccelerationUnitsPerSecond);
+
         addRequirements(swerveSubsystem);
     }
 
     @Override
     public void initialize() {
     }
+
 
     @Override
     public void execute() {
@@ -58,20 +64,15 @@ public class SwerveJoystickCmd extends CommandBase {
         ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleOpMaxSpeedMetersPerSecond;
         steerSpeed = steerLimiter.calculate(steerSpeed) * DriveConstants.kTeleOpMaxAngularSpeedRadiansPerSecond;
 
+
         /*
          * 4. Calculate ChassisSpeeds
          * WPILib does all the heavy lifting with our kinematics. This ChassisSpeeds
          * object represents a universal container for linear and angular velocities
-         * (strafing and rotation).
+         * (strafing and rotation). See SwerveSubsystem.java for implementation.
          */
-        ChassisSpeeds chassisSpeeds;
-        if (isFieldOrientedFunction.get()) {
-            chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed,
-                    steerSpeed,
-                    swerveSubsystem.getRotation2d());
-        } else {
-            chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, steerSpeed);
-        }
+        ChassisSpeeds chassisSpeeds = swerveSubsystem.calculateChassisSpeeds(xSpeed, ySpeed,
+                steerSpeed, isFieldOrientedFunction.get());
 
         /*
          * 5. Convert ChassisSpeeds to SwerveModuleStates
