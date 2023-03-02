@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.Timer;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
-public class TunableProfiledPIDController extends ProfiledPIDController {
+public class TunableProfiledPIDController {
 
     private final static NetworkTableInstance networkTableInstance = NetworkTableInstance.getDefault();
     private final static NetworkTable tuningTable = networkTableInstance.getTable("tuning");
@@ -22,9 +22,11 @@ public class TunableProfiledPIDController extends ProfiledPIDController {
     private double lastUpdatedTS = Timer.getFPGATimestamp();
     private double lastMeasurement;
 
+    private ProfiledPIDController profiledPIDController;
+
 
     public TunableProfiledPIDController(String identifier, double Kp, double Ki, double Kd, TrapezoidProfile.Constraints constraints) {
-        super(Kp, Ki, Kd, constraints);
+        profiledPIDController = new ProfiledPIDController(Kp, Ki, Kd, constraints);
 
         this.identifier = identifier;
 
@@ -44,16 +46,19 @@ public class TunableProfiledPIDController extends ProfiledPIDController {
         controllers.add(this);
     }
 
+    public ProfiledPIDController getInnerProfiledPIDController() {
+        return profiledPIDController;
+    }
+
     public static void updateControllersIfOutdated() {
         for (TunableProfiledPIDController controller : controllers) {
             controller.updateConstantsIfOutdated();
         }
     }
 
-    @Override
-    public double calculate(double currentMeasurement) {
+    public double calculateAndUpdateLastMeasurement(double currentMeasurement) {
         lastMeasurement = currentMeasurement;
-        return super.calculate(currentMeasurement);
+        return profiledPIDController.calculate(currentMeasurement);
     }
 
     public String appendIdentifier(String input) {
@@ -71,16 +76,16 @@ public class TunableProfiledPIDController extends ProfiledPIDController {
 
         TrapezoidProfile.Constraints currConstraints = getConstraints();
 
-        if (super.getP() != tableKP
-                || super.getI() != tableKI
-                || super.getD() != tableKD
+        if (profiledPIDController.getP() != tableKP
+                || profiledPIDController.getI() != tableKI
+                || profiledPIDController.getD() != tableKD
                 || currConstraints.maxVelocity != tableMaxVelocity
                 || currConstraints.maxAcceleration != tableMaxAcceleration) {
-            super.setP(tableKP);
-            super.setI(tableKI);
-            super.setD(tableKD);
-            super.setConstraints(new TrapezoidProfile.Constraints(tableMaxVelocity, tableMaxAcceleration));
-            super.reset(lastMeasurement);
+            profiledPIDController.setP(tableKP);
+            profiledPIDController.setI(tableKI);
+            profiledPIDController.setD(tableKD);
+            profiledPIDController.setConstraints(new TrapezoidProfile.Constraints(tableMaxVelocity, tableMaxAcceleration));
+            profiledPIDController.reset(lastMeasurement);
         }
 
         lastUpdatedTS = Timer.getFPGATimestamp();
@@ -88,7 +93,7 @@ public class TunableProfiledPIDController extends ProfiledPIDController {
 
     public TrapezoidProfile.Constraints getConstraints() {
         try {
-            return (TrapezoidProfile.Constraints) m_constraintsField.get(this);
+            return (TrapezoidProfile.Constraints) m_constraintsField.get(profiledPIDController);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
