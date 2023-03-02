@@ -14,7 +14,6 @@ public class ManualVerticalElevatorController extends CommandBase {
 
     private VerticalElevatorSubsystem verticalElevatorSubsystem;
     private Supplier<Double> controllerPowerOutput;
-    private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kSHorizontalElevator, ElevatorConstants.kGVerticalElevator, ElevatorConstants.kVHorizontalElevator);
 
     public ManualVerticalElevatorController(VerticalElevatorSubsystem verticalElevatorSubsystem, Supplier<Double> controllerPowerOutput) {
         this.verticalElevatorSubsystem = verticalElevatorSubsystem;
@@ -25,14 +24,13 @@ public class ManualVerticalElevatorController extends CommandBase {
 
     @Override
     public void execute() {
-        double power = elevatorFeedforward.calculate(controllerPowerOutput.get());
-        SmartDashboard.putNumber("Power to vertical", power);
-        verticalElevatorSubsystem.setVerticalElevatorVoltage(power);
+        double velocity = (controllerPowerOutput.get()/50);
+        verticalElevatorSubsystem.calculateFeedforward(velocity);
     }
 
     @Override
     public void end(boolean interrupted) {
-        verticalElevatorSubsystem.setVerticalElevatorVoltage(elevatorFeedforward.calculate(0));
+        verticalElevatorSubsystem.stopElevator();
     }
 
 }

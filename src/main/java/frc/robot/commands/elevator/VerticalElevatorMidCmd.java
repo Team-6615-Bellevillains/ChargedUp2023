@@ -1,5 +1,7 @@
 package frc.robot.commands.elevator;
 
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.VerticalElevatorSubsystem;
 import frc.robot.Constants.ElevatorConstants;
@@ -17,6 +19,11 @@ public class VerticalElevatorMidCmd extends CommandBase {
     @Override
     public void initialize() {
         verticalElevatorToSetpointCmd.initialize();
+    }
+
+    @Override
+    public void execute() {
+        verticalElevatorToSetpointCmd.execute();
     }
 
     @Override

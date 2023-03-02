@@ -9,7 +9,7 @@ public class VerticalElevatorHighCmd extends CommandBase {
     private final VerticalElevatorToSetpointCmd verticalElevatorToSetpointCmd;
 
     public VerticalElevatorHighCmd(VerticalElevatorSubsystem verticalElevatorSubsystem) {
-        this.verticalElevatorToSetpointCmd = new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalMaxHeight);
+        this.verticalElevatorToSetpointCmd = new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight);
 
         addRequirements(verticalElevatorSubsystem);
     }
@@ -17,6 +17,11 @@ public class VerticalElevatorHighCmd extends CommandBase {
     @Override
     public void initialize() {
         verticalElevatorToSetpointCmd.initialize();
+    }
+
+    @Override
+    public void execute() {
+        verticalElevatorToSetpointCmd.execute();
     }
 
     @Override

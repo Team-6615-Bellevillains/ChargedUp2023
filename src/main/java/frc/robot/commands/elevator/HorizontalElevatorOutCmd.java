@@ -1,7 +1,5 @@
 package frc.robot.commands.elevator;
 
-import edu.wpi.first.math.controller.ElevatorFeedforward;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.HorizontalElevatorSubsystem;
@@ -10,7 +8,6 @@ public class HorizontalElevatorOutCmd extends CommandBase {
 
     private HorizontalElevatorSubsystem horizontalElevatorSubsystem;
 
-    private SimpleMotorFeedforward simpleMotorFeedforward = new SimpleMotorFeedforward(1.5, 1);
 
 
     public HorizontalElevatorOutCmd(HorizontalElevatorSubsystem horizontalElevatorSubsystem) {
@@ -25,8 +22,8 @@ public class HorizontalElevatorOutCmd extends CommandBase {
 
     @Override
     public void execute() {
-        if (horizontalElevatorSubsystem.getHorizontalElevatorPosition() < 11.4) {
-            horizontalElevatorSubsystem.setHorizontalElevatorVoltage(simpleMotorFeedforward.calculate(2));
+        if (horizontalElevatorSubsystem.getHorizontalElevatorPosition() < ElevatorConstants.kHorizontalElevatorOutThreshold) {
+            horizontalElevatorSubsystem.setHorizontalElevatorVoltage(horizontalElevatorSubsystem.calculateFeedforward(ElevatorConstants.kHorizontalElevatorFFInput));
         } else {
             horizontalElevatorSubsystem.setHorizontalElevatorVoltage(0);
         }
