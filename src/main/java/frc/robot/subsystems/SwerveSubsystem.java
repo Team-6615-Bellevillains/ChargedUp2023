@@ -2,17 +2,27 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.SwerveModuleConstants;
 import frc.robot.SwerveModule;
 import frc.robot.Constants.DriveConstants;
+
+import java.lang.reflect.Field;
 
 public class SwerveSubsystem extends SubsystemBase {
 
@@ -56,12 +66,21 @@ public class SwerveSubsystem extends SubsystemBase {
     private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics,
             getRotation2d(), getModulePositions(), new Pose2d());
 
+    private double lastKnownCorrectHeadingRadians;
+    private final ProfiledPIDController thetaCorrectionPID = new ProfiledPIDController(DriveConstants.kPThetaCorrection, DriveConstants.kIThetaCorrection, DriveConstants.kDThetaCorrection, new TrapezoidProfile.Constraints(DriveConstants.kMaxVelocityThetaCorrection, DriveConstants.kMaxAccelerationThetaCorrection));
+
     public SwerveSubsystem() {
+        this.thetaCorrectionPID.enableContinuousInput(0, 2 * Math.PI);
+
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
                 zeroHeading();
+
+                lastKnownCorrectHeadingRadians = getRotation2d().getRadians();
+                this.thetaCorrectionPID.reset(lastKnownCorrectHeadingRadians);
             } catch (Exception e) {
+                Commands.print("Failed to zero gyro on startup!");
             }
         }).start();
     }
@@ -99,6 +118,9 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Robot Heading", getHeading());
         SmartDashboard.putString("Robot Location",
                 getPose().getTranslation().toString());
+
+        SmartDashboard.putNumber("Last known correct heading Rads", lastKnownCorrectHeadingRadians);
+
     }
 
     public void stopModules() {
@@ -108,16 +130,37 @@ public class SwerveSubsystem extends SubsystemBase {
         backRight.stop();
     }
 
-    public void setModuleStates(SwerveModuleState[] desiredStates) {
+    public ChassisSpeeds calculateChassisSpeedsWithDriftCorrection(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, boolean isFieldOriented) {
+        if ((Math.abs(vxMetersPerSecond) > 0 || Math.abs(vyMetersPerSecond) > 0) && omegaRadiansPerSecond == 0) {
+            double input = getRotation2d().getRadians();
+            SmartDashboard.putNumber("Theta correction input", input);
+            omegaRadiansPerSecond = thetaCorrectionPID.calculate(input, lastKnownCorrectHeadingRadians);
+            SmartDashboard.putNumber("Theta correction PID", omegaRadiansPerSecond);
+        } else {
+            lastKnownCorrectHeadingRadians = getRotation2d().getRadians();
+            thetaCorrectionPID.reset(lastKnownCorrectHeadingRadians);
+        }
+
+        if (isFieldOriented) {
+            return ChassisSpeeds.fromFieldRelativeSpeeds(vxMetersPerSecond, vyMetersPerSecond,
+                    omegaRadiansPerSecond,
+                    getRotation2d());
+        } else {
+            return new ChassisSpeeds(vxMetersPerSecond, vyMetersPerSecond,
+                    omegaRadiansPerSecond);
+        }
+    }
+
+    public void setModuleStates(SwerveModuleState[] desiredStates, boolean ignoreLittle) {
         // If some wheels are set to a speed over their max speed, they will cap out at
         // their max speed.
         // This messes up the ratio of the wheel speeds to each other.
         // This code will scale down the speeds so they are all within the max speed.
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
 
-        frontLeft.setDesiredState(desiredStates[0]);
-        frontRight.setDesiredState(desiredStates[1]);
-        backLeft.setDesiredState(desiredStates[2]);
-        backRight.setDesiredState(desiredStates[3]);
+        frontLeft.setDesiredState(desiredStates[0], ignoreLittle);
+        frontRight.setDesiredState(desiredStates[1], ignoreLittle);
+        backLeft.setDesiredState(desiredStates[2], ignoreLittle);
+        backRight.setDesiredState(desiredStates[3], ignoreLittle);
     }
 }

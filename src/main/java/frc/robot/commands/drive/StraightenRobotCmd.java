@@ -37,7 +37,7 @@ public class StraightenRobotCmd extends CommandBase {
 
         SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
-        swerveSubsystem.setModuleStates(moduleStates);
+        swerveSubsystem.setModuleStates(moduleStates, true);
     }
 
 }

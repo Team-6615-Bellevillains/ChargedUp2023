@@ -18,17 +18,22 @@ public final class Constants {
         public static final double kSteerGearboxRatio = (71.0 / 1.0);
         public static final double kSteerModuleRatio = (48.0/40.0);
         public static final double kSteerPPR = 7;
-        public static final double kPTurning = 5;
+
+        public static final double kPTurning = 5; // TODO: Tune, has not yet completely oscillated
         public static final double kITurning = 0;
         public static final double kDTurning = 0.0;
+
+        public static final double kSTurning = 2.5466; // TODO: Tune with static test
+        public static final double kVTurning = 0.97146;
+        public static final double kATurning = 1.0961;
+
+        public static final double maxWheelVelocity = 90.0/*revolutions/minute*/ / 60.0/*seconds/minute*/ * 2 * Math.PI /*rads/revolution*/;
+        public static final double maxWheelAcceleration = maxWheelVelocity*4;
 
         public static final double kDriveEncoderRot2Meter = kWheelCircumference / kDriveMotorGearRatio;
         public static final double kSteerEncoderRot2Rad = 2 * Math.PI / ((kSteerGearboxRatio/kSteerModuleRatio)*kSteerPPR);
 
         public static final int maximumTotalCounts = 1024;
-        public static final double kSRotation = 2.9466;
-        public static final double kVRotation = 0.97146;
-        public static final double kARotation = 1.0961;
     }
 
     public static final class DriveConstants {
@@ -93,6 +98,13 @@ public final class Constants {
                 / 35;
         public static final double kTeleOpMaxAccelerationUnitsPerSecond = 3;
         public static final double kTeleOpMaxAngularAccelerationUnitsPerSecond = 3;
+
+        public static final double kPThetaCorrection = 5;
+        public static final double kIThetaCorrection = 0;
+        public static final double kDThetaCorrection = 0;
+        public static final double kMaxVelocityThetaCorrection = 1;
+        public static final double kMaxAccelerationThetaCorrection = 2;
+
 
         // TODO: Tune
         public static final double kPRotation = .25;
