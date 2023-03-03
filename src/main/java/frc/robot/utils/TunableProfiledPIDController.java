@@ -46,7 +46,7 @@ public class TunableProfiledPIDController {
         controllers.add(this);
     }
 
-    public ProfiledPIDController getInnerProfiledPIDController() {
+    public ProfiledPIDController getController() {
         return profiledPIDController;
     }
 
