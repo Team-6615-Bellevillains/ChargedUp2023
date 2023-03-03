@@ -143,7 +143,7 @@ public final class Constants {
         public static final int verticalEncoderPulsesPerRevolution = kCimcoderPulsesPerRevolution;
         public static final double verticalRotationsToDistance = verticalGearDiameter * Math.PI * verticalGearRatio;
 
-        public static final double verticalLowHeight = 0;
+        public static final double verticalLowHeight = Units.inchesToMeters(1);
         public static final double verticalMidHeight = Units.inchesToMeters(15);
         public static final double verticalHighHeight = verticalMaxHeight - Units.inchesToMeters(1);
         public static final double verticalRestThreshold = 0.01; // Measurement of elevator, in meters, that is considered all the way down.
