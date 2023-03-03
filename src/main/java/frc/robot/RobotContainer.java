@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToAprilTagCubeCmd;
-import frc.robot.commands.drive.StraightenRobotCmd;
 import frc.robot.commands.drive.SwerveJoystickCmd;
 import frc.robot.commands.elevator.*;
 import frc.robot.commands.grabber.ShootPieceCmd;
@@ -44,8 +43,6 @@ public class RobotContainer {
 
   private void configureBindings() {
     driverController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
-    driverController.rightBumper().whileTrue(new StraightenRobotCmd(swerveSubsystem));
-
 
     operatorController.leftBumper().whileTrue(new SuckObjectCmd(grabberSubsystem));
     operatorController.rightBumper().whileTrue(new ShootPieceCmd(grabberSubsystem));
