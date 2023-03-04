@@ -9,6 +9,7 @@ import frc.robot.commands.grabber.ClampGrabberCmd;
 import frc.robot.subsystems.GrabberSubsystem;
 
 public class IntakeConeCmd extends CommandBase {
+    // TODO: Move command initialization to constructor (otherwise subsystems are null), remove then unnecessary instance variables for subsystems
 
     private GrabberSubsystem grabberSubsystem;
 

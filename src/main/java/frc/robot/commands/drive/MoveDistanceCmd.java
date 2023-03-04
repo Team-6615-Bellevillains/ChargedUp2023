@@ -60,7 +60,7 @@ public class MoveDistanceCmd extends CommandBase {
         double ySpeed = this.yProfiledPIDController.calculate(currentPose.getY(), finalYMeters);
 
         swerveSubsystem.setModuleStates(
-                DriveConstants.kDriveKinematics.toSwerveModuleStates(new ChassisSpeeds(xSpeed, ySpeed, 0)));
+                DriveConstants.kDriveKinematics.toSwerveModuleStates(new ChassisSpeeds(xSpeed, ySpeed, 0)), true);
     }
 
     @Override

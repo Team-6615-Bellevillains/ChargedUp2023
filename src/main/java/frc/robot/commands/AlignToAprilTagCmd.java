@@ -59,7 +59,7 @@ public class AlignToAprilTagCmd extends CommandBase {
 
             // Convert ChassisSpeeds to SwerveModuleStates and send them off through the
             // SwerveSubsystem
-            swerveSubsystem.setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds));
+            swerveSubsystem.setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds), true);
         } else {
             // If there is no target to track, stop. This prevents the robot from continuing
             // to move after the target is lost.

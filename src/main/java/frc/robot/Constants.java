@@ -18,17 +18,22 @@ public final class Constants {
         public static final double kSteerGearboxRatio = (71.0 / 1.0);
         public static final double kSteerModuleRatio = (48.0/40.0);
         public static final double kSteerPPR = 7;
-        public static final double kPTurning = 5;
+
+        public static final double kPTurning = 5; // TODO: Tune, has not yet completely oscillated
         public static final double kITurning = 0;
         public static final double kDTurning = 0.0;
+
+        public static final double kSTurning = 2.5466; // TODO: Tune with static test
+        public static final double kVTurning = 0.97146;
+        public static final double kATurning = 1.0961;
+
+        public static final double maxWheelVelocity = 90.0/*revolutions/minute*/ / 60.0/*seconds/minute*/ * 2 * Math.PI /*rads/revolution*/;
+        public static final double maxWheelAcceleration = maxWheelVelocity*4;
 
         public static final double kDriveEncoderRot2Meter = kWheelCircumference / kDriveMotorGearRatio;
         public static final double kSteerEncoderRot2Rad = 2 * Math.PI / ((kSteerGearboxRatio/kSteerModuleRatio)*kSteerPPR);
 
         public static final int maximumTotalCounts = 1024;
-        public static final double kSRotation = 2.9466;
-        public static final double kVRotation = 0.97146;
-        public static final double kARotation = 1.0961;
     }
 
     public static final class DriveConstants {
@@ -94,6 +99,13 @@ public final class Constants {
         public static final double kTeleOpMaxAccelerationUnitsPerSecond = 3;
         public static final double kTeleOpMaxAngularAccelerationUnitsPerSecond = 3;
 
+        public static final double kPThetaCorrection = 5;
+        public static final double kIThetaCorrection = 0;
+        public static final double kDThetaCorrection = 0;
+        public static final double kMaxVelocityThetaCorrection = 1;
+        public static final double kMaxAccelerationThetaCorrection = 2;
+
+
         // TODO: Tune
         public static final double kPRotation = .25;
         public static final double kIRotation = 0;
@@ -121,6 +133,9 @@ public final class Constants {
         public static final int verticalMotorAPort = 17;
         public static final int verticalMotorBPort = 3;
 
+        public static final int verticalMotorAEncoderAPort = 0;
+        public static final int verticalMotorAEncoderBPort = 1;
+
         public static final double verticalGearRatio = 12.0 / 60.0;
         public static final double verticalMaxHeight = Units.inchesToMeters(30);
         public static final double verticalGearDiameter = Units.inchesToMeters(1.76);
@@ -131,14 +146,18 @@ public final class Constants {
         public static final double verticalLowHeight = 0;
         public static final double verticalMidHeight = Units.inchesToMeters(15);
         public static final double verticalHighHeight = verticalMaxHeight - Units.inchesToMeters(1);
+        public static final double verticalRestThreshold = 0.01; // Measurement of elevator, in meters, that is considered all the way down.
+        public static final double kVerticalSlowFallVoltage = 2;
 
-        public static final double kPVerticalElevator = 0;
+        public static final double kPVerticalElevator = 600;
         public static final double kIVerticalElevator = 0;
         public static final double kDVerticalElevator = 0;
+        public static final double kMaxVelocityVerticalElevator = .5;
+        public static final double kMaxAccelerationVerticalElevator = .4;
 
-        public static final double kGVerticalElevator = 2.50000;
+        public static final double kGVerticalElevator = 2.658000;
         public static final double kSVerticalElevator = 0.032000;
-        public static final double kVVerticalElevator = 4;
+        public static final double kVVerticalElevator = 7;
         public static final double kAVerticalElevator = 0;
 
         // Begin Horizontal
@@ -146,21 +165,25 @@ public final class Constants {
 
         public static final double horizontalGearRatio = 12.0 / 60.0;
         public static final double horizontalMaxExtensionLength = Units.inchesToMeters(15);
-        public static final double horizontalGearDiameter = Units.inchesToMeters(1.76);
+        public static final double horizontalGearDiameter = Units.inchesToMeters(1.751);
 
         public static final int horizontalEncoderPulsesPerRevolution = kCimcoder256PulsesPerRevolution;
-        public static final double horizontalRotationsToDistance = horizontalGearDiameter * Math.PI * horizontalGearRatio;
+        public static final double horizontalRotationsToDistance = 3328.0/11585.0;
 
-        public static final double horizontalInLength = 0;
-        public static final double horizontalOutLength = horizontalMaxExtensionLength-Units.inchesToMeters(1);
+        public static final double kHorizontalElevatorInThreshold = 1;
+        public static final double kHorizontalElevatorOutThreshold = 11.4;
 
         public static final double kPHorizontalElevator = 0;
         public static final double kIHorizontalElevator = 0;
         public static final double kDHorizontalElevator = 0;
+        public static final double kMaxVelocityHorizontalElevator = .1;
+        public static final double kMaxAccelerationHorizontalElevator = .05;
 
-        public static final double kSHorizontalElevator = 0;
-        public static final double kVHorizontalElevator = 0;
+        public static final double kSHorizontalElevator = 1.5;
+        public static final double kVHorizontalElevator = 1;
         public static final double kAHorizontalElevator = 0;
+
+        public static final double kHorizontalElevatorFFInput = 1.5;
     }
 
     public static final class GrabberConstants {

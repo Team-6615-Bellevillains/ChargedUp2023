@@ -6,27 +6,32 @@ import frc.robot.subsystems.HorizontalElevatorSubsystem;
 
 public class HorizontalElevatorOutCmd extends CommandBase {
 
-    private final HorizontalElevatorToSetpointCmd horizontalElevatorToSetpointCmd;
+    private HorizontalElevatorSubsystem horizontalElevatorSubsystem;
+
+
 
     public HorizontalElevatorOutCmd(HorizontalElevatorSubsystem horizontalElevatorSubsystem) {
-        this.horizontalElevatorToSetpointCmd = new HorizontalElevatorToSetpointCmd(horizontalElevatorSubsystem, ElevatorConstants.horizontalOutLength);
+        this.horizontalElevatorSubsystem = horizontalElevatorSubsystem;
 
         addRequirements(horizontalElevatorSubsystem);
     }
 
     @Override
     public void initialize() {
-        horizontalElevatorToSetpointCmd.initialize();
+    }
+
+    @Override
+    public void execute() {
+        if (horizontalElevatorSubsystem.getHorizontalElevatorPosition() < ElevatorConstants.kHorizontalElevatorOutThreshold) {
+            horizontalElevatorSubsystem.setHorizontalElevatorVoltage(horizontalElevatorSubsystem.calculateFeedforward(ElevatorConstants.kHorizontalElevatorFFInput));
+        } else {
+            horizontalElevatorSubsystem.setHorizontalElevatorVoltage(0);
+        }
     }
 
     @Override
     public void end(boolean interrupted) {
-        horizontalElevatorToSetpointCmd.end(interrupted);
-    }
-
-    @Override
-    public boolean isFinished() {
-        return horizontalElevatorToSetpointCmd.isFinished();
+        horizontalElevatorSubsystem.setHorizontalElevatorVoltage(0);
     }
 
 }
