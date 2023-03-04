@@ -218,6 +218,7 @@ public final class Constants {
         public static final double grabberInSetpoint = 0;
         public static final double grabberShootSetpoint = Units.degreesToRadians(118 - 25);
         public static final double grabberIntakeSetpoint = Units.degreesToRadians(118 + 27);
+        public static double grabberOutSetpoint;
     }
 
     public static final class LimelightConstants {

@@ -12,23 +12,37 @@ import frc.robot.subsystems.GrabberSubsystem;
 public class FlipGrabberIntakeCmd extends CommandBase {
   private GrabberSubsystem grabberSubsystem;
   private PIDController flipPIDController;
+  private boolean upDirection;
 
-  public FlipGrabberIntakeCmd(GrabberSubsystem grabberSubsystem) {
+  public FlipGrabberIntakeCmd(GrabberSubsystem grabberSubsystem, boolean upDirection) {
     this.grabberSubsystem = grabberSubsystem;
 
     flipPIDController = new PIDController(GrabberConstants.kPFlip, GrabberConstants.kIFlip, GrabberConstants.kDFlip);
-    flipPIDController.setSetpoint(GrabberConstants.grabberIntakeSetpoint);
+
+    this.upDirection = upDirection; //True will raise the grabber up
+    
+
 
     addRequirements(grabberSubsystem);
   }
 
   @Override
   public void initialize() {
+    if(upDirection == true)
+    {
+      flipPIDController.setSetpoint(GrabberConstants.grabberInSetpoint);
+    }
+    else
+    {
+      flipPIDController.setSetpoint(GrabberConstants.grabberOutSetpoint);
+    }
+    
     flipPIDController.reset();
   }
 
   @Override
   public void execute() {
+    //Need to test which direction
     double speed = flipPIDController.calculate(grabberSubsystem.getFlipEncoderPosition());
     grabberSubsystem.setFlipMotorSpeed(speed);
 
