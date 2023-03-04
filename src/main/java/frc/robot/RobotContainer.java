@@ -4,12 +4,22 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToAprilTagCubeCmd;
 import frc.robot.commands.drive.StraightenRobotCmd;
@@ -35,7 +45,10 @@ public class RobotContainer {
 
   private final CommandXboxController driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
   private final CommandXboxController operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
-
+  
+  private SwerveAutoBuilder autoBuilder;
+  private HashMap<String, Command> eventMap = new HashMap<>();
+  
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
         swerveSubsystem,
@@ -47,11 +60,30 @@ public class RobotContainer {
     horizontalElevatorSubsystem.setDefaultCommand(new ManualHorizontalElevatorController(horizontalElevatorSubsystem, () -> -operatorController.getLeftY()));
     verticalElevatorSubsystem.setDefaultCommand(new ManualVerticalElevatorController(verticalElevatorSubsystem, () -> -operatorController.getRightY()));
 
+
+    PathPlannerTrajectory testPath = PathPlanner.loadPath("New Path", new PathConstraints(4, 3));
+
+    eventMap.put("marker1", new PrintCommand("Passed Marker 1"));
+
+    autoBuilder = new SwerveAutoBuilder(
+    swerveSubsystem::getPose, // Pose2d supplier
+    swerveSubsystem::resetPoseEstimator, // Pose2d consumer, used to reset odometry at the beginning of auto
+    DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+    new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+    new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+    swerveSubsystem::setModuleStates, // Module states consumer used to output to the drive subsystem
+    eventMap,
+    true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+    swerveSubsystem // The drive subsystem. Used to properly set the requirements of path following commands
+);
+    
+
     //Adds a smartdashboard widget that will allow us to select the autonomous we want to use. 
     m_chooser = new SendableChooser<>();
     //Default Autonomous that will be run if no other auto is selected
     m_chooser.setDefaultOption("AlignToAprilTagCubeCmd", new AlignToAprilTagCubeCmd(limelightSubsystem, swerveSubsystem));
     m_chooser.addOption("ScoreCubeLowCmd", new ScoreCubeLowCmd(horizontalElevatorSubsystem, grabberSubsystem, swerveSubsystem, limelightSubsystem)); 
+    m_chooser.addOption("Path Tester", autoBuilder.fullAuto(testPath));
     SmartDashboard.putData(m_chooser); 
 
     configureBindings();
