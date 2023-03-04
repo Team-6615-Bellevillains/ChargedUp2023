@@ -9,7 +9,7 @@ import frc.robot.commands.elevator.HorizontalElevatorInCmd;
 import frc.robot.commands.elevator.HorizontalElevatorOutCmd;
 import frc.robot.commands.elevator.VerticalElevatorLowCmd;
 import frc.robot.commands.elevator.VerticalElevatorMidCmd;
-import frc.robot.commands.grabber.FlipGrabberInCmd;
+//import frc.robot.commands.grabber.FlipGrabberInCmd;
 import frc.robot.commands.grabber.ShootPieceCmd;
 import frc.robot.subsystems.*;
 
@@ -18,7 +18,7 @@ public class ScoreCubeMidCmd extends CommandBase {
     private final VerticalElevatorMidCmd verticalElevatorMidCmd;
     private final HorizontalElevatorOutCmd horizontalElevatorOutCmd;
 
-    private final FlipGrabberInCmd flipGrabberInCmd;
+   // private final FlipGrabberInCmd flipGrabberInCmd;
     private final ShootPieceCmd shootPieceCmd;
 
     private final HorizontalElevatorInCmd horizontalElevatorInCmd;
@@ -38,7 +38,7 @@ public class ScoreCubeMidCmd extends CommandBase {
         verticalElevatorLowCmd = new VerticalElevatorLowCmd(verticalElevatorSubsystem);
 
         shootPieceCmd = new ShootPieceCmd(grabberSubsystem);
-        flipGrabberInCmd = new FlipGrabberInCmd(grabberSubsystem);
+      //  flipGrabberInCmd = new FlipGrabberIntakeCmd(grabberSubsystem);
 
         alignToAprilTagCubeCmd = new AlignToAprilTagCubeCmd(limelightSubsystem, swerveSubsystem);
 
@@ -46,7 +46,7 @@ public class ScoreCubeMidCmd extends CommandBase {
                 .andThen(verticalElevatorMidCmd)
                 .andThen(horizontalElevatorOutCmd)
                 .andThen(Commands.parallel(new WaitCommand(0.5), shootPieceCmd))
-                .andThen(flipGrabberInCmd)
+               // .andThen(flipGrabberInCmd)
                 .andThen(horizontalElevatorInCmd)
                 .andThen(verticalElevatorLowCmd);
 
