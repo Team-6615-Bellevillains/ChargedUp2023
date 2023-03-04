@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.commands.AlignToAprilTagCubeCmd;
 import frc.robot.commands.drive.SwerveJoystickCmd;
 import frc.robot.commands.elevator.*;
@@ -50,9 +51,9 @@ public class RobotContainer {
     operatorController.y().whileTrue(new HorizontalElevatorOutCmd(horizontalElevatorSubsystem));
     operatorController.x().whileTrue(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
 
-    operatorController.rightTrigger(0.1).whileTrue(new VerticalElevatorLowCmd(verticalElevatorSubsystem)); // TODO: Test
-    operatorController.a().whileTrue(new VerticalElevatorMidCmd(verticalElevatorSubsystem));
-    operatorController.b().whileTrue(new VerticalElevatorHighCmd(verticalElevatorSubsystem));
+    operatorController.rightTrigger(0.1).whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalLowHeight)); // TODO: Test
+    operatorController.a().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalMidHeight));
+    operatorController.b().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight));
     operatorController.leftTrigger(0.1).whileTrue(new InstantCommand(verticalElevatorSubsystem::lowerElevator));
   }
 
