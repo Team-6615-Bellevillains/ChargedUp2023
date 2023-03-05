@@ -4,6 +4,9 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.utils.TunablePIDController;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.MathUtil;
@@ -27,8 +30,8 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
   private PIDController yawController;
   private PIDController xdistanceController;
   private PIDController ydistanceController;
-  private double setpoint;
-  private double xsetpoint;
+  private double ySetpoint;
+  private double xSetpoint;
   private PhotonTrackedTarget target;
   private Pose2d currentPosition;
   private double currentYPosition;
@@ -39,26 +42,27 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
     this.swerveSubsystem = swerveSubsystem;
 
     //yawController = new PIDController(AutoConstants.kPTrackingYaw, 0, 0);
-    xdistanceController = new PIDController(AutoConstants.kPTrackingDrive, 0, 0);
-    ydistanceController = new PIDController(AutoConstants.kPTrackingDriveY, 0, 0);
-    target = limelightSubsystem.getBestTarget();
-    setpoint = 0;
-    xsetpoint = 0;
+    xdistanceController = new TunablePIDController("xdistance", AutoConstants.kPTrackingDriveX, 0, 0).getController();
+    ydistanceController = new TunablePIDController("ydistance", AutoConstants.kPTrackingDriveY, 0, 0).getController();
+    ySetpoint = 0;
+    xSetpoint = 0;
 
-    currentPosition = swerveSubsystem.getPose();
-    currentYPosition = currentPosition.getY();
-    currentXPosition = currentPosition.getX();
     addRequirements(limelightSubsystem, swerveSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    currentPosition = swerveSubsystem.getPose();
+    currentYPosition = currentPosition.getY();
+    currentXPosition = currentPosition.getX();
+
     if (limelightSubsystem.getBestTarget() != null) {
+      target = limelightSubsystem.getBestTarget();
       Transform3d cameraTransform = target.getBestCameraToTarget();
 
-      setpoint = currentYPosition + cameraTransform.getY() + 0.331; 
-      xsetpoint = currentXPosition + (cameraTransform.getX() - 1);
+      ySetpoint = currentYPosition + cameraTransform.getY() + 0.331;
+      xSetpoint = currentXPosition + (cameraTransform.getX() - 1 - Units.inchesToMeters(1));
     }
   }
 
@@ -67,18 +71,23 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
   public void execute() {
     currentPosition = swerveSubsystem.getPose();
     currentYPosition = currentPosition.getY();
+    currentXPosition = currentPosition.getX();
 
     //double rotationOutput = yawController.calculate(limelightSubsystem.getBestTarget().getYaw(), 0);
-    double ydistanceOutput = ydistanceController.calculate(currentYPosition, setpoint);
-    double xdistanceOutput = xdistanceController.calculate(currentXPosition, xsetpoint);
+    double ydistanceOutput = ydistanceController.calculate(currentYPosition, ySetpoint);
+    double xdistanceOutput = xdistanceController.calculate(currentXPosition, xSetpoint);
+
+    SmartDashboard.putNumber("y curr", currentYPosition);
+    SmartDashboard.putNumber("x curr", currentXPosition);
+    SmartDashboard.putNumber("x P", xdistanceController.getP());
+    SmartDashboard.putNumber("x goal", xSetpoint);
+    SmartDashboard.putNumber("y goal", ySetpoint);
 
     // Convert P[ID] outputs to ChassisSpeed values, clamping the distance P[ID] to
     // a max speed
-    ChassisSpeeds chassisSpeeds = new ChassisSpeeds( MathUtil.clamp(xdistanceOutput, -AutoConstants.kAutoMaxSpeedMetersPerSecond,
-    AutoConstants.kAutoMaxSpeedMetersPerSecond),
-        MathUtil.clamp(ydistanceOutput, -AutoConstants.kAutoMaxSpeedMetersPerSecond,
-            AutoConstants.kAutoMaxSpeedMetersPerSecond),
-        0);
+    ChassisSpeeds chassisSpeeds = swerveSubsystem.calculateChassisSpeedsWithDriftCorrection( MathUtil.clamp(xdistanceOutput, -AutoConstants.kAutoMaxSpeedMetersPerSecond,
+                    AutoConstants.kAutoMaxSpeedMetersPerSecond),MathUtil.clamp(ydistanceOutput, -AutoConstants.kAutoMaxSpeedMetersPerSecond,
+                    AutoConstants.kAutoMaxSpeedMetersPerSecond),0, false);
 
     // Convert ChassisSpeeds to SwerveModuleStates and send them off through the
     // SwerveSubsystem
