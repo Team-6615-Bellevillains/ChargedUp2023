@@ -190,10 +190,8 @@ public final class Constants {
         public static final int kLeftRollerMotorPort = 15;
         public static final int kRightRollerMotorPort = 14;
 
-        public static final int kLeftSolenoidForwardChannel = 1;
-        public static final int kLeftSolenoidReverseChannel = 2;
-        public static final int kRightSolenoidForwardChannel = 3;
-        public static final int kRightSolenoidReverseChannel = 4;
+        public static final int kSolenoidForwardChannel = 0;
+        public static final int kSolenoidReverseChannel = 1;
 
         public static final int kFlipMotorPort = 16;
         public static final double kFlipReverseThreshold = 0;

@@ -20,7 +20,7 @@ public class GrabberSubsystem extends SubsystemBase {
 
   /** Creates a new GrabberSubsystem. */
   private Compressor compressor;
-  private DoubleSolenoid leftSolenoid;
+  private DoubleSolenoid solenoid;
   private DoubleSolenoid rightSolenoid;
   private CANSparkMax leftMotorRoller;
   private CANSparkMax rightMotorRoller;
@@ -30,10 +30,8 @@ public class GrabberSubsystem extends SubsystemBase {
     // Find out ports later!!
     // Compressor and Solenoids
 //    compressor = new Compressor(PneumaticsModuleType.CTREPCM);
-//    leftSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kLeftSolenoidForwardChannel,
-//        GrabberConstants.kLeftSolenoidReverseChannel);
-//    rightSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kRightSolenoidForwardChannel,
-//        GrabberConstants.kRightSolenoidReverseChannel);
+    solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kSolenoidForwardChannel,
+        GrabberConstants.kSolenoidReverseChannel);
 
     // Roller Motors
     leftMotorRoller = new CANSparkMax(GrabberConstants.kLeftRollerMotorPort, MotorType.kBrushless);
@@ -73,10 +71,9 @@ public class GrabberSubsystem extends SubsystemBase {
 //    }
 //  }
 
-//  public void setSolenoidStates(DoubleSolenoid.Value state) {
-//    leftSolenoid.set(state);
-//    rightSolenoid.set(state);
-//  }
+  public void setSolenoidState(DoubleSolenoid.Value state) {
+    solenoid.set(state);
+  }
 
   public void setFlipMotorSpeed(double speed) {
     flipMotor.set(speed);

@@ -4,24 +4,24 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.GrabberSubsystem;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
-public class OpenGrabberCmd extends CommandBase {
+public class ClampGrabberCmd extends CommandBase {
 
     private GrabberSubsystem grabberSubsystem;
 
-    public OpenGrabberCmd(GrabberSubsystem grabberSubsystem) {
+    public ClampGrabberCmd(GrabberSubsystem grabberSubsystem) {
         this.grabberSubsystem = grabberSubsystem;
-        
+
         addRequirements(grabberSubsystem);
     }
 
     @Override
     public void execute() {
-        grabberSubsystem.setSolenoidStates(DoubleSolenoid.Value.kReverse);
+        grabberSubsystem.setSolenoidState(DoubleSolenoid.Value.kForward);
     }
 
     @Override
     public void end(boolean interrupted) {
-        grabberSubsystem.setSolenoidStates(DoubleSolenoid.Value.kOff);
+        grabberSubsystem.setSolenoidState(DoubleSolenoid.Value.kOff);
     }
-    
+
 }
