@@ -5,27 +5,35 @@
 package frc.robot.commands.grabber;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.GrabberSubsystem;
 
-public class ManualGrabberFlipInCmd extends CommandBase {
-    private GrabberSubsystem grabberSubsystem;
+import java.util.ArrayList;
+import java.util.function.Supplier;
 
-    public ManualGrabberFlipInCmd(GrabberSubsystem grabberSubsystem) {
+public class GrabberJoystickControlCmd extends CommandBase {
+    private GrabberSubsystem grabberSubsystem;
+    private Supplier<Double> joystickPercentageFunction;
+
+    public GrabberJoystickControlCmd(GrabberSubsystem grabberSubsystem, Supplier<Double> joystickPercentageFunction) {
         this.grabberSubsystem = grabberSubsystem;
+        this.joystickPercentageFunction = joystickPercentageFunction;
 
         addRequirements(grabberSubsystem);
     }
 
     @Override
     public void execute() {
-        grabberSubsystem.setFlipMotorSpeed(-.4);
+        SmartDashboard.putNumber("manual percentage", joystickPercentageFunction.get()/3);
+        grabberSubsystem.setMotorPercentage(joystickPercentageFunction.get()/3);
+//        System.out.println(String.format("(%s,%s)", this.grabberSubsystem.getFlipEncoderPosition(), grabberSubsystem.getLatestVoltage())); // plot position vs voltage
     }
 
     @Override
     public void end(boolean interrupted) {
-        grabberSubsystem.setFlipMotorSpeed(0);
+        grabberSubsystem.setMotorPercentage(0);
     }
 
     @Override

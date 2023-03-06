@@ -144,7 +144,7 @@ public final class Constants {
         public static final double verticalRotationsToDistance = verticalGearDiameter * Math.PI * verticalGearRatio;
 
         public static final double verticalLowHeight = Units.inchesToMeters(1);
-        public static final double verticalMidHeight = Units.inchesToMeters(15);
+        public static final double verticalMidHeight = Units.inchesToMeters(21);
         public static final double verticalHighHeight = verticalMaxHeight - Units.inchesToMeters(1);
         public static final double verticalRestThreshold = 0.01; // Measurement of elevator, in meters, that is considered all the way down.
         public static final double kVerticalSlowFallVoltage = 2;
@@ -208,8 +208,8 @@ public final class Constants {
          */
         public static final double kFlipGearRatio = (12.0 / 60.0) * (16.0 / 58.0) * (12.0 / 30.0);
 
-        public static final int flipPulsesPerRevolution = kCimcoder256PulsesPerRevolution;
-        public static final double flipRotationsToRadians = 2 * Math.PI / kFlipGearRatio;
+        public static final int flipPulsesPerRevolution = kCimcoder256PulsesPerRevolution*4;
+        public static final double flipRotationsToDegrees = 360 * kFlipGearRatio;
 
         public static final double kPFlip = 0.1;
         public static final double kIFlip = 0.1;

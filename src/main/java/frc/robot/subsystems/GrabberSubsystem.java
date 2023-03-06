@@ -11,7 +11,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GrabberConstants;
@@ -25,6 +24,7 @@ public class GrabberSubsystem extends SubsystemBase {
   private CANSparkMax leftMotorRoller;
   private CANSparkMax rightMotorRoller;
   private WPI_TalonSRX flipMotor;
+  private static final double DEGREES_PER_TICK = GrabberConstants.flipRotationsToDegrees / GrabberConstants.flipPulsesPerRevolution;
 
   public GrabberSubsystem() {
     // Find out ports later!!
@@ -45,6 +45,10 @@ public class GrabberSubsystem extends SubsystemBase {
     flipMotor = new WPI_TalonSRX(GrabberConstants.kFlipMotorPort);
     flipMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
 
+    flipMotor.setInverted(true);
+
+    flipMotor.setSelectedSensorPosition(-102 / DEGREES_PER_TICK);
+
     // Sets flipMotor's thresholds to prevent mechanism from breaking
     flipMotor.configReverseSoftLimitThreshold(GrabberConstants.kFlipReverseThreshold, 10);
     flipMotor.configForwardSoftLimitThreshold(GrabberConstants.kFlipReverseThreshold, 10);
@@ -57,7 +61,9 @@ public class GrabberSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
 //    SmartDashboard.putNumber("Compressor Pressure", compressor.getCurrent());
+    SmartDashboard.putNumber("Flip Encoder Position [RAW]", flipMotor.getSelectedSensorPosition());
     SmartDashboard.putNumber("Flip Encoder Position", getFlipEncoderPosition());
+    SmartDashboard.putNumber("Flip Encoder Velocity", getFlipEncoderVelocity());
   }
 
   public void setRollerSpeeds(double speed) {
@@ -78,12 +84,32 @@ public class GrabberSubsystem extends SubsystemBase {
 //    rightSolenoid.set(state);
 //  }
 
-  public void setFlipMotorSpeed(double speed) {
-    flipMotor.set(speed);
+  private double latestVoltage = 0;
+
+  public double getLatestVoltage() {
+    return latestVoltage;
+  }
+
+  public void setMotorVoltage(double voltage) {
+    latestVoltage = voltage;
+    SmartDashboard.putNumber("grabber voltage", voltage);
+    flipMotor.setVoltage(voltage);
+  }
+
+  public void setMotorPercentage(double percentage) {
+    SmartDashboard.putNumber("grabber percentage", percentage);
+    flipMotor.set(percentage);
   }
 
   public double getFlipEncoderPosition() {
-    return flipMotor.getSelectedSensorPosition() * GrabberConstants.flipRotationsToRadians/GrabberConstants.flipPulsesPerRevolution;
+//    if (flipMotor.getSelectedSensorPosition() > 118) {
+//      flipMotor.setSelectedSensorPosition(118);
+//    }
+    return flipMotor.getSelectedSensorPosition() * DEGREES_PER_TICK;
+  }
+
+  public double getFlipEncoderVelocity() {
+    return flipMotor.getSelectedSensorVelocity() * DEGREES_PER_TICK;
   }
 
   public void resetFlipEncoder() {

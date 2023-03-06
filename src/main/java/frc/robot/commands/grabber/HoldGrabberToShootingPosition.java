@@ -4,15 +4,14 @@
 
 package frc.robot.commands.grabber;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.GrabberSubsystem;
 
-public class ManualGrabberFlipOutCmd extends CommandBase {
+public class HoldGrabberToShootingPosition extends CommandBase {
+    // TODO: Fix Broken CMD
     private GrabberSubsystem grabberSubsystem;
 
-    public ManualGrabberFlipOutCmd(GrabberSubsystem grabberSubsystem) {
+    public HoldGrabberToShootingPosition(GrabberSubsystem grabberSubsystem) {
         this.grabberSubsystem = grabberSubsystem;
 
         addRequirements(grabberSubsystem);
@@ -20,17 +19,21 @@ public class ManualGrabberFlipOutCmd extends CommandBase {
 
     @Override
     public void execute() {
-        grabberSubsystem.setFlipMotorSpeed(.4);
+        if (grabberSubsystem.getFlipEncoderPosition() <= 50) {
+            grabberSubsystem.setMotorPercentage(-.1);
+        } else {
+            grabberSubsystem.setMotorPercentage(.2);
+        }
     }
 
     @Override
     public void end(boolean interrupted) {
-        grabberSubsystem.setFlipMotorSpeed(0);
+        grabberSubsystem.setMotorVoltage(-1.5);
     }
 
     @Override
     public boolean isFinished() {
-        return Math.abs(grabberSubsystem.getFlipEncoderPosition() - Constants.GrabberConstants.grabberIntakeSetpoint) < Units.degreesToRadians(10);
+        return grabberSubsystem.getFlipEncoderPosition() <= 33;
     }
 
 }
