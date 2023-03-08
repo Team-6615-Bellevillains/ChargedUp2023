@@ -16,12 +16,7 @@ public class OpenGrabberCmd extends CommandBase {
 
     @Override
     public void execute() {
-        grabberSubsystem.setSolenoidState(DoubleSolenoid.Value.kReverse);
+        grabberSubsystem.setSolenoidState(false);
     }
 
-    @Override
-    public void end(boolean interrupted) {
-        grabberSubsystem.setSolenoidState(DoubleSolenoid.Value.kOff);
-    }
-    
 }
