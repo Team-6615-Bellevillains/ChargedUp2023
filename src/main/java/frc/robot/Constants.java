@@ -150,16 +150,16 @@ public final class Constants {
         public static final double verticalRestThreshold = 0.01; // Measurement of elevator, in meters, that is considered all the way down.
         public static final double kVerticalSlowFallVoltage = 2;
 
-        public static final double kPVerticalElevator = 600;
+        public static final double kPVerticalElevator = 0.01;
         public static final double kIVerticalElevator = 0;
         public static final double kDVerticalElevator = 0;
         public static final double kMaxVelocityVerticalElevator = .5;
         public static final double kMaxAccelerationVerticalElevator = .4;
 
-        public static final double kGVerticalElevator = 2.658000;
-        public static final double kSVerticalElevator = 0.032000;
-        public static final double kVVerticalElevator = 7;
-        public static final double kAVerticalElevator = 0;
+        public static final double kGVerticalElevator = 3.379000;
+        public static final double kSVerticalElevator = 0.621000;
+        public static final double kVVerticalElevator = 4.81;
+        public static final double kAVerticalElevator = 0.22;
 
         // Begin Horizontal
         public static final int horizontalMotorPort = 18;
