@@ -1,26 +1,28 @@
 package frc.robot.commands.grabber;
 
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.GrabberSubsystem;
+import frc.robot.subsystems.RollerSubsystem;
 
 public class ShootPieceCmd extends CommandBase {
 
-    private GrabberSubsystem grabberSubsystem;
+    private RollerSubsystem rollerSubsystem;
 
-    public ShootPieceCmd(GrabberSubsystem grabberSubsystem) {
-        this.grabberSubsystem = grabberSubsystem;
+    public ShootPieceCmd(RollerSubsystem rollerSubsystem) {
+        this.rollerSubsystem = rollerSubsystem;
 
-        addRequirements(grabberSubsystem);
+        addRequirements(rollerSubsystem);
     }
 
     @Override
     public void execute() {
-        grabberSubsystem.setRollerSpeeds(.2);
+        rollerSubsystem.setRollerSpeedPercentage(.2);
     }
 
     @Override
     public void end(boolean interrupted) {
-        grabberSubsystem.setRollerSpeeds(0);
+        rollerSubsystem.setRollerSpeedPercentage(0);
     }
 
 }

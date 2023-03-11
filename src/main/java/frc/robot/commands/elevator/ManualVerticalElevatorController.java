@@ -24,8 +24,8 @@ public class ManualVerticalElevatorController extends CommandBase {
 
     @Override
     public void execute() {
-        double velocity = (controllerPowerOutput.get()/50);
-        verticalElevatorSubsystem.calculateFeedforward(velocity);
+        double velocity = (controllerPowerOutput.get()/2.5);
+        verticalElevatorSubsystem.setVerticalElevatorVoltage(verticalElevatorSubsystem.calculateFeedforward(velocity));
     }
 
     @Override
