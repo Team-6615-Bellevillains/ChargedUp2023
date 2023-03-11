@@ -61,8 +61,8 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
       target = limelightSubsystem.getBestTarget();
       Transform3d cameraTransform = target.getBestCameraToTarget();
 
-      ySetpoint = currentYPosition + cameraTransform.getY() + 0.331;
-      xSetpoint = currentXPosition + (cameraTransform.getX() - 1 - Units.inchesToMeters(1));
+      ySetpoint = currentYPosition + cameraTransform.getY() + 0.331 - Units.inchesToMeters(5);
+      xSetpoint = currentXPosition + (cameraTransform.getX() - 1 + Units.inchesToMeters(11));
     }
   }
 

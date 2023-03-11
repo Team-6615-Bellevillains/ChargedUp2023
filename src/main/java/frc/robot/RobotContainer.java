@@ -58,7 +58,7 @@ public class RobotContainer {
     verticalElevatorSubsystem.setDefaultCommand(new ManualVerticalElevatorController(verticalElevatorSubsystem, () -> -operatorController.getRightY())); // TODO: Test
 
 
-    PathPlannerTrajectory testPath = PathPlanner.loadPath("New Path", new PathConstraints(4, 3));
+    PathPlannerTrajectory testPath = PathPlanner.loadPath("New Path", new PathConstraints(2, 2));
 
     eventMap.put("marker1", new PrintCommand("Passed Marker 1"));
 
