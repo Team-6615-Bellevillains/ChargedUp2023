@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
@@ -19,6 +21,8 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   private final LimelightSubsystem limelight = new LimelightSubsystem();
   private final GrabberSubsystem grabberSubsystem = new GrabberSubsystem();
+  private final RollerSubsystem rollerSubsystem = new RollerSubsystem();
+
   private final HorizontalElevatorSubsystem horizontalElevatorSubsystem = new HorizontalElevatorSubsystem();
   private final VerticalElevatorSubsystem verticalElevatorSubsystem = new VerticalElevatorSubsystem();
 
@@ -34,8 +38,8 @@ public class RobotContainer {
         () -> -driverController.getRightX(),
         () -> driverController.leftBumper().getAsBoolean()));
 
-    horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
-    verticalElevatorSubsystem.setDefaultCommand(new ManualVerticalElevatorController(verticalElevatorSubsystem, () -> -operatorController.getRightY())); // TODO: Test
+//    horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
+//    verticalElevatorSubsystem.setDefaultCommand(new ManualVerticalElevatorController(verticalElevatorSubsystem, () -> -operatorController.getRightY())); // TODO: Test
     grabberSubsystem.setDefaultCommand(new GrabberJoystickControlCmd(grabberSubsystem, () -> -operatorController.getLeftY()));
 
     configureBindings();
@@ -44,15 +48,17 @@ public class RobotContainer {
   private void configureBindings() {
     driverController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
 
-    operatorController.leftBumper().whileTrue(new SuckObjectCmd(grabberSubsystem));
-    operatorController.rightBumper().whileTrue(new ShootPieceCmd(grabberSubsystem));
+    operatorController.leftBumper().whileTrue(new SuckObjectCmd(rollerSubsystem));
+    operatorController.rightBumper().whileTrue(new ShootPieceCmd(rollerSubsystem));
 
-    operatorController.y().whileTrue(new HorizontalElevatorOutCmd(horizontalElevatorSubsystem));
-    operatorController.x().whileTrue(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
-    operatorController.a().whileTrue(new GrabberJoystickControlCmd(grabberSubsystem, () -> -operatorController.getLeftY()));
-    operatorController.b().whileTrue(new HoldGrabberToShootingPosition(grabberSubsystem));
+//    operatorController.y().whileTrue(new HorizontalElevatorOutCmd(horizontalElevatorSubsystem));
+//    operatorController.x().whileTrue(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
+//    operatorController.a().whileTrue(new GrabberJoystickControlCmd(grabberSubsystem, () -> -operatorController.getLeftY()));
+//    operatorController.b().whileTrue(new HoldGrabberToShootingPosition(grabberSubsystem));
+//    operatorController.b().toggleOnTrue(new HoldGrabberToShootingPosition(grabberSubsystem));
 
-    operatorController.leftBumper().whileTrue(new InstantCommand(verticalElevatorSubsystem::lowerElevator));
+
+//    operatorController.leftBumper().whileTrue(new InstantCommand(verticalElevatorSubsystem::lowerElevator));
   }
 
   public Command getAutonomousCommand() {

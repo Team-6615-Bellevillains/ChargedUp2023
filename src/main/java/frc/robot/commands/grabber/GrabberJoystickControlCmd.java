@@ -4,18 +4,20 @@
 
 package frc.robot.commands.grabber;
 
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
+import frc.robot.Constants.GrabberConstants;
+import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.GrabberSubsystem;
 
-import java.util.ArrayList;
 import java.util.function.Supplier;
 
 public class GrabberJoystickControlCmd extends CommandBase {
     private GrabberSubsystem grabberSubsystem;
     private Supplier<Double> joystickPercentageFunction;
+    private ArmFeedforward grabberFeedforward = new ArmFeedforward(GrabberConstants.kSGrabber,GrabberConstants.kGGrabber,GrabberConstants.kVGrabber, GrabberConstants.kAGrabber);
+
 
     public GrabberJoystickControlCmd(GrabberSubsystem grabberSubsystem, Supplier<Double> joystickPercentageFunction) {
         this.grabberSubsystem = grabberSubsystem;
@@ -26,19 +28,14 @@ public class GrabberJoystickControlCmd extends CommandBase {
 
     @Override
     public void execute() {
-        SmartDashboard.putNumber("manual percentage", joystickPercentageFunction.get()/3);
-        grabberSubsystem.setMotorPercentage(joystickPercentageFunction.get()/3);
-//        System.out.println(String.format("(%s,%s)", this.grabberSubsystem.getFlipEncoderPosition(), grabberSubsystem.getLatestVoltage())); // plot position vs voltage
+        double joystickPower = MathUtil.applyDeadband(joystickPercentageFunction.get(), OIConstants.kDeadband) / 2;
+        grabberSubsystem.setMotorVoltage(grabberFeedforward.calculate(grabberSubsystem.getFlipEncoderPositionInRads(), joystickPower));
     }
 
     @Override
     public void end(boolean interrupted) {
-        grabberSubsystem.setMotorPercentage(0);
+        grabberSubsystem.setMotorVoltage(grabberFeedforward.calculate(grabberSubsystem.getFlipEncoderPositionInRads(), 0));
     }
 
-    @Override
-    public boolean isFinished() {
-        return Math.abs(grabberSubsystem.getFlipEncoderPosition() - Constants.GrabberConstants.grabberInSetpoint) < Units.degreesToRadians(10);
-    }
 
 }
