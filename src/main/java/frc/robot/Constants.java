@@ -153,11 +153,11 @@ public final class Constants {
         public static final double kPVerticalElevator = 0.01;
         public static final double kIVerticalElevator = 0;
         public static final double kDVerticalElevator = 0;
-        public static final double kMaxVelocityVerticalElevator = .5;
-        public static final double kMaxAccelerationVerticalElevator = .4;
+        public static final double kMaxVelocityVerticalElevator = Units.inchesToMeters(5);
+        public static final double kMaxAccelerationVerticalElevator = Units.inchesToMeters(7);
 
-        public static final double kGVerticalElevator = 3.379000;
-        public static final double kSVerticalElevator = 0.621000;
+        public static final double kGVerticalElevator = 3.179000;
+        public static final double kSVerticalElevator = 0.821000;
         public static final double kVVerticalElevator = 4.81;
         public static final double kAVerticalElevator = 0.22;
 
@@ -246,7 +246,8 @@ public final class Constants {
     }
 
     public static final class OIConstants {
-        public static final double kDeadband = 0.07;
+        public static final double kDefaultJoystickDeadband = 0.07;
+        public static final double kOperatorRightYDeadband = 0.10;
         public static final int kDriverControllerPort = 0;
         public static final int kOperatorControllerPort = 1;
     }

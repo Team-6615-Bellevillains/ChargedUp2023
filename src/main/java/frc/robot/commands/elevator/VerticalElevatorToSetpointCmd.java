@@ -1,19 +1,22 @@
 package frc.robot.commands.elevator;
 
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.VerticalElevatorSubsystem;
+import frc.robot.utils.TunableProfiledPIDController;
 
 public class VerticalElevatorToSetpointCmd extends CommandBase {
+    // TODO: Tune 'er up
 
     private final VerticalElevatorSubsystem verticalElevatorSubsystem;
-    private ProfiledPIDController profiledPIDController = new ProfiledPIDController(ElevatorConstants.kPVerticalElevator, ElevatorConstants.kIVerticalElevator, ElevatorConstants.kDVerticalElevator, new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVelocityVerticalElevator, ElevatorConstants.kMaxAccelerationVerticalElevator));
+    private TunableProfiledPIDController tunableProfiledPIDController = new TunableProfiledPIDController("vertElevator", ElevatorConstants.kPVerticalElevator, ElevatorConstants.kIVerticalElevator, ElevatorConstants.kDVerticalElevator, new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVelocityVerticalElevator, ElevatorConstants.kMaxAccelerationVerticalElevator));
 
     public VerticalElevatorToSetpointCmd(VerticalElevatorSubsystem verticalElevatorSubsystem, double setpoint) {
-        profiledPIDController.setGoal(setpoint);
+        tunableProfiledPIDController.getController().setGoal(setpoint);
 
         this.verticalElevatorSubsystem = verticalElevatorSubsystem;
 
@@ -22,13 +25,15 @@ public class VerticalElevatorToSetpointCmd extends CommandBase {
 
     @Override
     public void initialize() {
-        profiledPIDController.reset(verticalElevatorSubsystem.getVerticalElevatorPosition(), verticalElevatorSubsystem.getVerticalElevatorVelocity());
+        tunableProfiledPIDController.getController().reset(verticalElevatorSubsystem.getVerticalElevatorPosition(), verticalElevatorSubsystem.getVerticalElevatorVelocity());
     }
 
     @Override
     public void execute() {
-        double pidOutput = profiledPIDController.calculate(verticalElevatorSubsystem.getVerticalElevatorPosition());
-        double feedforwardOutput = verticalElevatorSubsystem.calculateFeedforward(profiledPIDController.getSetpoint().velocity);
+        double pidOutput = tunableProfiledPIDController.calculateAndUpdateLastMeasurement(verticalElevatorSubsystem.getVerticalElevatorPosition());
+        double feedforwardOutput = verticalElevatorSubsystem.calculateFeedforward(tunableProfiledPIDController.getController().getSetpoint().velocity);
+
+        SmartDashboard.putNumber("Position Desired (in)", Units.metersToInches(tunableProfiledPIDController.getController().getSetpoint().position));
 
         verticalElevatorSubsystem.setVerticalElevatorVoltage(pidOutput + feedforwardOutput);
     }
@@ -40,7 +45,7 @@ public class VerticalElevatorToSetpointCmd extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return profiledPIDController.atGoal();
+        return tunableProfiledPIDController.getController().atGoal();
     }
 
 }

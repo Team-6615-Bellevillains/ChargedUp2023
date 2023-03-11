@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Encoder;
@@ -17,11 +18,6 @@ public class VerticalElevatorSubsystem extends SubsystemBase {
     private final WPI_TalonSRX verticalMotorB;
 
     private final Encoder verticalElevatorEncoder;
-
-
-    private final static NetworkTableInstance networkTableInstance = NetworkTableInstance.getDefault();
-    private final static NetworkTable tuningTable = networkTableInstance.getTable("tuning");
-    private double lastUpdatedTS = Timer.getFPGATimestamp();
 
     private TunableElevatorFeedforward tunableElevatorFeedforward = new TunableElevatorFeedforward("vertelevator", ElevatorConstants.kSVerticalElevator, ElevatorConstants.kGVerticalElevator, ElevatorConstants.kVVerticalElevator);
 
@@ -53,11 +49,15 @@ public class VerticalElevatorSubsystem extends SubsystemBase {
     public void setVerticalElevatorVoltage(double voltage) {
         verticalMotorA.setVoltage(voltage);
         verticalMotorB.setVoltage(voltage);
+
         SmartDashboard.putNumber("vert voltage", voltage);
         SmartDashboard.putNumber("A Stator Current", verticalMotorA.getStatorCurrent());
         SmartDashboard.putNumber("B Stator Current", verticalMotorB.getStatorCurrent());
         SmartDashboard.putNumber("A Supply Current", verticalMotorA.getSupplyCurrent());
         SmartDashboard.putNumber("B Supply Current", verticalMotorB.getSupplyCurrent());
+
+        SmartDashboard.putNumber("Velo True (in/s)", Units.metersToInches(getVerticalElevatorVelocity()));
+        SmartDashboard.putNumber("Position True (in)", Units.metersToInches(getVerticalElevatorPosition()));
     }
 
     public double getVerticalElevatorPosition() {
