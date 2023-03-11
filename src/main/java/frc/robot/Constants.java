@@ -247,7 +247,7 @@ public final class Constants {
 
     public static final class OIConstants {
         public static final double kDefaultJoystickDeadband = 0.07;
-        public static final double kOperatorRightYDeadband = 0.10;
+        public static final double kOperatorRightYDeadband = 0.13;
         public static final int kDriverControllerPort = 0;
         public static final int kOperatorControllerPort = 1;
     }
