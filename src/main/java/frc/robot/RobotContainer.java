@@ -57,8 +57,8 @@ public class RobotContainer {
         () -> -driverController.getRightX(),
         () -> driverController.leftBumper().getAsBoolean()));
 
-//    horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
-//    verticalElevatorSubsystem.setDefaultCommand(new ManualVerticalElevatorController(verticalElevatorSubsystem, () -> -operatorController.getRightY())); // TODO: Test
+    horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
+    verticalElevatorSubsystem.setDefaultCommand(new ManualVerticalElevatorController(verticalElevatorSubsystem, () -> -operatorController.getRightY())); // TODO: Test
     grabberSubsystem.setDefaultCommand(new GrabberJoystickControlCmd(grabberSubsystem, () -> -operatorController.getLeftY()));
 
 
@@ -95,17 +95,11 @@ public class RobotContainer {
 
     operatorController.leftBumper().whileTrue(new ClampGrabberCmd(pneumaticsSubsystem));
     operatorController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));
-    operatorController.leftTrigger(0.1).whileTrue(new ShootPieceCmd(rollerSubsystem));
-    operatorController.rightTrigger(0.1).whileTrue(new SuckObjectCmd(rollerSubsystem));
+    operatorController.leftTrigger(0.1).whileTrue(new SuckObjectCmd(rollerSubsystem));
+    operatorController.rightTrigger(0.1).whileTrue(new ShootPieceCmd(rollerSubsystem));
 
-//    operatorController.y().whileTrue(new HorizontalElevatorOutCmd(horizontalElevatorSubsystem));
-//    operatorController.x().whileTrue(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
-//    operatorController.a().whileTrue(new GrabberJoystickControlCmd(grabberSubsystem, () -> -operatorController.getLeftY()));
-//    operatorController.b().whileTrue(new HoldGrabberToShootingPosition(grabberSubsystem));
-//    operatorController.b().toggleOnTrue(new HoldGrabberToShootingPosition(grabberSubsystem));
-
-
-//    operatorController.leftBumper().whileTrue(new InstantCommand(verticalElevatorSubsystem::lowerElevator));
+    operatorController.start().whileTrue(new HorizontalElevatorOutCmd(horizontalElevatorSubsystem));
+    operatorController.back().whileTrue(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
   }
 
   public Command getAutonomousCommand() {
