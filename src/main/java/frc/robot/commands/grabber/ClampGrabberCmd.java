@@ -16,12 +16,8 @@ public class ClampGrabberCmd extends CommandBase {
 
     @Override
     public void execute() {
-        grabberSubsystem.setSolenoidStates(DoubleSolenoid.Value.kForward);
+        grabberSubsystem.setSolenoidState(true);
     }
 
-    @Override
-    public void end(boolean interrupted) {
-        grabberSubsystem.setSolenoidStates(DoubleSolenoid.Value.kOff);
-    }
 
 }

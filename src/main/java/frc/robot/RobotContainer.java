@@ -8,12 +8,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.ElevatorConstants;
 import frc.robot.commands.AlignToAprilTagCubeCmd;
 import frc.robot.commands.drive.SwerveJoystickCmd;
 import frc.robot.commands.elevator.*;
-import frc.robot.commands.grabber.ShootPieceCmd;
-import frc.robot.commands.grabber.SuckObjectCmd;
+import frc.robot.commands.grabber.ClampGrabberCmd;
+import frc.robot.commands.grabber.OpenGrabberCmd;
 import frc.robot.subsystems.*;
 
 public class RobotContainer {
@@ -45,16 +44,16 @@ public class RobotContainer {
   private void configureBindings() {
     driverController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
 
-    operatorController.leftBumper().whileTrue(new SuckObjectCmd(grabberSubsystem));
-    operatorController.rightBumper().whileTrue(new ShootPieceCmd(grabberSubsystem));
+    operatorController.leftBumper().onTrue(new OpenGrabberCmd(grabberSubsystem));
+    operatorController.rightBumper().onTrue(new ClampGrabberCmd(grabberSubsystem));
 
-    operatorController.y().whileTrue(new HorizontalElevatorOutCmd(horizontalElevatorSubsystem));
-    operatorController.x().whileTrue(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
-
-    operatorController.rightTrigger(0.1).whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalLowHeight)); // TODO: Test
-    operatorController.a().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalMidHeight));
-    operatorController.b().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight));
-    operatorController.leftTrigger(0.1).whileTrue(new InstantCommand(verticalElevatorSubsystem::lowerElevator));
+//    operatorController.y().whileTrue(new HorizontalElevatorOutCmd(horizontalElevatorSubsystem));
+//    operatorController.x().whileTrue(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
+//
+//    operatorController.rightTrigger(0.1).whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalLowHeight)); // TODO: Test
+//    operatorController.a().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalMidHeight));
+//    operatorController.b().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight));
+//    operatorController.leftTrigger(0.1).whileTrue(new InstantCommand(verticalElevatorSubsystem::lowerElevator));
   }
 
   public Command getAutonomousCommand() {
