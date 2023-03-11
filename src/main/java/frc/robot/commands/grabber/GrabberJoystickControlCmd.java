@@ -28,7 +28,7 @@ public class GrabberJoystickControlCmd extends CommandBase {
 
     @Override
     public void execute() {
-        double joystickPower = MathUtil.applyDeadband(joystickPercentageFunction.get(), OIConstants.kDeadband) / 2;
+        double joystickPower = MathUtil.applyDeadband(joystickPercentageFunction.get(), OIConstants.kDefaultJoystickDeadband) / 2;
         grabberSubsystem.setMotorVoltage(grabberFeedforward.calculate(grabberSubsystem.getFlipEncoderPositionInRads(), joystickPower));
     }
 
