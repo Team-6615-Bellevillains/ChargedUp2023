@@ -22,6 +22,7 @@ public class RobotContainer {
   private final LimelightSubsystem limelight = new LimelightSubsystem();
   private final GrabberSubsystem grabberSubsystem = new GrabberSubsystem();
   private final RollerSubsystem rollerSubsystem = new RollerSubsystem();
+  private final PneumaticsSubsystem pneumaticsSubsystem = new PneumaticsSubsystem();
 
   private final HorizontalElevatorSubsystem horizontalElevatorSubsystem = new HorizontalElevatorSubsystem();
   private final VerticalElevatorSubsystem verticalElevatorSubsystem = new VerticalElevatorSubsystem();
@@ -48,8 +49,10 @@ public class RobotContainer {
   private void configureBindings() {
     driverController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
 
-    operatorController.leftBumper().whileTrue(new SuckObjectCmd(rollerSubsystem));
-    operatorController.rightBumper().whileTrue(new ShootPieceCmd(rollerSubsystem));
+    operatorController.leftBumper().whileTrue(new ClampGrabberCmd(pneumaticsSubsystem));
+    operatorController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));
+    operatorController.leftTrigger(0.1).whileTrue(new ShootPieceCmd(rollerSubsystem));
+    operatorController.rightTrigger(0.1).whileTrue(new SuckObjectCmd(rollerSubsystem));
 
 //    operatorController.y().whileTrue(new HorizontalElevatorOutCmd(horizontalElevatorSubsystem));
 //    operatorController.x().whileTrue(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
