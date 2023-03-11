@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Timer;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.function.DoubleSupplier;
 
 public class TunableProfiledPIDController {
 
@@ -19,16 +20,20 @@ public class TunableProfiledPIDController {
     private final Field m_constraintsField;
     private final String identifier;
 
+    private final DoubleSupplier measurementSupplier;
+
     private double lastUpdatedTS = Timer.getFPGATimestamp();
     private double lastMeasurement;
 
     private ProfiledPIDController profiledPIDController;
 
 
-    public TunableProfiledPIDController(String identifier, double Kp, double Ki, double Kd, TrapezoidProfile.Constraints constraints) {
+    public TunableProfiledPIDController(String identifier, double Kp, double Ki, double Kd, TrapezoidProfile.Constraints constraints, DoubleSupplier measurementSupplier) {
         profiledPIDController = new ProfiledPIDController(Kp, Ki, Kd, constraints);
 
         this.identifier = identifier;
+
+        this.measurementSupplier = measurementSupplier;
 
         tuningTable.getEntry(appendIdentifier("Kp")).setDouble(Kp);
         tuningTable.getEntry(appendIdentifier("Ki")).setDouble(Ki);
@@ -56,11 +61,6 @@ public class TunableProfiledPIDController {
         }
     }
 
-    public double calculateAndUpdateLastMeasurement(double currentMeasurement) {
-        lastMeasurement = currentMeasurement;
-        return profiledPIDController.calculate(currentMeasurement);
-    }
-
     public String appendIdentifier(String input) {
         return "ppid" + input + identifier;
     }
@@ -85,7 +85,7 @@ public class TunableProfiledPIDController {
             profiledPIDController.setI(tableKI);
             profiledPIDController.setD(tableKD);
             profiledPIDController.setConstraints(new TrapezoidProfile.Constraints(tableMaxVelocity, tableMaxAcceleration));
-            profiledPIDController.reset(lastMeasurement);
+            profiledPIDController.reset(measurementSupplier.getAsDouble());
         }
 
         lastUpdatedTS = Timer.getFPGATimestamp();
