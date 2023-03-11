@@ -9,27 +9,15 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GrabberConstants;
 
 public class GrabberSubsystem extends SubsystemBase {
-
-  /** Creates a new GrabberSubsystem. */
-  private Compressor compressor;
-  private Solenoid solenoid;
   private CANSparkMax flipMotor;
   private RelativeEncoder flipEncoder;
 
   public GrabberSubsystem() {
-    // Compressor and Solenoids
-//    compressor = new Compressor(PneumaticsModuleType.CTREPCM);
-    solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kSolenoidChannel);
-
-    // flipMotor
     flipMotor = new CANSparkMax(GrabberConstants.kFlipMotorPort, MotorType.kBrushless);
     flipEncoder = flipMotor.getEncoder();
     flipEncoder.setPositionConversionFactor(GrabberConstants.kGrabberPositionConversionFactor);
@@ -39,22 +27,9 @@ public class GrabberSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-//    SmartDashboard.putNumber("Compressor Pressure", compressor.getCurrent());
     SmartDashboard.putNumber("Flip Encoder Position", flipEncoder.getPosition());
     SmartDashboard.putNumber("Flip Encoder Velocity", flipEncoder.getVelocity());
     SmartDashboard.putNumber("Flip Encoder Velocity (rads per second)", getFlipEncoderVelocityInRadsPerSec());
-  }
-
-//  public void setCompressorState(boolean on) {
-//    if (on) {
-//      compressor.enableDigital();
-//    } else {
-//      compressor.disable();
-//    }
-//  }
-
-  public void setSolenoidState(boolean on) {
-    solenoid.set(on);
   }
 
   private double latestVoltage = 0;

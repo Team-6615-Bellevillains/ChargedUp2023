@@ -1,22 +1,21 @@
 package frc.robot.commands.grabber;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.GrabberSubsystem;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
+import frc.robot.subsystems.PneumaticsSubsystem;
 
 public class ClampGrabberCmd extends CommandBase {
 
-    private GrabberSubsystem grabberSubsystem;
+    private PneumaticsSubsystem pneumaticsSubsystem;
 
-    public ClampGrabberCmd(GrabberSubsystem grabberSubsystem) {
-        this.grabberSubsystem = grabberSubsystem;
+    public ClampGrabberCmd(PneumaticsSubsystem pneumaticsSubsystem) {
+        this.pneumaticsSubsystem = pneumaticsSubsystem;
 
-        addRequirements(grabberSubsystem);
+        addRequirements(pneumaticsSubsystem);
     }
 
     @Override
     public void execute() {
-        grabberSubsystem.setSolenoidState(true);
+        pneumaticsSubsystem.setSolenoidState(true);
     }
 
 
