@@ -67,9 +67,15 @@ public class SwerveJoystickCmd extends CommandBase {
          * object represents a universal container for linear and angular velocities
          * (strafing and rotation). See SwerveSubsystem.java for implementation.
          */
-        ChassisSpeeds chassisSpeeds = swerveSubsystem.calculateChassisSpeedsWithDriftCorrection(xSpeed, ySpeed,
-                steerSpeed, isFieldOrientedFunction.get());
-
+        ChassisSpeeds chassisSpeeds;
+        if (isFieldOrientedFunction.get()) {
+            chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed,
+                    steerSpeed,
+                    swerveSubsystem.getRotation2d());
+        } else {
+            chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed,
+                    steerSpeed);
+        }
         /*
          * 5. Convert ChassisSpeeds to SwerveModuleStates
          * For a swerve drive, the ChassisSpeeds needs to be converted into a separate

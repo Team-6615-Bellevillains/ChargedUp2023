@@ -71,10 +71,10 @@ public final class Constants {
         public static final boolean kBackLeftDriveMotorReversed = true;
         public static final boolean kBackRightDriveMotorReversed = true;
 
-        public static final double kFrontLeftDriveAbsoluteEncoderOffsetCounts = 135;
-        public static final double kFrontRightDriveAbsoluteEncoderOffsetCounts = 857;
-        public static final double kBackLeftDriveAbsoluteEncoderOffsetCounts = 282;
-        public static final double kBackRightDriveAbsoluteEncoderOffsetCounts = 777;
+        public static final double kFrontLeftDriveAbsoluteEncoderOffsetCounts = 137;
+        public static final double kFrontRightDriveAbsoluteEncoderOffsetCounts = 527;
+        public static final double kBackLeftDriveAbsoluteEncoderOffsetCounts = 291;
+        public static final double kBackRightDriveAbsoluteEncoderOffsetCounts = 754;
 
         /*
          * wheelPoint = (0,0) or (0,kWheelBase) or (kTrackWidth, 0) or (kTrackWidth,
