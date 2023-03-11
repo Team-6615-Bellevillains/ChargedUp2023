@@ -7,9 +7,12 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 
+import com.revrobotics.RelativeEncoder;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GrabberConstants;
@@ -19,45 +22,29 @@ public class GrabberSubsystem extends SubsystemBase {
   /** Creates a new GrabberSubsystem. */
   private Compressor compressor;
   private Solenoid solenoid;
-  private CANSparkMax leftMotorRoller;
-  private CANSparkMax rightMotorRoller;
-  private WPI_TalonSRX flipMotor;
+  private CANSparkMax flipMotor;
+  private RelativeEncoder flipEncoder;
 
   public GrabberSubsystem() {
-    // Find out ports later!!
     // Compressor and Solenoids
 //    compressor = new Compressor(PneumaticsModuleType.CTREPCM);
     solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kSolenoidChannel);
 
-    // Roller Motors
-//    leftMotorRoller = new CANSparkMax(GrabberConstants.kLeftRollerMotorPort, MotorType.kBrushless);
-//    rightMotorRoller = new CANSparkMax(GrabberConstants.kRightRollerMotorPort, MotorType.kBrushless);
-
-//    leftMotorRoller.setInverted(true);
-
     // flipMotor
-//    flipMotor = new WPI_TalonSRX(GrabberConstants.kFlipMotorPort);
-//    flipMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
-//
-//    // Sets flipMotor's thresholds to prevent mechanism from breaking
-//    flipMotor.configReverseSoftLimitThreshold(GrabberConstants.kFlipReverseThreshold, 10);
-//    flipMotor.configForwardSoftLimitThreshold(GrabberConstants.kFlipReverseThreshold, 10);
-//
-//    // Enables or Disables flipMotor's thresholds
-//    flipMotor.configReverseSoftLimitEnable(false);
-//    flipMotor.configForwardSoftLimitEnable(false);
+    flipMotor = new CANSparkMax(GrabberConstants.kFlipMotorPort, MotorType.kBrushless);
+    flipEncoder = flipMotor.getEncoder();
+    flipEncoder.setPositionConversionFactor(GrabberConstants.kGrabberPositionConversionFactor);
+    flipEncoder.setVelocityConversionFactor(GrabberConstants.kGrabberPositionConversionFactor/60.0);
+    flipEncoder.setPosition(GrabberConstants.kGrabberHighestPositionDegrees);
   }
 
   @Override
   public void periodic() {
 //    SmartDashboard.putNumber("Compressor Pressure", compressor.getCurrent());
-//    SmartDashboard.putNumber("Flip Encoder Position", getFlipEncoderPosition());
+    SmartDashboard.putNumber("Flip Encoder Position", flipEncoder.getPosition());
+    SmartDashboard.putNumber("Flip Encoder Velocity", flipEncoder.getVelocity());
+    SmartDashboard.putNumber("Flip Encoder Velocity (rads per second)", getFlipEncoderVelocityInRadsPerSec());
   }
-
-//  public void setRollerSpeeds(double speed) {
-//    leftMotorRoller.set(speed);
-//    rightMotorRoller.set(speed);
-//  }
 
 //  public void setCompressorState(boolean on) {
 //    if (on) {
@@ -70,17 +57,27 @@ public class GrabberSubsystem extends SubsystemBase {
   public void setSolenoidState(boolean on) {
     solenoid.set(on);
   }
+  
+  
+  private double latestVoltage = 0;
 
-//  public void setFlipMotorSpeed(double speed) {
-//    flipMotor.set(speed);
-//  }
+  public double getLatestVoltage() {
+    return latestVoltage;
+  }
 
-//  public double getFlipEncoderPosition() {
-//    return flipMotor.getSelectedSensorPosition() * GrabberConstants.flipRotationsToRadians/GrabberConstants.flipPulsesPerRevolution;
-//  }
+  public double getFlipEncoderPositionInDegrees() {
+    return flipEncoder.getPosition();
+  }
+  public double getFlipEncoderPositionInRads() {
+    return Units.degreesToRadians(getFlipEncoderPositionInDegrees());
+  }
 
-//  public void resetFlipEncoder() {
-//    flipMotor.setSelectedSensorPosition(0, 0, 10);
-//  }
+  public double getFlipEncoderVelocityInDegsPerSec() {
+    return flipEncoder.getVelocity();
+  }
+
+  public double getFlipEncoderVelocityInRadsPerSec() {
+    return Units.degreesToRadians(getFlipEncoderVelocityInDegsPerSec());
+  }
 
 }

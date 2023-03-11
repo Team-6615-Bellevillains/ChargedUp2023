@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import frc.robot.utils.TunableArmFeedforward;
 
 public final class Constants {
 
@@ -144,7 +145,7 @@ public final class Constants {
         public static final double verticalRotationsToDistance = verticalGearDiameter * Math.PI * verticalGearRatio;
 
         public static final double verticalLowHeight = Units.inchesToMeters(1);
-        public static final double verticalMidHeight = Units.inchesToMeters(15);
+        public static final double verticalMidHeight = Units.inchesToMeters(21);
         public static final double verticalHighHeight = verticalMaxHeight - Units.inchesToMeters(1);
         public static final double verticalRestThreshold = 0.01; // Measurement of elevator, in meters, that is considered all the way down.
         public static final double kVerticalSlowFallVoltage = 2;
@@ -195,22 +196,21 @@ public final class Constants {
         public static final int kFlipMotorPort = 16;
         public static final double kFlipReverseThreshold = 0;
 
-        /*
-         * Dr. Blake "MillieB" Miller Expert Calculation
-         * (PhD in Mechanical Engineering)
-         *
-         * Motor drives 12 tooth gear that drives a 60 tooth gear that is coaxial with a
-         * 16 tooth gear that drives a 58 tooth gear that is coaxial with a 12 tooth
-         * gear that drives a 30 tooth gear via chain. :')
-         */
-        public static final double kFlipGearRatio = (12.0 / 60.0) * (16.0 / 58.0) * (12.0 / 30.0);
+        public static final double kGrabberLowestPositionDegrees = -24.9;
+        public static final double kGrabberHighestPositionDegrees = 90+42;
+        public static final double kRotationsFromLowestToHighest = 17;
 
-        public static final int flipPulsesPerRevolution = kCimcoder256PulsesPerRevolution;
-        public static final double flipRotationsToRadians = 2 * Math.PI / kFlipGearRatio;
+        public static final double kGrabberPositionConversionFactor = (kGrabberHighestPositionDegrees-kGrabberLowestPositionDegrees)/kRotationsFromLowestToHighest;
 
         public static final double kPFlip = 0.1;
         public static final double kIFlip = 0.1;
         public static final double kDFlip = 0.1;
+
+
+        public static final double kSGrabber = 0.060000;
+        public static final double kGGrabber = 0.860000;
+        public static final double kVGrabber = 0.970000;
+        public static final double kAGrabber = 0.04;
 
         public static final double grabberInSetpoint = 0;
         public static final double grabberShootSetpoint = Units.degreesToRadians(118 - 25);
