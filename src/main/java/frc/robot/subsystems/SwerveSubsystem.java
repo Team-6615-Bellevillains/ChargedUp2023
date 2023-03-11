@@ -1,7 +1,10 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -16,8 +19,7 @@ import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.SwerveModuleConstants;
 import frc.robot.SwerveModule;
 import frc.robot.Constants.DriveConstants;
@@ -163,4 +165,27 @@ public class SwerveSubsystem extends SubsystemBase {
         backLeft.setDesiredState(desiredStates[2], ignoreLittle);
         backRight.setDesiredState(desiredStates[3], ignoreLittle);
     }
+
+    //NEED TO ADD THE PID CONSTANTS
+    public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
+        return new SequentialCommandGroup(
+             new InstantCommand(() -> {
+               // Reset odometry for the first path you run during auto
+               if(isFirstPath){
+                   //this.resetOdometry(traj.getInitialHolonomicPose());
+               }
+             }),
+             new PPSwerveControllerCommand(
+                 traj, 
+                 this::getPose, // Pose supplier
+                 DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+                 new PIDController(0, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+                 new PIDController(0, 0, 0), // Y controller (usually the same values as X controller)
+                 new PIDController(0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+                 (SwerveModuleState[] desiredStates) -> this.setModuleStates(desiredStates, true), // Module states consumer
+                 true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+                 this // Requires this drive subsystem
+             )
+         );
+     }
 }

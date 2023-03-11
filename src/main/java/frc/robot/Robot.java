@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.utils.TunableArmFeedforward;
 import frc.robot.utils.TunableElevatorFeedforward;
+import frc.robot.utils.TunablePIDController;
 import frc.robot.utils.TunableProfiledPIDController;
 import frc.robot.utils.TunableSimpleMotorFeedforward;
 
@@ -27,6 +28,7 @@ public class Robot extends TimedRobot {
     TunableProfiledPIDController.updateControllersIfOutdated();
     TunableElevatorFeedforward.updateControllersIfOutdated();
     TunableSimpleMotorFeedforward.updateControllersIfOutdated();
+    TunablePIDController.updateControllersIfOutdated();
     TunableArmFeedforward.updateControllersIfOutdated();
     CommandScheduler.getInstance().run();
   }

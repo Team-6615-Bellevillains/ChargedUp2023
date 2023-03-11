@@ -41,7 +41,7 @@ public class AlignToMidRungCmd extends CommandBase {
     this.swerveSubsystem = swerveSubsystem;
 
     //yawController = new PIDController(AutoConstants.kPTrackingYaw, 0, 0);
-    xdistanceController = new PIDController(AutoConstants.kPTrackingDrive, 0, 0);
+    xdistanceController = new PIDController(AutoConstants.kPTrackingDriveX, 0, 0);
     ydistanceController = new PIDController(AutoConstants.kPTrackingDriveY, 0, 0);
     target = limelightSubsystem.getBestTarget();
     setpoint = 0;

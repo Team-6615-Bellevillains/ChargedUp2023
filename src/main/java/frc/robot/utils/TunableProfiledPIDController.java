@@ -62,7 +62,7 @@ public class TunableProfiledPIDController {
     }
 
     public String appendIdentifier(String input) {
-        return "pid" + input + identifier;
+        return "ppid" + input + identifier;
     }
 
     public void updateConstantsIfOutdated() {

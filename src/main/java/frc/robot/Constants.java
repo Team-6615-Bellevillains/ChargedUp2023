@@ -215,6 +215,7 @@ public final class Constants {
         public static final double grabberInSetpoint = 0;
         public static final double grabberShootSetpoint = Units.degreesToRadians(118 - 25);
         public static final double grabberIntakeSetpoint = Units.degreesToRadians(118 + 27);
+        public static double grabberOutSetpoint;
     }
 
     public static final class LimelightConstants {
@@ -239,9 +240,9 @@ public final class Constants {
         public static final double kAutoMaxAccelerationMetersPerSecond = 0.5;
 
         public static final double kPTrackingYaw = .05;
-        public static final double kPTrackingDrive = .4;
+        public static final double kPTrackingDriveX = 1.2;
         public static final double kTrackingDistance = .45;
-        public static final double kPTrackingDriveY = .8;
+        public static final double kPTrackingDriveY = 1.2;
     }
 
     public static final class OIConstants {

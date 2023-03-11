@@ -56,4 +56,15 @@ public class HorizontalElevatorSubsystem extends SubsystemBase {
         hElevatorMotor.setSelectedSensorPosition(0);
     }
 
+    public double getHorizontalElevatorRawEncoder() 
+    {
+        return hElevatorMotor.getSelectedSensorPosition();
+    }
+
+    public void periodic()
+    {
+        
+        SmartDashboard.putNumber("Encoder Raw Ticks", getHorizontalElevatorRawEncoder());
+    }
+
 }
