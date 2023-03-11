@@ -4,13 +4,12 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
-
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -57,12 +56,17 @@ public class GrabberSubsystem extends SubsystemBase {
   public void setSolenoidState(boolean on) {
     solenoid.set(on);
   }
-  
-  
+
   private double latestVoltage = 0;
 
   public double getLatestVoltage() {
     return latestVoltage;
+  }
+
+  public void setMotorVoltage(double voltage) {
+    latestVoltage = voltage;
+    SmartDashboard.putNumber("grabber voltage", voltage);
+    flipMotor.setVoltage(voltage);
   }
 
   public double getFlipEncoderPositionInDegrees() {
