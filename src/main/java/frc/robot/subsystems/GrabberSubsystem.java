@@ -4,16 +4,16 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GrabberConstants;
 
@@ -21,18 +21,14 @@ public class GrabberSubsystem extends SubsystemBase {
 
   /** Creates a new GrabberSubsystem. */
   private Compressor compressor;
-  private DoubleSolenoid leftSolenoid;
-  private DoubleSolenoid rightSolenoid;
+  private Solenoid solenoid;
   private CANSparkMax flipMotor;
   private RelativeEncoder flipEncoder;
 
   public GrabberSubsystem() {
     // Compressor and Solenoids
 //    compressor = new Compressor(PneumaticsModuleType.CTREPCM);
-//    leftSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kLeftSolenoidForwardChannel,
-//        GrabberConstants.kLeftSolenoidReverseChannel);
-//    rightSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kRightSolenoidForwardChannel,
-//        GrabberConstants.kRightSolenoidReverseChannel);
+    solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kSolenoidChannel);
 
     // flipMotor
     flipMotor = new CANSparkMax(GrabberConstants.kFlipMotorPort, MotorType.kBrushless);
@@ -58,21 +54,15 @@ public class GrabberSubsystem extends SubsystemBase {
 //    }
 //  }
 
-//  public void setSolenoidStates(DoubleSolenoid.Value state) {
-//    leftSolenoid.set(state);
-//    rightSolenoid.set(state);
-//  }
-
+  public void setSolenoidState(boolean on) {
+    solenoid.set(on);
+  }
+  
+  
   private double latestVoltage = 0;
 
   public double getLatestVoltage() {
     return latestVoltage;
-  }
-
-  public void setMotorVoltage(double voltage) {
-    latestVoltage = voltage;
-    SmartDashboard.putNumber("grabber voltage", voltage);
-    flipMotor.setVoltage(voltage);
   }
 
   public double getFlipEncoderPositionInDegrees() {
