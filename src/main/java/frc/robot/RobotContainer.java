@@ -27,6 +27,7 @@ import frc.robot.commands.AlignToAprilTagCubeCmd;
 import frc.robot.commands.drive.SwerveJoystickCmd;
 import frc.robot.commands.elevator.*;
 import frc.robot.commands.grabber.*;
+import frc.robot.commands.operation.ScoreHighCmd;
 //import frc.robot.commands.operation.ScoreCubeLowCmd;
 //import frc.robot.commands.operation.ScoreCubeMidCmd;
 import frc.robot.subsystems.*;
@@ -83,6 +84,7 @@ public class RobotContainer {
     m_chooser = new SendableChooser<>();
     //Default Autonomous that will be run if no other auto is selected
     m_chooser.setDefaultOption("AlignToAprilTagCubeCmd", new AlignToAprilTagCubeCmd(limelightSubsystem, swerveSubsystem));
+    m_chooser.addOption("ScoreHighCmd", new ScoreHighCmd(horizontalElevatorSubsystem, grabberSubsystem, verticalElevatorSubsystem, rollerSubsystem));
     //m_chooser.addOption("ScoreCubeLowCmd", new ScoreCubeLowCmd(horizontalElevatorSubsystem, grabberSubsystem, swerveSubsystem, limelightSubsystem)); 
     m_chooser.addOption("Path Tester", autoBuilder.fullAuto(testPath));
     SmartDashboard.putData(m_chooser); 
