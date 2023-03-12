@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Encoder;
@@ -9,6 +10,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.utils.TunableElevatorFeedforward;
 
 public class VerticalElevatorSubsystem extends SubsystemBase {
 
@@ -17,12 +19,7 @@ public class VerticalElevatorSubsystem extends SubsystemBase {
 
     private final Encoder verticalElevatorEncoder;
 
-
-    private final static NetworkTableInstance networkTableInstance = NetworkTableInstance.getDefault();
-    private final static NetworkTable tuningTable = networkTableInstance.getTable("tuning");
-    private double lastUpdatedTS = Timer.getFPGATimestamp();
-
-    private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kSVerticalElevator, ElevatorConstants.kGVerticalElevator, ElevatorConstants.kVVerticalElevator);
+    private TunableElevatorFeedforward tunableElevatorFeedforward = new TunableElevatorFeedforward("vertelevator", ElevatorConstants.kSVerticalElevator, ElevatorConstants.kGVerticalElevator, ElevatorConstants.kVVerticalElevator);
 
     public VerticalElevatorSubsystem() {
         // The A motor has an encoder, the B motor does not.
@@ -38,7 +35,7 @@ public class VerticalElevatorSubsystem extends SubsystemBase {
     }
 
     public double calculateFeedforward(double velocity) {
-        return elevatorFeedforward.calculate(velocity);
+        return tunableElevatorFeedforward.getController().calculate(velocity);
     }
 
     public void stopElevator() {
@@ -50,9 +47,17 @@ public class VerticalElevatorSubsystem extends SubsystemBase {
     }
 
     public void setVerticalElevatorVoltage(double voltage) {
-        SmartDashboard.putNumber("vert voltage", voltage);
         verticalMotorA.setVoltage(voltage);
         verticalMotorB.setVoltage(voltage);
+
+        SmartDashboard.putNumber("vert voltage", voltage);
+        SmartDashboard.putNumber("A Stator Current", verticalMotorA.getStatorCurrent());
+        SmartDashboard.putNumber("B Stator Current", verticalMotorB.getStatorCurrent());
+        SmartDashboard.putNumber("A Supply Current", verticalMotorA.getSupplyCurrent());
+        SmartDashboard.putNumber("B Supply Current", verticalMotorB.getSupplyCurrent());
+
+        SmartDashboard.putNumber("Velo True (in/s)", Units.metersToInches(getVerticalElevatorVelocity()));
+        SmartDashboard.putNumber("Position True (in)", Units.metersToInches(getVerticalElevatorPosition()));
     }
 
     public double getVerticalElevatorPosition() {
