@@ -63,7 +63,7 @@ public class RobotContainer {
     grabberSubsystem.setDefaultCommand(new GrabberJoystickControlCmd(grabberSubsystem, () -> -operatorController.getLeftY()));
 
 
-    PathPlannerTrajectory testPath = PathPlanner.loadPath("New Path", new PathConstraints(2, 2));
+    PathPlannerTrajectory testPath = PathPlanner.loadPath("New Path", new PathConstraints(0.35, 1));
 
     eventMap.put("marker1", new PrintCommand("Passed Marker 1"));
 
@@ -71,7 +71,7 @@ public class RobotContainer {
     swerveSubsystem::getPose, // Pose2d supplier
     swerveSubsystem::resetPoseEstimator, // Pose2d consumer, used to reset odometry at the beginning of auto
     DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-    new PIDConstants(3, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+    new PIDConstants(Constants.AutoConstants.kPTrackingDriveX, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
     new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
     (SwerveModuleState[] desiredStates) -> swerveSubsystem.setModuleStates(desiredStates, true), // Module states consumer used to output to the drive subsytem
     eventMap,
