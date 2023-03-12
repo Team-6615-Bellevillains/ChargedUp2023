@@ -20,7 +20,7 @@ public final class Constants {
         public static final double kSteerModuleRatio = (48.0/40.0);
         public static final double kSteerPPR = 7;
 
-        public static final double kPTurning = 5; // TODO: Tune, has not yet completely oscillated
+        public static final double kPTurning = 4; // TODO: Tune, has not yet completely oscillated
         public static final double kITurning = 0;
         public static final double kDTurning = 0.0;
 
@@ -98,7 +98,7 @@ public final class Constants {
         public static final double kTeleOpMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond
                 / 35;
         public static final double kTeleOpMaxAccelerationUnitsPerSecond = 3;
-        public static final double kTeleOpMaxAngularAccelerationUnitsPerSecond = 3;
+        public static final double kTeleOpMaxAngularAccelerationUnitsPerSecond = 5;
 
         public static final double kPThetaCorrection = 5;
         public static final double kIThetaCorrection = 0;

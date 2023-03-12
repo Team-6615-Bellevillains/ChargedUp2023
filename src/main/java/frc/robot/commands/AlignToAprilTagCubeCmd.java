@@ -85,9 +85,10 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
 
     // Convert P[ID] outputs to ChassisSpeed values, clamping the distance P[ID] to
     // a max speed
-    ChassisSpeeds chassisSpeeds = swerveSubsystem.calculateChassisSpeedsWithDriftCorrection( MathUtil.clamp(xdistanceOutput, -AutoConstants.kAutoMaxSpeedMetersPerSecond,
-                    AutoConstants.kAutoMaxSpeedMetersPerSecond),MathUtil.clamp(ydistanceOutput, -AutoConstants.kAutoMaxSpeedMetersPerSecond,
-                    AutoConstants.kAutoMaxSpeedMetersPerSecond),0, false);
+    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(
+            MathUtil.clamp(xdistanceOutput, -AutoConstants.kAutoMaxSpeedMetersPerSecond, AutoConstants.kAutoMaxSpeedMetersPerSecond),
+            MathUtil.clamp(ydistanceOutput, -AutoConstants.kAutoMaxSpeedMetersPerSecond, AutoConstants.kAutoMaxSpeedMetersPerSecond),
+            0);
 
     // Convert ChassisSpeeds to SwerveModuleStates and send them off through the
     // SwerveSubsystem

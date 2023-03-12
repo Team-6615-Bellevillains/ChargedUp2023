@@ -61,6 +61,16 @@ public class TunableProfiledPIDController {
         }
     }
 
+    public double calculateAndUpdateLastMeasurement(double currentMeasurement) {
+        lastMeasurement = currentMeasurement;
+        return profiledPIDController.calculate(currentMeasurement);
+    }
+
+    public double calculateAndUpdateLastMeasurement(double currentMeasurement, double goal) {
+        lastMeasurement = currentMeasurement;
+        return profiledPIDController.calculate(currentMeasurement, goal);
+    }
+
     public String appendIdentifier(String input) {
         return "ppid" + input + identifier;
     }
