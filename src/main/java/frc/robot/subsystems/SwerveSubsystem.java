@@ -129,26 +129,27 @@ public class SwerveSubsystem extends SubsystemBase {
         backRight.stop();
     }
 
-    public ChassisSpeeds calculateChassisSpeedsWithDriftCorrection(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, boolean isFieldOriented) {
-        if ((Math.abs(vxMetersPerSecond) > 0 || Math.abs(vyMetersPerSecond) > 0) && omegaRadiansPerSecond == 0) {
-            double input = getRotation2d().getRadians();
-            SmartDashboard.putNumber("Theta correction input", input);
-            omegaRadiansPerSecond = thetaCorrectionPID.calculate(input, lastKnownCorrectHeadingRadians);
-            SmartDashboard.putNumber("Theta correction PID", omegaRadiansPerSecond);
-        } else {
-            lastKnownCorrectHeadingRadians = getRotation2d().getRadians();
-            thetaCorrectionPID.reset(lastKnownCorrectHeadingRadians);
-        }
-
-        if (isFieldOriented) {
-            return ChassisSpeeds.fromFieldRelativeSpeeds(vxMetersPerSecond, vyMetersPerSecond,
-                    omegaRadiansPerSecond,
-                    getRotation2d());
-        } else {
-            return new ChassisSpeeds(vxMetersPerSecond, vyMetersPerSecond,
-                    omegaRadiansPerSecond);
-        }
-    }
+    // TODO: Reimplement
+//    public ChassisSpeeds calculateChassisSpeedsWithDriftCorrection(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, boolean isFieldOriented) {
+//        if ((Math.abs(vxMetersPerSecond) > 0 || Math.abs(vyMetersPerSecond) > 0) && omegaRadiansPerSecond == 0) {
+//            double input = getRotation2d().getRadians();
+//            SmartDashboard.putNumber("Theta correction input", input);
+//            omegaRadiansPerSecond = thetaCorrectionPID.calculate(input, lastKnownCorrectHeadingRadians);
+//            SmartDashboard.putNumber("Theta correction PID", omegaRadiansPerSecond);
+//        } else {
+//            lastKnownCorrectHeadingRadians = getRotation2d().getRadians();
+//            thetaCorrectionPID.reset(lastKnownCorrectHeadingRadians);
+//        }
+//
+//        if (isFieldOriented) {
+//            return ChassisSpeeds.fromFieldRelativeSpeeds(vxMetersPerSecond, vyMetersPerSecond,
+//                    omegaRadiansPerSecond,
+//                    getRotation2d());
+//        } else {
+//            return new ChassisSpeeds(vxMetersPerSecond, vyMetersPerSecond,
+//                    omegaRadiansPerSecond);
+//        }
+//    }
 
     public static double calculateDriveFeedforward(double velocity) {
         return driveFeedforward.getController().calculate(velocity);
