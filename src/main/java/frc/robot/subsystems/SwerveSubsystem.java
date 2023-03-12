@@ -6,7 +6,6 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,16 +14,12 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
-import frc.robot.Constants.SwerveModuleConstants;
 import frc.robot.SwerveModule;
 import frc.robot.Constants.DriveConstants;
-
-import java.lang.reflect.Field;
+import frc.robot.utils.TunableSimpleMotorFeedforward;
 
 public class SwerveSubsystem extends SubsystemBase {
 
@@ -70,6 +65,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
     private double lastKnownCorrectHeadingRadians;
     private final ProfiledPIDController thetaCorrectionPID = new ProfiledPIDController(DriveConstants.kPThetaCorrection, DriveConstants.kIThetaCorrection, DriveConstants.kDThetaCorrection, new TrapezoidProfile.Constraints(DriveConstants.kMaxVelocityThetaCorrection, DriveConstants.kMaxAccelerationThetaCorrection));
+    private static final TunableSimpleMotorFeedforward driveFeedforward = new TunableSimpleMotorFeedforward("drive", 0.440000, 2.350000);
+    private static final TunableSimpleMotorFeedforward steerFeedforward = new TunableSimpleMotorFeedforward("steer", 1.112500, 1.300000);
 
     public SwerveSubsystem() {
         this.thetaCorrectionPID.enableContinuousInput(0, 2 * Math.PI);
@@ -151,6 +148,14 @@ public class SwerveSubsystem extends SubsystemBase {
             return new ChassisSpeeds(vxMetersPerSecond, vyMetersPerSecond,
                     omegaRadiansPerSecond);
         }
+    }
+
+    public static double calculateDriveFeedforward(double velocity) {
+        return driveFeedforward.getController().calculate(velocity);
+    }
+
+    public static double calculateSteerFeedforward(double velocity) {
+        return steerFeedforward.getController().calculate(velocity);
     }
 
     public void setModuleStates(SwerveModuleState[] desiredStates, boolean ignoreLittle) {
