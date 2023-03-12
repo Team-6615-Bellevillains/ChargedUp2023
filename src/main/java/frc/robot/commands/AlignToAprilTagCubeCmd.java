@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.TunablePIDController;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -62,7 +63,7 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
       Transform3d cameraTransform = target.getBestCameraToTarget();
 
       ySetpoint = currentYPosition + cameraTransform.getY() + 0.331 - Units.inchesToMeters(5);
-      xSetpoint = currentXPosition + (cameraTransform.getX() - 1 + Units.inchesToMeters(11));
+      xSetpoint = currentXPosition + (cameraTransform.getX() - 1 + Units.inchesToMeters(9));
     }
   }
 
@@ -101,6 +102,7 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    SmartDashboard.putNumber("Align end TS", Timer.getFPGATimestamp());
     swerveSubsystem.stopModules();
   }
 
