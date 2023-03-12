@@ -61,7 +61,7 @@ public class RobotContainer {
         () -> -driverController.getRightX(),
         () -> driverController.leftBumper().getAsBoolean()));
 
-//    horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
+    horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
     verticalElevatorSubsystem.setDefaultCommand(new ManualVerticalElevatorController(verticalElevatorSubsystem, () -> -operatorController.getRightY())); // TODO: Test
     grabberSubsystem.setDefaultCommand(new GrabberJoystickControlCmd(grabberSubsystem, () -> -operatorController.getLeftY()));
 
@@ -81,13 +81,26 @@ public class RobotContainer {
     true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
     swerveSubsystem // The drive subsystem. Used to properly set the requirements of path following commands
 );
-    
+
+
+    Command alignToApriltagCubeCmd = new AlignToAprilTagCubeCmd(limelightSubsystem, swerveSubsystem);
+    Command scoreHighCmd = (new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight))
+            .andThen(Commands.run(horizontalElevatorSubsystem::removeDefaultCommand))
+            .andThen(new HorizontalElevatorOutCmd(horizontalElevatorSubsystem))
+            .andThen(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberShootCubeSetpoint))
+            .andThen(new AutoShootPieceCmd(rollerSubsystem))
+            .andThen(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberInSetpoint))
+            .andThen(new HorizontalElevatorInCmd(horizontalElevatorSubsystem))
+            .andThen(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, Units.inchesToMeters(2)))
+            .andThen(Commands.run(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem))));
 
     //Adds a smartdashboard widget that will allow us to select the autonomous we want to use. 
     m_chooser = new SendableChooser<>();
     //Default Autonomous that will be run if no other auto is selected
-    m_chooser.setDefaultOption("AlignToAprilTagCubeCmd", new AlignToAprilTagCubeCmd(limelightSubsystem, swerveSubsystem));
-    m_chooser.addOption("ScoreHighCmd", new ScoreHighCmd(horizontalElevatorSubsystem, grabberSubsystem, verticalElevatorSubsystem, rollerSubsystem));
+    m_chooser.setDefaultOption("AlignToAprilTagCubeCmd",alignToApriltagCubeCmd);
+    m_chooser.addOption("ScoreHighCmd", scoreHighCmd);
+    m_chooser.addOption("AlignAndScoreHigh", alignToApriltagCubeCmd.andThen(scoreHighCmd));
+
     //m_chooser.addOption("ScoreCubeLowCmd", new ScoreCubeLowCmd(horizontalElevatorSubsystem, grabberSubsystem, swerveSubsystem, limelightSubsystem)); 
     m_chooser.addOption("Path Tester", autoBuilder.fullAuto(testPath));
     SmartDashboard.putData(m_chooser); 
@@ -107,7 +120,11 @@ public class RobotContainer {
     operatorController.back().whileTrue(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
 
     operatorController.a().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight));
+    operatorController.x().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, Units.inchesToMeters(2)));
     operatorController.b().whileTrue(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberShootCubeSetpoint));
+    operatorController.y().whileTrue(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberInSetpoint));
+//    operatorController.y().onTrue(new AutoShootPieceCmd(rollerSubsystem));
+
   }
 
   public Command getAutonomousCommand() {

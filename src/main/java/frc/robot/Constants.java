@@ -152,12 +152,12 @@ public final class Constants {
         public static final double kPVerticalElevator = 0.1;
         public static final double kIVerticalElevator = 0;
         public static final double kDVerticalElevator = 0;
-        public static final double kMaxVelocityVerticalElevator = .2;
+        public static final double kMaxVelocityVerticalElevator = .4;
         public static final double kMaxAccelerationVerticalElevator = .4;
 
-        public static final double kGVerticalElevator = 3.629000;
-        public static final double kSVerticalElevator = 0.471000;
-        public static final double kVVerticalElevator = 8.610000;
+        public static final double kGVerticalElevator = 3.699000;
+        public static final double kSVerticalElevator = 0.791000;
+        public static final double kVVerticalElevator = 7.010000;
         public static final double kAVerticalElevator = 0.22;
 
         // Begin Horizontal
@@ -214,9 +214,9 @@ public final class Constants {
         public static final double kMaxFlipVelocityRadiansPerSecond = 1;
         public static final double kMaxFlipAccelerationRadiansPerSecondSquared = 2;
 
-        public static final double grabberInSetpoint = 0;
+        public static final double grabberInSetpoint = Units.degreesToRadians(130);
         public static final double grabberShootCubeSetpoint = Units.degreesToRadians(21);
-        public static final double grabberIntakeSetpoint = Units.degreesToRadians(118 + 27);
+//        public static final double grabberIntakeSetpoint = Units.degreesToRadians(130);
         public static double grabberOutSetpoint;
     }
 
@@ -242,9 +242,9 @@ public final class Constants {
         public static final double kAutoMaxAccelerationMetersPerSecond = 0.5;
 
         public static final double kPTrackingYaw = .05;
-        public static final double kPTrackingDriveX = 1.2;
+        public static final double kPTrackingDriveX = 0.8;
         public static final double kTrackingDistance = .45;
-        public static final double kPTrackingDriveY = 1.2;
+        public static final double kPTrackingDriveY = 0.8;
     }
 
     public static final class OIConstants {
