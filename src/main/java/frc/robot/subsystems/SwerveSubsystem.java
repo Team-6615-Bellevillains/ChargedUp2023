@@ -194,4 +194,10 @@ public class SwerveSubsystem extends SubsystemBase {
              )
          );
      }
+
+    public double getPitch()
+    {
+        return gyro.getPitch();
+    }
+ 
 }
