@@ -60,7 +60,6 @@ public class SwerveJoystickCmd extends CommandBase {
         ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleOpMaxSpeedMetersPerSecond;
         steerSpeed = steerLimiter.calculate(steerSpeed) * DriveConstants.kTeleOpMaxAngularSpeedRadiansPerSecond;
 
-
         /*
          * 4. Calculate ChassisSpeeds
          * WPILib does all the heavy lifting with our kinematics. This ChassisSpeeds

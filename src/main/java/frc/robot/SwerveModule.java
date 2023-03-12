@@ -7,7 +7,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -15,8 +14,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.SwerveModuleConstants;
+import frc.robot.subsystems.SwerveSubsystem;
 
 public class SwerveModule {
 
@@ -28,7 +27,6 @@ public class SwerveModule {
     private final Encoder steerEncoder;
 
     private final ProfiledPIDController steerPIDController;
-    private SimpleMotorFeedforward steerFeedforward;
 
     private final double absoluteEncoderOffsetCounts;
 
@@ -66,28 +64,7 @@ public class SwerveModule {
                 SwerveModuleConstants.kDTurning, new TrapezoidProfile.Constraints(SwerveModuleConstants.maxWheelVelocity, SwerveModuleConstants.maxWheelAcceleration));
         this.steerPIDController.enableContinuousInput(0, 2 * Math.PI);
 
-        this.steerFeedforward = new SimpleMotorFeedforward(SwerveModuleConstants.kSTurning, SwerveModuleConstants.kVTurning, SwerveModuleConstants.kATurning);
-
         this.driveEncoder.setPosition(0);
-    }
-
-    public SimpleMotorFeedforward getSteerFeedforward() {
-        return steerFeedforward;
-    }
-
-    public ProfiledPIDController getSteerPIDController() {
-        return steerPIDController;
-    }
-
-    public void changeFeedforwardConstants(double kS, double kV, double kA) {
-        steerFeedforward = new SimpleMotorFeedforward(kS, kV, kA);
-    }
-    public void changePIDConstants(double kP, double kI, double kD, double maxVelo, double maxAccel) {
-        steerPIDController.setP(kP);
-        steerPIDController.setI(kI);
-        steerPIDController.setD(kD);
-        steerPIDController.setConstraints(new TrapezoidProfile.Constraints(maxVelo, maxAccel));
-        steerPIDController.reset(getModuleRotation2dFromPGEncoder().getRadians());
     }
 
     public SwerveModulePosition getPosition() {
@@ -135,17 +112,12 @@ public class SwerveModule {
 
         state = SwerveModuleState.optimize(state, getModuleRotation2dFromPGEncoder());
 
-//        SmartDashboard.putNumber(appendIdx("State"), getModuleRotation2dFromPGEncoder().getRadians());
-//        SmartDashboard.putNumber(appendIdx("Setpoint"), state.angle.getRadians());
-
         double steerPIDOut = steerPIDController.calculate(getModuleRotation2dFromPGEncoder().getRadians(),
                 state.angle.getRadians());
-//        SmartDashboard.putNumber(appendIdx("Steer PID Out"), steerPIDOut);
 
-        double feedforward = steerFeedforward.calculate(steerPIDController.getSetpoint().velocity);
-//        SmartDashboard.putNumber(appendIdx("Steer Feedforward"), steerPIDOut);
+        double feedforward = SwerveSubsystem.calculateSteerFeedforward(steerPIDController.getSetpoint().velocity);
 
-        driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        driveMotor.setVoltage(SwerveSubsystem.calculateDriveFeedforward(state.speedMetersPerSecond));
         steerMotor.setVoltage(steerPIDOut + feedforward);
     }
 
