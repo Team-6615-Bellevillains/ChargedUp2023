@@ -41,7 +41,7 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
     this.limelightSubsystem = limelightSubsystem;
     this.swerveSubsystem = swerveSubsystem;
 
-    //yawController = new PIDController(AutoConstants.kPTrackingYaw, 0, 0);
+    // yawController = new PIDController(AutoConstants.kPTrackingYaw, 0, 0);
     xdistanceController = new TunablePIDController("xdistance", AutoConstants.kPTrackingDriveX, 0, 0).getController();
     ydistanceController = new TunablePIDController("ydistance", AutoConstants.kPTrackingDriveY, 0, 0).getController();
     ySetpoint = 0;
@@ -73,7 +73,8 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
     currentYPosition = currentPosition.getY();
     currentXPosition = currentPosition.getX();
 
-    //double rotationOutput = yawController.calculate(limelightSubsystem.getBestTarget().getYaw(), 0);
+    // double rotationOutput =
+    // yawController.calculate(limelightSubsystem.getBestTarget().getYaw(), 0);
     double ydistanceOutput = ydistanceController.calculate(currentYPosition, ySetpoint);
     double xdistanceOutput = xdistanceController.calculate(currentXPosition, xSetpoint);
 
@@ -86,9 +87,11 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
     // Convert P[ID] outputs to ChassisSpeed values, clamping the distance P[ID] to
     // a max speed
     ChassisSpeeds chassisSpeeds = new ChassisSpeeds(
-            MathUtil.clamp(xdistanceOutput, -AutoConstants.kAutoMaxSpeedMetersPerSecond, AutoConstants.kAutoMaxSpeedMetersPerSecond),
-            MathUtil.clamp(ydistanceOutput, -AutoConstants.kAutoMaxSpeedMetersPerSecond, AutoConstants.kAutoMaxSpeedMetersPerSecond),
-            0);
+        MathUtil.clamp(xdistanceOutput, -AutoConstants.kAutoMaxSpeedMetersPerSecond,
+            AutoConstants.kAutoMaxSpeedMetersPerSecond),
+        MathUtil.clamp(ydistanceOutput, -AutoConstants.kAutoMaxSpeedMetersPerSecond,
+            AutoConstants.kAutoMaxSpeedMetersPerSecond),
+        0);
 
     // Convert ChassisSpeeds to SwerveModuleStates and send them off through the
     // SwerveSubsystem

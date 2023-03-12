@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
-import frc.robot.utils.TunableArmFeedforward;
 
 public final class Constants {
 
@@ -146,19 +145,19 @@ public final class Constants {
 
         public static final double verticalLowHeight = Units.inchesToMeters(1);
         public static final double verticalMidHeight = Units.inchesToMeters(21);
-        public static final double verticalHighHeight = verticalMaxHeight - Units.inchesToMeters(1);
+        public static final double verticalHighHeight = 0.598;
         public static final double verticalRestThreshold = 0.01; // Measurement of elevator, in meters, that is considered all the way down.
         public static final double kVerticalSlowFallVoltage = 2;
 
-        public static final double kPVerticalElevator = 0.01;
+        public static final double kPVerticalElevator = 0.1;
         public static final double kIVerticalElevator = 0;
         public static final double kDVerticalElevator = 0;
-        public static final double kMaxVelocityVerticalElevator = Units.inchesToMeters(5);
-        public static final double kMaxAccelerationVerticalElevator = Units.inchesToMeters(7);
+        public static final double kMaxVelocityVerticalElevator = .2;
+        public static final double kMaxAccelerationVerticalElevator = .4;
 
-        public static final double kGVerticalElevator = 3.179000;
-        public static final double kSVerticalElevator = 0.821000;
-        public static final double kVVerticalElevator = 4.81;
+        public static final double kGVerticalElevator = 3.629000;
+        public static final double kSVerticalElevator = 0.471000;
+        public static final double kVVerticalElevator = 8.610000;
         public static final double kAVerticalElevator = 0.22;
 
         // Begin Horizontal
@@ -197,7 +196,7 @@ public final class Constants {
         public static final double kFlipReverseThreshold = 0;
 
         public static final double kGrabberLowestPositionDegrees = -24.9;
-        public static final double kGrabberHighestPositionDegrees = 90+42;
+        public static final double kGrabberHighestPositionDegrees = 90+48;
         public static final double kRotationsFromLowestToHighest = 17;
 
         public static final double kGrabberPositionConversionFactor = (kGrabberHighestPositionDegrees-kGrabberLowestPositionDegrees)/kRotationsFromLowestToHighest;
@@ -212,8 +211,11 @@ public final class Constants {
         public static final double kVGrabber = 0.970000;
         public static final double kAGrabber = 0.04;
 
+        public static final double kMaxFlipVelocityRadiansPerSecond = 1;
+        public static final double kMaxFlipAccelerationRadiansPerSecondSquared = 2;
+
         public static final double grabberInSetpoint = 0;
-        public static final double grabberShootSetpoint = Units.degreesToRadians(118 - 25);
+        public static final double grabberShootCubeSetpoint = Units.degreesToRadians(21);
         public static final double grabberIntakeSetpoint = Units.degreesToRadians(118 + 27);
         public static double grabberOutSetpoint;
     }

@@ -13,6 +13,7 @@ import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,6 +23,8 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.GrabberConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToAprilTagCubeCmd;
 import frc.robot.commands.drive.SwerveJoystickCmd;
@@ -58,7 +61,7 @@ public class RobotContainer {
         () -> -driverController.getRightX(),
         () -> driverController.leftBumper().getAsBoolean()));
 
-    horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
+//    horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
     verticalElevatorSubsystem.setDefaultCommand(new ManualVerticalElevatorController(verticalElevatorSubsystem, () -> -operatorController.getRightY())); // TODO: Test
     grabberSubsystem.setDefaultCommand(new GrabberJoystickControlCmd(grabberSubsystem, () -> -operatorController.getLeftY()));
 
@@ -97,11 +100,14 @@ public class RobotContainer {
 
     operatorController.leftBumper().whileTrue(new ClampGrabberCmd(pneumaticsSubsystem));
     operatorController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));
-    operatorController.leftTrigger(0.1).whileTrue(new SuckObjectCmd(rollerSubsystem));
-    operatorController.rightTrigger(0.1).whileTrue(new ShootPieceCmd(rollerSubsystem));
+    operatorController.leftTrigger(0.4).whileTrue(new SuckObjectCmd(rollerSubsystem));
+    operatorController.rightTrigger(0.4).whileTrue(new ShootPieceCmd(rollerSubsystem));
 
     operatorController.start().whileTrue(new HorizontalElevatorOutCmd(horizontalElevatorSubsystem));
     operatorController.back().whileTrue(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
+
+    operatorController.a().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight));
+    operatorController.b().whileTrue(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberShootCubeSetpoint));
   }
 
   public Command getAutonomousCommand() {

@@ -30,6 +30,11 @@ public class HorizontalElevatorSubsystem extends SubsystemBase {
         resetHorizontalElevatorEncoder();
     }
 
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Horizontal Position", getHorizontalElevatorPosition());
+    }
+
     public double calculateFeedforward(double velocity) {
         return feedforward.calculate(velocity);
     }
@@ -59,12 +64,6 @@ public class HorizontalElevatorSubsystem extends SubsystemBase {
     public double getHorizontalElevatorRawEncoder() 
     {
         return hElevatorMotor.getSelectedSensorPosition();
-    }
-
-    public void periodic()
-    {
-        
-        SmartDashboard.putNumber("Encoder Raw Ticks", getHorizontalElevatorRawEncoder());
     }
 
 }
