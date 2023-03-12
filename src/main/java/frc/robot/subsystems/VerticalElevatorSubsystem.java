@@ -56,8 +56,10 @@ public class VerticalElevatorSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("A Supply Current", verticalMotorA.getSupplyCurrent());
         SmartDashboard.putNumber("B Supply Current", verticalMotorB.getSupplyCurrent());
 
-        SmartDashboard.putNumber("Velo True (in/s)", Units.metersToInches(getVerticalElevatorVelocity()));
+        SmartDashboard.putNumber("Velo True (in per s)", Units.metersToInches(getVerticalElevatorVelocity()));
+        SmartDashboard.putNumber("Velo True (m per s)", getVerticalElevatorVelocity());
         SmartDashboard.putNumber("Position True (in)", Units.metersToInches(getVerticalElevatorPosition()));
+        SmartDashboard.putNumber("Position True (m)", getVerticalElevatorPosition());
     }
 
     public double getVerticalElevatorPosition() {

@@ -1,5 +1,7 @@
 package frc.robot.commands.elevator;
 
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.HorizontalElevatorSubsystem;
@@ -22,16 +24,19 @@ public class HorizontalElevatorOutCmd extends CommandBase {
 
     @Override
     public void execute() {
-        if (horizontalElevatorSubsystem.getHorizontalElevatorPosition() < ElevatorConstants.kHorizontalElevatorOutThreshold) {
-            horizontalElevatorSubsystem.setHorizontalElevatorVoltage(horizontalElevatorSubsystem.calculateFeedforward(ElevatorConstants.kHorizontalElevatorFFInput));
-        } else {
-            horizontalElevatorSubsystem.setHorizontalElevatorVoltage(0);
-        }
+        horizontalElevatorSubsystem.setHorizontalElevatorVoltage(horizontalElevatorSubsystem.calculateFeedforward(ElevatorConstants.kHorizontalElevatorFFInput));
     }
 
     @Override
     public void end(boolean interrupted) {
+        SmartDashboard.putNumber("Stop Hori TS", Timer.getFPGATimestamp());
+
         horizontalElevatorSubsystem.setHorizontalElevatorVoltage(0);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return horizontalElevatorSubsystem.getHorizontalElevatorPosition() >= ElevatorConstants.kHorizontalElevatorOutThreshold;
     }
 
 }

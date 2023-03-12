@@ -24,16 +24,17 @@ public class HorizontalElevatorInCmd extends CommandBase {
 
     @Override
     public void execute() {
-        if (horizontalElevatorSubsystem.getHorizontalElevatorPosition() > ElevatorConstants.kHorizontalElevatorInThreshold) {
-            horizontalElevatorSubsystem.setHorizontalElevatorVoltage(horizontalElevatorSubsystem.calculateFeedforward(-ElevatorConstants.kHorizontalElevatorFFInput));
-        } else {
-            horizontalElevatorSubsystem.setHorizontalElevatorVoltage(0);
-        }
+        horizontalElevatorSubsystem.setHorizontalElevatorVoltage(horizontalElevatorSubsystem.calculateFeedforward(-ElevatorConstants.kHorizontalElevatorFFInput));
     }
 
     @Override
     public void end(boolean interrupted) {
         horizontalElevatorSubsystem.setHorizontalElevatorVoltage(0);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return horizontalElevatorSubsystem.getHorizontalElevatorPosition() <= ElevatorConstants.kHorizontalElevatorInThreshold;
     }
 
 }

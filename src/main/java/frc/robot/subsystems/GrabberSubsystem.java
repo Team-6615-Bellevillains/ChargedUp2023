@@ -8,14 +8,19 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GrabberConstants;
+import frc.robot.utils.TunableArmFeedforward;
 
 public class GrabberSubsystem extends SubsystemBase {
   private CANSparkMax flipMotor;
   private RelativeEncoder flipEncoder;
+
+  private TunableArmFeedforward grabberFeedforward = new TunableArmFeedforward("grabber", GrabberConstants.kSGrabber,GrabberConstants.kGGrabber,GrabberConstants.kVGrabber, GrabberConstants.kAGrabber);
+
 
   public GrabberSubsystem() {
     flipMotor = new CANSparkMax(GrabberConstants.kFlipMotorPort, MotorType.kBrushless);
@@ -38,9 +43,15 @@ public class GrabberSubsystem extends SubsystemBase {
     return latestVoltage;
   }
 
+  public double calculateFeedforward(double positionRadians, double velocity) {
+    return grabberFeedforward.getController().calculate(positionRadians, velocity);
+  }
+
   public void setMotorVoltage(double voltage) {
     latestVoltage = voltage;
     SmartDashboard.putNumber("grabber voltage", voltage);
+
+    SmartDashboard.putNumber("[GRAB] Velocity True (rads per second)", getFlipEncoderVelocityInRadsPerSec());
     flipMotor.setVoltage(voltage);
   }
 

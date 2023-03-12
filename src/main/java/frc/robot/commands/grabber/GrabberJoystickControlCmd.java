@@ -6,6 +6,7 @@ package frc.robot.commands.grabber;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.GrabberConstants;
 import frc.robot.Constants.OIConstants;
@@ -16,8 +17,6 @@ import java.util.function.Supplier;
 public class GrabberJoystickControlCmd extends CommandBase {
     private GrabberSubsystem grabberSubsystem;
     private Supplier<Double> joystickPercentageFunction;
-    private ArmFeedforward grabberFeedforward = new ArmFeedforward(GrabberConstants.kSGrabber,GrabberConstants.kGGrabber,GrabberConstants.kVGrabber, GrabberConstants.kAGrabber);
-
 
     public GrabberJoystickControlCmd(GrabberSubsystem grabberSubsystem, Supplier<Double> joystickPercentageFunction) {
         this.grabberSubsystem = grabberSubsystem;
@@ -29,12 +28,15 @@ public class GrabberJoystickControlCmd extends CommandBase {
     @Override
     public void execute() {
         double joystickPower = MathUtil.applyDeadband(joystickPercentageFunction.get(), OIConstants.kDefaultJoystickDeadband) / 2;
-        grabberSubsystem.setMotorVoltage(grabberFeedforward.calculate(grabberSubsystem.getFlipEncoderPositionInRads(), joystickPower));
+
+        SmartDashboard.putNumber("[GRAB] Velocity Desired (rads per second)", joystickPower);
+
+        grabberSubsystem.setMotorVoltage(grabberSubsystem.calculateFeedforward(grabberSubsystem.getFlipEncoderPositionInRads(), joystickPower));
     }
 
     @Override
     public void end(boolean interrupted) {
-        grabberSubsystem.setMotorVoltage(grabberFeedforward.calculate(grabberSubsystem.getFlipEncoderPositionInRads(), 0));
+        grabberSubsystem.setMotorVoltage(grabberSubsystem.calculateFeedforward(grabberSubsystem.getFlipEncoderPositionInRads(), 0));
     }
 
 
