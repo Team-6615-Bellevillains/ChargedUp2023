@@ -146,17 +146,19 @@ public final class Constants {
         public static final double verticalLowHeight = Units.inchesToMeters(1);
         public static final double verticalMidHeight = Units.inchesToMeters(21);
         public static final double verticalHighHeight = 0.598;
-        public static final double verticalRestThreshold = 0.01; // Measurement of elevator, in meters, that is considered all the way down.
+        public static final double verticalRestThreshold = Units.inchesToMeters(1); // Measurement of elevator, in meters, that is considered all the way down.
         public static final double kVerticalSlowFallVoltage = 2;
 
         public static final double kPVerticalElevator = 0.1;
         public static final double kIVerticalElevator = 0;
         public static final double kDVerticalElevator = 0;
-        public static final double kMaxVelocityVerticalElevator = .4;
-        public static final double kMaxAccelerationVerticalElevator = .4;
+        public static final double kMaxVelocityVerticalElevatorUp = .65;
+        public static final double kMaxAccelerationVerticalElevatorUp = .9;
+        public static final double kMaxVelocityVerticalElevatorDown = .4;
+        public static final double kMaxAccelerationVerticalElevatorDown = .4;
 
-        public static final double kGVerticalElevator = 3.699000;
-        public static final double kSVerticalElevator = 0.791000;
+        public static final double kGVerticalElevator = 3.899;
+        public static final double kSVerticalElevator = 0.491000;
         public static final double kVVerticalElevator = 7.010000;
         public static final double kAVerticalElevator = 0.22;
 
