@@ -40,9 +40,11 @@ public class AutoBalance extends CommandBase {
     double yDistanceOutput = balancer.calculate(swerveSubsystem.getPitch()); 
 
     // Convert P[ID] outputs to ChassisSpeed values, clamping the distance P[ID] to a max speed
-    ChassisSpeeds chassisSpeeds = swerveSubsystem.calculateChassisSpeedsWithDriftCorrection( MathUtil.clamp(0, -AutoConstants.kAutoMaxSpeedMetersPerSecond,
-                    AutoConstants.kAutoMaxSpeedMetersPerSecond),MathUtil.clamp(yDistanceOutput, -AutoConstants.kAutoMaxSpeedMetersPerSecond,
-                    AutoConstants.kAutoMaxSpeedMetersPerSecond),0, false);
+    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(
+            MathUtil.clamp(0, -AutoConstants.kAutoMaxSpeedMetersPerSecond, AutoConstants.kAutoMaxSpeedMetersPerSecond),
+            MathUtil.clamp(yDistanceOutput, -AutoConstants.kAutoMaxSpeedMetersPerSecond, AutoConstants.kAutoMaxSpeedMetersPerSecond),
+            0
+    );
 
     // Convert ChassisSpeeds to SwerveModuleStates and send them off through the SwerveSubsystem
     swerveSubsystem.setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds), true);
