@@ -22,7 +22,7 @@ public class AutoSuckPieceCmd extends CommandBase {
     @Override
     public void initialize() {
         robotTime = 0;
-        shootOutTime = 5;
+        shootOutTime = 2;
         isDone = false;
 
         robotTime = Timer.getFPGATimestamp();
@@ -33,7 +33,7 @@ public class AutoSuckPieceCmd extends CommandBase {
     public void execute() {
         robotTime = Timer.getFPGATimestamp();
         if(robotTime < shootOutTime){
-        rollerSubsystem.setRollerSpeedPercentage(-.2);
+        rollerSubsystem.setRollerSpeedPercentage(-.15);
         }
         else
         {
