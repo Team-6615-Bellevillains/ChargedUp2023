@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ElevatorConstants;
@@ -30,7 +29,6 @@ import frc.robot.commands.AlignToAprilTagCubeCmd;
 import frc.robot.commands.drive.SwerveJoystickCmd;
 import frc.robot.commands.elevator.*;
 import frc.robot.commands.grabber.*;
-import frc.robot.commands.operation.ScoreHighCmd;
 //import frc.robot.commands.operation.ScoreCubeLowCmd;
 //import frc.robot.commands.operation.ScoreCubeMidCmd;
 import frc.robot.subsystems.*;
@@ -61,10 +59,7 @@ public class RobotContainer {
         () -> -driverController.getRightX(),
         () -> driverController.leftBumper().getAsBoolean()));
 
-    horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
-    verticalElevatorSubsystem.setDefaultCommand(new ManualVerticalElevatorController(verticalElevatorSubsystem, () -> -operatorController.getRightY())); // TODO: Test
-    grabberSubsystem.setDefaultCommand(new GrabberJoystickControlCmd(grabberSubsystem, () -> -operatorController.getLeftY()));
-
+    setMechanismDefaultCommands();
 
     PathPlannerTrajectory testPath = PathPlanner.loadPath("New Path", new PathConstraints(0.35, 1));
 
@@ -108,8 +103,21 @@ public class RobotContainer {
     configureBindings();
   }
 
+  public void setMechanismDefaultCommands() {
+    horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
+    verticalElevatorSubsystem.setDefaultCommand(new ManualVerticalElevatorController(verticalElevatorSubsystem, () -> -operatorController.getRightY())); // TODO: Test
+    grabberSubsystem.setDefaultCommand(new GrabberJoystickControlCmd(grabberSubsystem, () -> -operatorController.getLeftY()));
+  }
+
+  public void removeMechanismDefaultCommands() {
+    horizontalElevatorSubsystem.removeDefaultCommand();
+    verticalElevatorSubsystem.removeDefaultCommand();
+    grabberSubsystem.removeDefaultCommand();
+  }
+
   private void configureBindings() {
     driverController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
+    driverController.start().onTrue(new InstantCommand(horizontalElevatorSubsystem::resetHorizontalElevatorEncoder));
 
     operatorController.leftBumper().whileTrue(new ClampGrabberCmd(pneumaticsSubsystem));
     operatorController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));

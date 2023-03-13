@@ -170,7 +170,7 @@ public final class Constants {
         public static final int horizontalEncoderPulsesPerRevolution = kCimcoder256PulsesPerRevolution;
         public static final double horizontalRotationsToDistance = 3328.0/11585.0;
 
-        public static final double kHorizontalElevatorInThreshold = 1;
+        public static final double kHorizontalElevatorInThreshold = 0.5;
         public static final double kHorizontalElevatorOutThreshold = 11.4;
 
         public static final double kPHorizontalElevator = 0;
@@ -217,6 +217,8 @@ public final class Constants {
         public static final double grabberInSetpoint = Units.degreesToRadians(130);
         public static final double grabberShootCubeSetpoint = Units.degreesToRadians(21);
         public static final double grabberIntakeSetpoint = Units.degreesToRadians(-20);
+
+        public static final double grabberRestThreshold = Units.degreesToRadians(125);
         public static double grabberOutSetpoint;
     }
 

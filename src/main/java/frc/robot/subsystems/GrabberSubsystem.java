@@ -55,7 +55,14 @@ public class GrabberSubsystem extends SubsystemBase {
     flipMotor.setVoltage(voltage);
   }
 
+  public void resetEncoderToHigh() {
+    flipEncoder.setPosition(GrabberConstants.kGrabberHighestPositionDegrees);
+  }
+
   public double getFlipEncoderPositionInDegrees() {
+    if (flipEncoder.getPosition() >= GrabberConstants.kGrabberHighestPositionDegrees) {
+      resetEncoderToHigh();
+    }
     return flipEncoder.getPosition();
   }
   public double getFlipEncoderPositionInRads() {

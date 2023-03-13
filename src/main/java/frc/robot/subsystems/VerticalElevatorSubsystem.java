@@ -63,6 +63,9 @@ public class VerticalElevatorSubsystem extends SubsystemBase {
     }
 
     public double getVerticalElevatorPosition() {
+        if (verticalElevatorEncoder.get() < 0) {
+            verticalElevatorEncoder.reset();
+        }
         return verticalElevatorEncoder.get() * ElevatorConstants.verticalRotationsToDistance
                 / ElevatorConstants.verticalEncoderPulsesPerRevolution;
     }
