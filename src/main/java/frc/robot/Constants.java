@@ -242,9 +242,9 @@ public final class Constants {
         public static final double kAutoMaxAccelerationMetersPerSecond = 0.5;
 
         public static final double kPTrackingYaw = .05;
-        public static final double kPTrackingDriveX = 0.8;
+        public static final double kPTrackingDriveX = 0.9;
         public static final double kTrackingDistance = .45;
-        public static final double kPTrackingDriveY = 0.8;
+        public static final double kPTrackingDriveY = 0.9;
     }
 
     public static final class OIConstants {

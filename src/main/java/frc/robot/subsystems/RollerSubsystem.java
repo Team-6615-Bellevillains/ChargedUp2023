@@ -17,7 +17,7 @@ public class RollerSubsystem extends SubsystemBase {
     }
 
     public void setRollerSpeedPercentage(double speedPercentage) {
-        leftMotorRoller.set(speedPercentage*.7);
+        leftMotorRoller.set(speedPercentage);
         rightMotorRoller.set(speedPercentage);
     }
 

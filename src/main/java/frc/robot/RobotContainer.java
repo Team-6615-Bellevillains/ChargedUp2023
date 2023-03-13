@@ -43,8 +43,8 @@ public class RobotContainer {
   private final RollerSubsystem rollerSubsystem = new RollerSubsystem();
   private final PneumaticsSubsystem pneumaticsSubsystem = new PneumaticsSubsystem();
 
-  private final HorizontalElevatorSubsystem horizontalElevatorSubsystem = new HorizontalElevatorSubsystem();
-  private final VerticalElevatorSubsystem verticalElevatorSubsystem = new VerticalElevatorSubsystem();
+  //private final HorizontalElevatorSubsystem horizontalElevatorSubsystem = new HorizontalElevatorSubsystem();
+  //private final VerticalElevatorSubsystem verticalElevatorSubsystem = new VerticalElevatorSubsystem();
   private SendableChooser<Command> m_chooser;
 
   private final CommandXboxController driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
@@ -61,21 +61,21 @@ public class RobotContainer {
         () -> -driverController.getRightX(),
         () -> driverController.leftBumper().getAsBoolean()));
 
-    horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
-    verticalElevatorSubsystem.setDefaultCommand(new ManualVerticalElevatorController(verticalElevatorSubsystem, () -> -operatorController.getRightY())); // TODO: Test
+   // horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
+  //  verticalElevatorSubsystem.setDefaultCommand(new ManualVerticalElevatorController(verticalElevatorSubsystem, () -> -operatorController.getRightY())); // TODO: Test
     grabberSubsystem.setDefaultCommand(new GrabberJoystickControlCmd(grabberSubsystem, () -> -operatorController.getLeftY()));
 
 
-    PathPlannerTrajectory testPath = PathPlanner.loadPath("New Path", new PathConstraints(0.35, 1));
+    PathPlannerTrajectory testPath = PathPlanner.loadPath("Inside Cube ID8 Copy Copy", new PathConstraints(0.75, 1));
 
-    eventMap.put("marker1", new PrintCommand("Passed Marker 1"));
+    eventMap.put("intake", new AutoSuckPieceCmd(rollerSubsystem));
 
     autoBuilder = new SwerveAutoBuilder(
     swerveSubsystem::getPose, // Pose2d supplier
     swerveSubsystem::resetPoseEstimator, // Pose2d consumer, used to reset odometry at the beginning of auto
     DriveConstants.kDriveKinematics, // SwerveDriveKinematics
     new PIDConstants(Constants.AutoConstants.kPTrackingDriveX, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-    new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+    new PIDConstants(0.3, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
     (SwerveModuleState[] desiredStates) -> swerveSubsystem.setModuleStates(desiredStates, true), // Module states consumer used to output to the drive subsytem
     eventMap,
     true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
@@ -84,7 +84,7 @@ public class RobotContainer {
 
 
     Command alignToApriltagCubeCmd = new AlignToAprilTagCubeCmd(limelightSubsystem, swerveSubsystem);
-    Command scoreHighCmd = (new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight))
+  /*   Command scoreHighCmd = (new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight))
             .andThen(Commands.run(horizontalElevatorSubsystem::removeDefaultCommand))
             .andThen(new HorizontalElevatorOutCmd(horizontalElevatorSubsystem))
             .andThen(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberShootCubeSetpoint))
@@ -92,14 +92,14 @@ public class RobotContainer {
             .andThen(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberInSetpoint))
             .andThen(new HorizontalElevatorInCmd(horizontalElevatorSubsystem))
             .andThen(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, Units.inchesToMeters(2)))
-            .andThen(Commands.run(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem))));
+            .andThen(Commands.run(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem)))); */
 
     //Adds a smartdashboard widget that will allow us to select the autonomous we want to use. 
     m_chooser = new SendableChooser<>();
     //Default Autonomous that will be run if no other auto is selected
     m_chooser.setDefaultOption("AlignToAprilTagCubeCmd",alignToApriltagCubeCmd);
-    m_chooser.addOption("ScoreHighCmd", scoreHighCmd);
-    m_chooser.addOption("AlignAndScoreHigh", alignToApriltagCubeCmd.andThen(scoreHighCmd));
+ //   m_chooser.addOption("ScoreHighCmd", scoreHighCmd);
+    // m_chooser.addOption("AlignAndScoreHigh", alignToApriltagCubeCmd.andThen(scoreHighCmd));
 
     //m_chooser.addOption("ScoreCubeLowCmd", new ScoreCubeLowCmd(horizontalElevatorSubsystem, grabberSubsystem, swerveSubsystem, limelightSubsystem)); 
     m_chooser.addOption("Path Tester", autoBuilder.fullAuto(testPath));
@@ -116,11 +116,11 @@ public class RobotContainer {
     operatorController.leftTrigger(0.4).whileTrue(new SuckObjectCmd(rollerSubsystem));
     operatorController.rightTrigger(0.4).whileTrue(new ShootPieceCmd(rollerSubsystem));
 
-    operatorController.start().whileTrue(new HorizontalElevatorOutCmd(horizontalElevatorSubsystem));
-    operatorController.back().whileTrue(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
+  //  operatorController.start().whileTrue(new HorizontalElevatorOutCmd(horizontalElevatorSubsystem));
+  //  operatorController.back().whileTrue(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
 
-    operatorController.a().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight));
-    operatorController.x().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, Units.inchesToMeters(2)));
+    //operatorController.a().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight));
+    //operatorController.x().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, Units.inchesToMeters(2)));
     operatorController.b().whileTrue(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberShootCubeSetpoint));
     operatorController.y().whileTrue(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberInSetpoint));
 //    operatorController.y().onTrue(new AutoShootPieceCmd(rollerSubsystem));
