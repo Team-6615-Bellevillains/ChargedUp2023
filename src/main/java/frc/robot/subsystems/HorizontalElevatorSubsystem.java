@@ -30,6 +30,9 @@ public class HorizontalElevatorSubsystem extends SubsystemBase {
         resetHorizontalElevatorEncoder();
     }
 
+    double[] velocities = new double[5];
+
+    int idx = 0;
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Horizontal Position", getHorizontalElevatorPosition());
@@ -39,8 +42,11 @@ public class HorizontalElevatorSubsystem extends SubsystemBase {
         return feedforward.calculate(velocity);
     }
 
+    double lastVoltage = 0;
 
     public void setHorizontalElevatorVoltage(double voltage) {
+        lastVoltage = voltage;
+        SmartDashboard.putNumber("Hori voltage", voltage);
         hElevatorMotor.setVoltage(voltage);
     }
 

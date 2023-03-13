@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.VerticalElevatorSubsystem;
-import frc.robot.utils.TunableProfiledPIDController;
 
 public class VerticalElevatorToSetpointCmd extends CommandBase {
 
@@ -19,7 +18,7 @@ public class VerticalElevatorToSetpointCmd extends CommandBase {
     public VerticalElevatorToSetpointCmd(VerticalElevatorSubsystem verticalElevatorSubsystem, double setpointMeters) {
         this.verticalElevatorSubsystem = verticalElevatorSubsystem;
 
-        this.profiledPIDController = new ProfiledPIDController(ElevatorConstants.kPVerticalElevator, ElevatorConstants.kIVerticalElevator, ElevatorConstants.kDVerticalElevator, new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVelocityVerticalElevator, ElevatorConstants.kMaxAccelerationVerticalElevator));
+        this.profiledPIDController = new ProfiledPIDController(ElevatorConstants.kPVerticalElevator, ElevatorConstants.kIVerticalElevator, ElevatorConstants.kDVerticalElevator, new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVelocityVerticalElevatorUp, ElevatorConstants.kMaxAccelerationVerticalElevatorUp));
 
         this.profiledPIDController.setGoal(setpointMeters);
 
@@ -28,6 +27,13 @@ public class VerticalElevatorToSetpointCmd extends CommandBase {
 
     @Override
     public void initialize() {
+        if (profiledPIDController.getGoal().position < verticalElevatorSubsystem.getVerticalElevatorPosition() ) {
+            SmartDashboard.putString("Constraints", "DOWN");
+            profiledPIDController.setConstraints(new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVelocityVerticalElevatorDown, ElevatorConstants.kMaxAccelerationVerticalElevatorDown));
+        } else {
+            SmartDashboard.putString("Constraints", "UP");
+            profiledPIDController.setConstraints(new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVelocityVerticalElevatorUp, ElevatorConstants.kMaxAccelerationVerticalElevatorUp));
+        }
         profiledPIDController.reset(verticalElevatorSubsystem.getVerticalElevatorPosition());
     }
 
@@ -45,6 +51,7 @@ public class VerticalElevatorToSetpointCmd extends CommandBase {
         SmartDashboard.putNumber("[VERT] PID Out", pidOut);
         SmartDashboard.putNumber("[VERT] FF Out", ffOut);
         SmartDashboard.putNumber("[VERT] Theoretical Voltage", pidOut+ffOut);
+        SmartDashboard.putNumber("[VERT] Error", Math.abs(verticalElevatorSubsystem.getVerticalElevatorPosition()-profiledPIDController.getGoal().position));
 
         verticalElevatorSubsystem.setVerticalElevatorVoltage(pidOut+ffOut);
     }
@@ -54,13 +61,13 @@ public class VerticalElevatorToSetpointCmd extends CommandBase {
         SmartDashboard.putNumber("[VERT] End Position", verticalElevatorSubsystem.getVerticalElevatorPosition());
         SmartDashboard.putNumber("[VERT] End Velocity", verticalElevatorSubsystem.getVerticalElevatorVelocity());
         SmartDashboard.putNumber("[VERT] End TS", Timer.getFPGATimestamp());
-        verticalElevatorSubsystem.setVerticalElevatorVoltage(verticalElevatorSubsystem.calculateFeedforward(0));
+        verticalElevatorSubsystem.stopElevator();
     }
 
     // TODO: Add position tolerance
     @Override
     public boolean isFinished() {
-        return Math.abs(verticalElevatorSubsystem.getVerticalElevatorPosition()-profiledPIDController.getGoal().position) <= Units.inchesToMeters(.25);
+        return Math.abs(verticalElevatorSubsystem.getVerticalElevatorPosition()-profiledPIDController.getGoal().position) <= Units.inchesToMeters(1);
     }
 
 }

@@ -24,7 +24,9 @@ public class HorizontalElevatorInCmd extends CommandBase {
 
     @Override
     public void execute() {
-        horizontalElevatorSubsystem.setHorizontalElevatorVoltage(horizontalElevatorSubsystem.calculateFeedforward(-ElevatorConstants.kHorizontalElevatorFFInput));
+        if (!this.isFinished()) {
+            horizontalElevatorSubsystem.setHorizontalElevatorVoltage(horizontalElevatorSubsystem.calculateFeedforward(-ElevatorConstants.kHorizontalElevatorFFInput));
+        }
     }
 
     @Override

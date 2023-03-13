@@ -31,7 +31,13 @@ public class GrabberJoystickControlCmd extends CommandBase {
 
         SmartDashboard.putNumber("[GRAB] Velocity Desired (rads per second)", joystickPower);
 
-        grabberSubsystem.setMotorVoltage(grabberSubsystem.calculateFeedforward(grabberSubsystem.getFlipEncoderPositionInRads(), joystickPower));
+        if (joystickPower == 0 && grabberSubsystem.getFlipEncoderPositionInRads() >= GrabberConstants.grabberRestThreshold) {
+            grabberSubsystem.setMotorVoltage(0);
+            grabberSubsystem.resetEncoderToHigh();
+        } else {
+            grabberSubsystem.setMotorVoltage(grabberSubsystem.calculateFeedforward(grabberSubsystem.getFlipEncoderPositionInRads(), joystickPower));
+        }
+
     }
 
     @Override
