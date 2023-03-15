@@ -14,6 +14,7 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.GrabberConstants;
@@ -47,10 +49,27 @@ public class RobotContainer {
 
   private final CommandXboxController driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
   private final CommandXboxController operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
+  private final Joystick buttonBox = new Joystick(OIConstants.kButtonBoxPort);
+  private final JoystickButton vertHighButton = new JoystickButton(buttonBox, 1);
+  private final JoystickButton vertMidButton = new JoystickButton(buttonBox, 2);
+  private final JoystickButton vertLowButton = new JoystickButton(buttonBox, 3);
+
+  private final JoystickButton scoreCubeHighButton = new JoystickButton(buttonBox, 8);
   
   private SwerveAutoBuilder autoBuilder;
   private HashMap<String, Command> eventMap = new HashMap<>();
-  
+
+  private Command generateScoreHighCmd() {
+    return (new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight))
+            .andThen(Commands.runOnce(horizontalElevatorSubsystem::removeDefaultCommand))
+            .andThen(Commands.parallel(new HorizontalElevatorOutCmd(horizontalElevatorSubsystem), new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberShootCubeSetpoint)))
+            .andThen(new AutoShootPieceCmd(rollerSubsystem))
+            .andThen(Commands.parallel(new HorizontalElevatorInCmd(horizontalElevatorSubsystem), new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberInSetpoint)))
+            .andThen(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, Units.inchesToMeters(.5)))
+            .andThen(Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem))))
+            .andThen(Commands.runOnce(() -> verticalElevatorSubsystem.setVerticalElevatorVoltage(0)));
+  }
+
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
         swerveSubsystem,
@@ -79,14 +98,7 @@ public class RobotContainer {
 
 
     Command alignToApriltagCubeCmd = new AlignToAprilTagCubeCmd(limelightSubsystem, swerveSubsystem);
-    Command scoreHighCmd = (new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight))
-            .andThen(Commands.runOnce(horizontalElevatorSubsystem::removeDefaultCommand))
-            .andThen(Commands.parallel(new HorizontalElevatorOutCmd(horizontalElevatorSubsystem), new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberShootCubeSetpoint)))
-            .andThen(new AutoShootPieceCmd(rollerSubsystem))
-            .andThen(Commands.parallel(new HorizontalElevatorInCmd(horizontalElevatorSubsystem), new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberInSetpoint)))
-            .andThen(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, Units.inchesToMeters(.5)))
-            .andThen(Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem))))
-            .andThen(Commands.runOnce(() -> verticalElevatorSubsystem.setVerticalElevatorVoltage(0)));
+    Command scoreHighCmd = generateScoreHighCmd();
 
     //Adds a smartdashboard widget that will allow us to select the autonomous we want to use. 
     m_chooser = new SendableChooser<>();
@@ -118,6 +130,11 @@ public class RobotContainer {
     driverController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
     driverController.start().onTrue(new InstantCommand(horizontalElevatorSubsystem::resetHorizontalElevatorEncoder));
 
+    driverController.leftBumper().whileTrue(new ClampGrabberCmd(pneumaticsSubsystem));
+    driverController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));
+    driverController.leftTrigger(0.4).whileTrue(new SuckObjectCmd(rollerSubsystem));
+    driverController.rightTrigger(0.4).whileTrue(new ShootPieceCmd(rollerSubsystem));
+
     operatorController.leftBumper().whileTrue(new ClampGrabberCmd(pneumaticsSubsystem));
     operatorController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));
     operatorController.leftTrigger(0.4).whileTrue(new SuckObjectCmd(rollerSubsystem));
@@ -126,15 +143,13 @@ public class RobotContainer {
     operatorController.start().whileTrue(new HorizontalElevatorOutCmd(horizontalElevatorSubsystem));
     operatorController.back().whileTrue(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
 
+    vertHighButton.whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight));
+    scoreCubeHighButton.whileTrue(generateScoreHighCmd());
+
 //    operatorController.a().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight));
 //    operatorController.x().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, Units.inchesToMeters(2)));
 //    operatorController.b().whileTrue(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberShootCubeSetpoint));
 //    operatorController.y().whileTrue(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberInSetpoint));
-
-    operatorController.a().onTrue(Commands.runOnce(() -> pneumaticsSubsystem.setCompressorState(true)));
-    operatorController.b().onTrue(Commands.runOnce(() -> pneumaticsSubsystem.setCompressorState(false)));
-
-//    operatorController.y().onTrue(new AutoShootPieceCmd(rollerSubsystem));
 
   }
 
