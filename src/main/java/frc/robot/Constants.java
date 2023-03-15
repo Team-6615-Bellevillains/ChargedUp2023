@@ -256,6 +256,7 @@ public final class Constants {
         public static final double kOperatorRightYDeadband = 0.13;
         public static final int kDriverControllerPort = 0;
         public static final int kOperatorControllerPort = 1;
+        public static final int kButtonBoxPort = 2;
     }
 
 }
