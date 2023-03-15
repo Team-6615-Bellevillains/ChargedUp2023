@@ -17,28 +17,46 @@ import frc.robot.Constants.GrabberConstants;
 
 public class PneumaticsSubsystem extends SubsystemBase {
 
-  /** Creates a new GrabberSubsystem. */
   private Compressor compressor;
   private Solenoid solenoid;
 
+  private boolean hasFilledSystem = false;
+
   public PneumaticsSubsystem() {
-//    compressor = new Compressor(PneumaticsModuleType.CTREPCM);
+    compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
+    compressor.enableDigital();
+
     solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kSolenoidChannel);
   }
 
   @Override
   public void periodic() {
-//    SmartDashboard.putNumber("Compressor Pressure", compressor.getCurrent());
+
+    boolean isSystemFull = compressor.getPressureSwitchValue();
+
+    SmartDashboard.putBoolean("Compressor/isEnabled", compressor.isEnabled());
+    SmartDashboard.putBoolean("Compressor/isSystemFull", isSystemFull);
+
+    if (!hasFilledSystem) {
+      if (isSystemFull) {
+        hasFilledSystem = true;
+        compressor.disable();
+      } else {
+        if (!compressor.isEnabled()) {
+          compressor.enableDigital();
+        }
+      }
     }
+  }
 
 
-//  public void setCompressorState(boolean on) {
-//    if (on) {
+  public void setCompressorState(boolean on) {
+    if (on) {
 //      compressor.enableDigital();
-//    } else {
+    } else {
 //      compressor.disable();
-//    }
-//  }
+    }
+  }
 
   public void setSolenoidState(boolean on) {
     solenoid.set(on);

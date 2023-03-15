@@ -97,7 +97,7 @@ public class RobotContainer {
 
     //m_chooser.addOption("ScoreCubeLowCmd", new ScoreCubeLowCmd(horizontalElevatorSubsystem, grabberSubsystem, swerveSubsystem, limelightSubsystem)); 
     m_chooser.addOption("Path Tester", autoBuilder.fullAuto(testPath));
-    SmartDashboard.putData(m_chooser); 
+    SmartDashboard.putData(m_chooser);
 
     configureBindings();
   }
@@ -126,10 +126,14 @@ public class RobotContainer {
     operatorController.start().whileTrue(new HorizontalElevatorOutCmd(horizontalElevatorSubsystem));
     operatorController.back().whileTrue(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
 
-    operatorController.a().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight));
-    operatorController.x().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, Units.inchesToMeters(2)));
-    operatorController.b().whileTrue(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberShootCubeSetpoint));
-    operatorController.y().whileTrue(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberInSetpoint));
+//    operatorController.a().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight));
+//    operatorController.x().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, Units.inchesToMeters(2)));
+//    operatorController.b().whileTrue(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberShootCubeSetpoint));
+//    operatorController.y().whileTrue(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberInSetpoint));
+
+    operatorController.a().onTrue(Commands.runOnce(() -> pneumaticsSubsystem.setCompressorState(true)));
+    operatorController.b().onTrue(Commands.runOnce(() -> pneumaticsSubsystem.setCompressorState(false)));
+
 //    operatorController.y().onTrue(new AutoShootPieceCmd(rollerSubsystem));
 
   }
