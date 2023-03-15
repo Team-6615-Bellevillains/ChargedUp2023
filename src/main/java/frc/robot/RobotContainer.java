@@ -128,7 +128,6 @@ public class RobotContainer {
 
   private void configureBindings() {
     driverController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
-    driverController.start().onTrue(new InstantCommand(horizontalElevatorSubsystem::resetHorizontalElevatorEncoder));
 
     driverController.leftBumper().whileTrue(new ClampGrabberCmd(pneumaticsSubsystem));
     driverController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));
@@ -145,6 +144,9 @@ public class RobotContainer {
 
     vertHighButton.whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight));
     scoreCubeHighButton.whileTrue(generateScoreHighCmd());
+    operatorController.a().onTrue(Commands.runOnce(verticalElevatorSubsystem::resetVerticalElevatorEncoder));
+    operatorController.b().onTrue(Commands.runOnce(horizontalElevatorSubsystem::resetHorizontalElevatorEncoder));
+//    operatorController.y().onTrue(new AutoShootPieceCmd(rollerSubsystem));
 
 //    operatorController.a().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight));
 //    operatorController.x().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, Units.inchesToMeters(2)));
