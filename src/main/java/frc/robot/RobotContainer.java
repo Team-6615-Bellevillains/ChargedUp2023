@@ -61,16 +61,19 @@ public class RobotContainer {
 
     setMechanismDefaultCommands();
 
-    PathPlannerTrajectory testPath = PathPlanner.loadPath("New Path", new PathConstraints(0.35, 1));
+    PathPlannerTrajectory testPath = PathPlanner.loadPath("Inside Cube ID8 Copy Copy", new PathConstraints(0.75, 1));
 
-    eventMap.put("marker1", new PrintCommand("Passed Marker 1"));
+    eventMap.put("intake", new AutoSuckPieceCmd(rollerSubsystem));
+    eventMap.put("grabberdown", new GrabberToSetpointCmd(grabberSubsystem, Constants.GrabberConstants.grabberIntakeSetpoint));
+    eventMap.put("grabberin", new GrabberToSetpointCmd(grabberSubsystem, Constants.GrabberConstants.grabberInSetpoint));
+
 
     autoBuilder = new SwerveAutoBuilder(
     swerveSubsystem::getPose, // Pose2d supplier
     swerveSubsystem::resetPoseEstimator, // Pose2d consumer, used to reset odometry at the beginning of auto
     DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-    new PIDConstants(Constants.AutoConstants.kPTrackingDriveX, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-    new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+    new PIDConstants(Constants.AutoConstants.kPTrackingDriveX + 0.1, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+    new PIDConstants(0.3, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
     (SwerveModuleState[] desiredStates) -> swerveSubsystem.setModuleStates(desiredStates, true), // Module states consumer used to output to the drive subsytem
     eventMap,
     true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
@@ -88,11 +91,15 @@ public class RobotContainer {
             .andThen(Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem))))
             .andThen(Commands.runOnce(() -> verticalElevatorSubsystem.setVerticalElevatorVoltage(0)));
 
+    Command autoSuckPieceCmd = new AutoSuckPieceCmd(rollerSubsystem);
+
     //Adds a smartdashboard widget that will allow us to select the autonomous we want to use. 
     m_chooser = new SendableChooser<>();
     //Default Autonomous that will be run if no other auto is selected
+
     m_chooser.setDefaultOption("AlignToAprilTagCubeCmd",alignToApriltagCubeCmd);
     m_chooser.addOption("ScoreHighCmd", scoreHighCmd);
+    m_chooser.addOption("AutoSuck", autoSuckPieceCmd);
 //    m_chooser.addOption("AlignAndScoreHigh", alignToApriltagCubeCmd.andThen(scoreHighCmd));
 
     //m_chooser.addOption("ScoreCubeLowCmd", new ScoreCubeLowCmd(horizontalElevatorSubsystem, grabberSubsystem, swerveSubsystem, limelightSubsystem)); 
