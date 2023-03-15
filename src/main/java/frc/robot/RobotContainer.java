@@ -26,6 +26,7 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.GrabberConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToAprilTagCubeCmd;
+import frc.robot.commands.AlignToDoubleSubstation;
 import frc.robot.commands.drive.SwerveJoystickCmd;
 import frc.robot.commands.elevator.*;
 import frc.robot.commands.grabber.*;
@@ -87,12 +88,14 @@ public class RobotContainer {
             .andThen(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, Units.inchesToMeters(.5)))
             .andThen(Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem))))
             .andThen(Commands.runOnce(() -> verticalElevatorSubsystem.setVerticalElevatorVoltage(0)));
+    Command alignToDoubleSubstation = new AlignToDoubleSubstation(limelightSubsystem, swerveSubsystem);
 
     //Adds a smartdashboard widget that will allow us to select the autonomous we want to use. 
     m_chooser = new SendableChooser<>();
     //Default Autonomous that will be run if no other auto is selected
     m_chooser.setDefaultOption("AlignToAprilTagCubeCmd",alignToApriltagCubeCmd);
     m_chooser.addOption("ScoreHighCmd", scoreHighCmd);
+    m_chooser.addOption("Double Sub", alignToDoubleSubstation);
 //    m_chooser.addOption("AlignAndScoreHigh", alignToApriltagCubeCmd.andThen(scoreHighCmd));
 
     //m_chooser.addOption("ScoreCubeLowCmd", new ScoreCubeLowCmd(horizontalElevatorSubsystem, grabberSubsystem, swerveSubsystem, limelightSubsystem)); 
