@@ -1,23 +1,24 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.GrabberConstants;
 
 public class RollerSubsystem extends SubsystemBase {
 
-    private WPI_TalonSRX leftMotorRoller;
-    private WPI_TalonSRX rightMotorRoller;
+    private CANSparkMax leftMotorRoller;
+    private CANSparkMax rightMotorRoller;
 
     public RollerSubsystem() {
-        leftMotorRoller = new WPI_TalonSRX(Constants.GrabberConstants.kLeftRollerMotorPort);
-        rightMotorRoller = new WPI_TalonSRX(Constants.GrabberConstants.kRightRollerMotorPort);
+        leftMotorRoller = new CANSparkMax(GrabberConstants.kLeftRollerMotorPort, MotorType.kBrushless);
+        rightMotorRoller = new CANSparkMax(GrabberConstants.kRightRollerMotorPort, MotorType.kBrushless);
 
         leftMotorRoller.setInverted(true);
     }
 
     public void setRollerSpeedPercentage(double speedPercentage) {
-        leftMotorRoller.set(speedPercentage*.7);
+        leftMotorRoller.set(speedPercentage);
         rightMotorRoller.set(speedPercentage);
     }
 
