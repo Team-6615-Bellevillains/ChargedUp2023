@@ -153,6 +153,9 @@ public class RobotContainer {
 
   private void configureBindings() {
     driverController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
+    driverController.x().onTrue(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(1.25)));
+    driverController.a().onTrue(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(.35)));
+    driverController.b().onTrue(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(1)));
 
     driverController.leftBumper().whileTrue(new ClampGrabberCmd(pneumaticsSubsystem));
     driverController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));
