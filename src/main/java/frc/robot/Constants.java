@@ -215,8 +215,10 @@ public final class Constants {
         public static final double kMaxFlipAccelerationRadiansPerSecondSquared = 3;
 
         public static final double grabberInSetpoint = Units.degreesToRadians(130);
-        public static final double grabberShootCubeSetpoint = Units.degreesToRadians(21);
+        public static final double grabberShootCubeMidSetpoint = Units.degreesToRadians(80);
+        public static final double grabberShootCubeHighSetpoint = Units.degreesToRadians(21);
         public static final double grabberIntakeSetpoint = Units.degreesToRadians(-23);
+
 
         public static final double grabberRestThreshold = Units.degreesToRadians(125);
         public static double grabberOutSetpoint;
