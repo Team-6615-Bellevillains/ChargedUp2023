@@ -22,7 +22,7 @@ public class AutoShootPieceCmd extends CommandBase {
     @Override
     public void initialize() {
         robotTime = 0;
-        shootOutTime = .3;
+        shootOutTime = .15;
         isDone = false;
 
         robotTime = Timer.getFPGATimestamp();
@@ -33,7 +33,7 @@ public class AutoShootPieceCmd extends CommandBase {
     public void execute() {
         robotTime = Timer.getFPGATimestamp();
         if(robotTime < shootOutTime){
-        rollerSubsystem.setRollerSpeedPercentage(.4);
+        rollerSubsystem.setRollerSpeedPercentage(.1);
         }
         else
         {

@@ -149,7 +149,7 @@ public final class Constants {
         public static final double verticalRestThreshold = Units.inchesToMeters(1); // Measurement of elevator, in meters, that is considered all the way down.
         public static final double kVerticalSlowFallVoltage = 2;
 
-        public static final double kPVerticalElevator = 0.1;
+        public static final double kPVerticalElevator = 9;
         public static final double kIVerticalElevator = 0;
         public static final double kDVerticalElevator = 0;
         public static final double kMaxVelocityVerticalElevator = .5;
@@ -201,7 +201,7 @@ public final class Constants {
 
         public static final double kGrabberPositionConversionFactor = (kGrabberHighestPositionDegrees-kGrabberLowestPositionDegrees)/kRotationsFromLowestToHighest;
 
-        public static final double kPFlip = 0.1;
+        public static final double kPFlip = 3;
         public static final double kIFlip = 0.1;
         public static final double kDFlip = 0.1;
 
@@ -211,8 +211,8 @@ public final class Constants {
         public static final double kVGrabber = 0.600000;
         public static final double kAGrabber = 0.04;
 
-        public static final double kMaxFlipVelocityRadiansPerSecond = 1;
-        public static final double kMaxFlipAccelerationRadiansPerSecondSquared = 2;
+        public static final double kMaxFlipVelocityRadiansPerSecond = 1.5;
+        public static final double kMaxFlipAccelerationRadiansPerSecondSquared = 3;
 
         public static final double grabberInSetpoint = Units.degreesToRadians(130);
         public static final double grabberShootCubeSetpoint = Units.degreesToRadians(21);
