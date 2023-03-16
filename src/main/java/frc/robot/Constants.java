@@ -230,6 +230,9 @@ public final class Constants {
         public static final double cameraPitchRadians =  Units.degreesToRadians(0);
         public static final double midGoalRange = 0;
         public static final double distanceFromAprilTagToRung = Units.inchesToMeters(21.25);
+        public static final double cameraOffset = 0.308;
+        public static final double xCameraOffset = 0.350;
+        public static final double bumperOffset = 0.083;
         public static Transform3d robotToCam = new Transform3d(
             new Translation3d(-0.047, 0.331, 0.858),
             new Rotation3d(

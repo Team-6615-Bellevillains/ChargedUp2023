@@ -28,6 +28,7 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.GrabberConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToAprilTagCubeCmd;
+import frc.robot.commands.AlignToDoubleSubstation;
 import frc.robot.commands.drive.SwerveJoystickCmd;
 import frc.robot.commands.elevator.*;
 import frc.robot.commands.grabber.*;
@@ -119,8 +120,8 @@ public class RobotContainer {
 
 
     Command alignToApriltagCubeCmd = new AlignToAprilTagCubeCmd(limelightSubsystem, swerveSubsystem);
+    Command alignToDoubleSubstation = new AlignToDoubleSubstation(limelightSubsystem, swerveSubsystem);
     Command scoreHighCmd = generateScoreHighCmd();
-
     Command autoSuckPieceCmd = new AutoSuckPieceCmd(rollerSubsystem);
 
     //Adds a smartdashboard widget that will allow us to select the autonomous we want to use. 
@@ -129,6 +130,7 @@ public class RobotContainer {
 
     m_chooser.setDefaultOption("AlignToAprilTagCubeCmd",alignToApriltagCubeCmd);
     m_chooser.addOption("ScoreHighCmd", scoreHighCmd);
+    m_chooser.addOption("Double Sub", alignToDoubleSubstation);
     m_chooser.addOption("AutoSuck", autoSuckPieceCmd);
 //    m_chooser.addOption("AlignAndScoreHigh", alignToApriltagCubeCmd.andThen(scoreHighCmd));
 
