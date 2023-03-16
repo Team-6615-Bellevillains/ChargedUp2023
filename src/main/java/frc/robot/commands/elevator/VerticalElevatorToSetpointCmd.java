@@ -8,17 +8,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.VerticalElevatorSubsystem;
+import frc.robot.utils.TunableProfiledPIDController;
 
 public class VerticalElevatorToSetpointCmd extends CommandBase {
 
     private final VerticalElevatorSubsystem verticalElevatorSubsystem;
 
+    private final TunableProfiledPIDController tunableProfiledPIDController;
     private final ProfiledPIDController profiledPIDController;
 
     public VerticalElevatorToSetpointCmd(VerticalElevatorSubsystem verticalElevatorSubsystem, double setpointMeters) {
         this.verticalElevatorSubsystem = verticalElevatorSubsystem;
 
-        this.profiledPIDController = new ProfiledPIDController(ElevatorConstants.kPVerticalElevator, ElevatorConstants.kIVerticalElevator, ElevatorConstants.kDVerticalElevator, new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVelocityVerticalElevatorUp, ElevatorConstants.kMaxAccelerationVerticalElevatorUp));
+        this.tunableProfiledPIDController = new TunableProfiledPIDController("vertElevatorFixer",ElevatorConstants.kPVerticalElevator, ElevatorConstants.kIVerticalElevator, ElevatorConstants.kDVerticalElevator, new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVelocityVerticalElevator, ElevatorConstants.kMaxAccelerationVerticalElevator),verticalElevatorSubsystem::getVerticalElevatorPosition);
+        this.profiledPIDController = tunableProfiledPIDController.getController();
 
         this.profiledPIDController.setGoal(setpointMeters);
 
@@ -27,13 +30,6 @@ public class VerticalElevatorToSetpointCmd extends CommandBase {
 
     @Override
     public void initialize() {
-        if (profiledPIDController.getGoal().position < verticalElevatorSubsystem.getVerticalElevatorPosition() ) {
-            SmartDashboard.putString("Constraints", "DOWN");
-            profiledPIDController.setConstraints(new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVelocityVerticalElevatorDown, ElevatorConstants.kMaxAccelerationVerticalElevatorDown));
-        } else {
-            SmartDashboard.putString("Constraints", "UP");
-            profiledPIDController.setConstraints(new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVelocityVerticalElevatorUp, ElevatorConstants.kMaxAccelerationVerticalElevatorUp));
-        }
         profiledPIDController.reset(verticalElevatorSubsystem.getVerticalElevatorPosition());
     }
 
@@ -41,6 +37,8 @@ public class VerticalElevatorToSetpointCmd extends CommandBase {
     public void execute() {
         SmartDashboard.putNumber("[VERT] Setpoint TS", Timer.getFPGATimestamp());
         SmartDashboard.putNumber("[VERT] Setpoint Goal Position", profiledPIDController.getGoal().position);
+        SmartDashboard.putString("[VERT] Status", "running");
+
 
 
         double pidOut = profiledPIDController.calculate(verticalElevatorSubsystem.getVerticalElevatorPosition());
@@ -61,13 +59,18 @@ public class VerticalElevatorToSetpointCmd extends CommandBase {
         SmartDashboard.putNumber("[VERT] End Position", verticalElevatorSubsystem.getVerticalElevatorPosition());
         SmartDashboard.putNumber("[VERT] End Velocity", verticalElevatorSubsystem.getVerticalElevatorVelocity());
         SmartDashboard.putNumber("[VERT] End TS", Timer.getFPGATimestamp());
+        if (interrupted) {
+            SmartDashboard.putString("[VERT] Status", "interrupted");
+        } else {
+            SmartDashboard.putString("[VERT] Status", "finished");
+        }
         verticalElevatorSubsystem.stopElevator();
     }
 
     // TODO: Add position tolerance
     @Override
     public boolean isFinished() {
-        return Math.abs(verticalElevatorSubsystem.getVerticalElevatorPosition()-profiledPIDController.getGoal().position) <= Units.inchesToMeters(1);
+        return Math.abs(verticalElevatorSubsystem.getVerticalElevatorPosition()-profiledPIDController.getGoal().position) <= Units.inchesToMeters(.1);
     }
 
 }

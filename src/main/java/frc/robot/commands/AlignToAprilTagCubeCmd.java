@@ -5,9 +5,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.utils.TunablePIDController;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import frc.robot.utils.TunablePIDController;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.MathUtil;
@@ -29,7 +28,6 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
 
   // These PID controllers will calculate the velocities required to make the
   // robot move to a certain position at a certain angle
-//  private PIDController yawController;
   private PIDController xdistanceController;
   private PIDController ydistanceController;
   private double ySetpoint;
@@ -55,6 +53,8 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    xdistanceController.reset();
+    ydistanceController.reset();
     currentPosition = swerveSubsystem.getPose();
    currentYPosition = currentPosition.getY();
   currentXPosition = currentPosition.getX();
@@ -87,12 +87,14 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
    double ydistanceOutput = ydistanceController.calculate(currentYPosition, ySetpoint);
    double xdistanceOutput = xdistanceController.calculate(currentXPosition, xSetpoint);
 
+    
+    /*
     SmartDashboard.putNumber("y curr", currentYPosition);
     SmartDashboard.putNumber("x curr", currentXPosition);
    // SmartDashboard.putNumber("x P", xdistanceController.getP());
     SmartDashboard.putNumber("x goal", xSetpoint);
     SmartDashboard.putNumber("y goal", ySetpoint);
-
+    */
     // Convert P[ID] outputs to ChassisSpeed values, clamping the distance P[ID] to
     // a max speed
   
@@ -114,7 +116,7 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    SmartDashboard.putNumber("Align end TS", Timer.getFPGATimestamp());
+    //SmartDashboard.putNumber("Align end TS", Timer.getFPGATimestamp());
     swerveSubsystem.stopModules();
   }
 

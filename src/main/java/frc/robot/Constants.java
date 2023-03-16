@@ -149,18 +149,16 @@ public final class Constants {
         public static final double verticalRestThreshold = Units.inchesToMeters(1); // Measurement of elevator, in meters, that is considered all the way down.
         public static final double kVerticalSlowFallVoltage = 2;
 
-        public static final double kPVerticalElevator = 0.1;
+        public static final double kPVerticalElevator = 9;
         public static final double kIVerticalElevator = 0;
         public static final double kDVerticalElevator = 0;
-        public static final double kMaxVelocityVerticalElevatorUp = .65;
-        public static final double kMaxAccelerationVerticalElevatorUp = .9;
-        public static final double kMaxVelocityVerticalElevatorDown = .4;
-        public static final double kMaxAccelerationVerticalElevatorDown = .4;
+        public static final double kMaxVelocityVerticalElevator = .5;
+        public static final double kMaxAccelerationVerticalElevator = .5*4;
 
-        public static final double kGVerticalElevator = 3.899;
-        public static final double kSVerticalElevator = 0.491000;
-        public static final double kVVerticalElevator = 7.010000;
-        public static final double kAVerticalElevator = 0.22;
+        public static final double kGVerticalElevator = 3.650000;
+        public static final double kSVerticalElevator = 1.000000;
+        public static final double kVVerticalElevator = 4.100000;
+        public static final double kAVerticalElevator = 0;
 
         // Begin Horizontal
         public static final int horizontalMotorPort = 18;
@@ -203,18 +201,18 @@ public final class Constants {
 
         public static final double kGrabberPositionConversionFactor = (kGrabberHighestPositionDegrees-kGrabberLowestPositionDegrees)/kRotationsFromLowestToHighest;
 
-        public static final double kPFlip = 0.1;
+        public static final double kPFlip = 3;
         public static final double kIFlip = 0.1;
         public static final double kDFlip = 0.1;
 
 
-        public static final double kSGrabber = 0.060000;
-        public static final double kGGrabber = 0.860000;
-        public static final double kVGrabber = 0.970000;
+        public static final double kSGrabber = 0.350000;
+        public static final double kGGrabber = 1.100000;
+        public static final double kVGrabber = 0.600000;
         public static final double kAGrabber = 0.04;
 
-        public static final double kMaxFlipVelocityRadiansPerSecond = 1;
-        public static final double kMaxFlipAccelerationRadiansPerSecondSquared = 2;
+        public static final double kMaxFlipVelocityRadiansPerSecond = 1.5;
+        public static final double kMaxFlipAccelerationRadiansPerSecondSquared = 3;
 
         public static final double grabberInSetpoint = Units.degreesToRadians(130);
         public static final double grabberShootCubeSetpoint = Units.degreesToRadians(21);
@@ -259,6 +257,7 @@ public final class Constants {
         public static final double kOperatorRightYDeadband = 0.13;
         public static final int kDriverControllerPort = 0;
         public static final int kOperatorControllerPort = 1;
+        public static final int kButtonBoxPort = 2;
     }
 
 }
