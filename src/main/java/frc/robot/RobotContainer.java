@@ -17,10 +17,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.DriveConstants;
@@ -118,6 +115,7 @@ public class RobotContainer {
     swerveSubsystem // The drive subsystem. Used to properly set the requirements of path following commands
 );
 
+    CommandBase pathPlannerCommand = autoBuilder.fullAuto(testPath);
 
     Command alignToApriltagCubeCmd = new AlignToAprilTagCubeCmd(limelightSubsystem, swerveSubsystem);
     Command alignToDoubleSubstation = new AlignToDoubleSubstation(limelightSubsystem, swerveSubsystem);
@@ -136,7 +134,8 @@ public class RobotContainer {
 
     //m_chooser.addOption("ScoreCubeLowCmd", new ScoreCubeLowCmd(horizontalElevatorSubsystem, grabberSubsystem, swerveSubsystem, limelightSubsystem)); 
     
-    m_chooser.addOption("Path Tester", autoBuilder.fullAuto(testPath));
+    m_chooser.addOption("Path Tester", pathPlannerCommand);
+    m_chooser.addOption("Score Cube High, Pickup, Park", new SequentialCommandGroup(scoreHighCmd, pathPlannerCommand));
     SmartDashboard.putData(m_chooser);
 
     configureBindings();
