@@ -155,7 +155,7 @@ public final class Constants {
         public static final double kMaxVelocityVerticalElevator = .5;
         public static final double kMaxAccelerationVerticalElevator = .5*4;
 
-        public static final double kGVerticalElevator = 3.750000;
+        public static final double kGVerticalElevator = 3.650000;
         public static final double kSVerticalElevator = 1.000000;
         public static final double kVVerticalElevator = 4.100000;
         public static final double kAVerticalElevator = 0;
@@ -206,9 +206,9 @@ public final class Constants {
         public static final double kDFlip = 0.1;
 
 
-        public static final double kSGrabber = 0.060000;
-        public static final double kGGrabber = 0.860000;
-        public static final double kVGrabber = 0.970000;
+        public static final double kSGrabber = 0.350000;
+        public static final double kGGrabber = 1.100000;
+        public static final double kVGrabber = 0.600000;
         public static final double kAGrabber = 0.04;
 
         public static final double kMaxFlipVelocityRadiansPerSecond = 1;

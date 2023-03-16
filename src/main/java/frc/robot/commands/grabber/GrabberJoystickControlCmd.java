@@ -27,7 +27,7 @@ public class GrabberJoystickControlCmd extends CommandBase {
 
     @Override
     public void execute() {
-        double joystickPower = MathUtil.applyDeadband(joystickPercentageFunction.get(), OIConstants.kDefaultJoystickDeadband) / 2;
+        double joystickPower = MathUtil.applyDeadband(joystickPercentageFunction.get(), OIConstants.kDefaultJoystickDeadband) * 1.5;
 
         SmartDashboard.putNumber("[GRAB] Velocity Desired (rads per second)", joystickPower);
 
