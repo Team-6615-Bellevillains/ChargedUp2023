@@ -56,10 +56,10 @@ public class RobotContainer {
   private final JoystickButton vertLowButton = new JoystickButton(buttonBox, 3);
 
   private final JoystickButton scoreCubeHighButton = new JoystickButton(buttonBox, 8);
+  private final JoystickButton doubleSubstationElevatorButton = new JoystickButton(buttonBox, 6);
 
 
   private final JoystickButton scoreCubeMidButton = new JoystickButton(buttonBox, 7);
-  private final JoystickButton scoreConeMidButton = new JoystickButton(buttonBox, 6);
 
   private SwerveAutoBuilder autoBuilder;
   private HashMap<String, Command> eventMap = new HashMap<>();
@@ -72,7 +72,7 @@ public class RobotContainer {
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 2)))
             .andThen(Commands.parallel(new HorizontalElevatorOutCmd(horizontalElevatorSubsystem), new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberShootCubeHighSetpoint)))
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 3)))
-            .andThen(new AutoShootPieceCmd(rollerSubsystem, 0.15))
+            .andThen(new AutoShootPieceCmd(rollerSubsystem))
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 4)))
             .andThen(Commands.parallel(new HorizontalElevatorInCmd(horizontalElevatorSubsystem), new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberInSetpoint)))
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 5)))
@@ -93,37 +93,13 @@ public class RobotContainer {
     return Commands.runOnce(() -> SmartDashboard.putString("Score Cube Mid", "running"))
             .andThen(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberShootCubeMidSetpoint))
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 1)))
-            .andThen(new AutoShootPieceCmd(rollerSubsystem, 0.15))
+            .andThen(new AutoShootPieceCmd(rollerSubsystem))
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 2)))
             .andThen(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberInSetpoint))
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 3)))
             .andThen(Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0), grabberSubsystem))
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 4)))
             .andThen(Commands.runOnce(() -> SmartDashboard.putString("Score Cube Mid", "done")))
-            .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 0)));
-  }
-
-  private Command generateScoreConeMidCmd() {
-    return Commands.runOnce(() -> SmartDashboard.putString("Score Cone Mid", "running"))
-            .andThen(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalMidHeight))
-            .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 1)))
-            .andThen(Commands.runOnce(horizontalElevatorSubsystem::removeDefaultCommand))
-            .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 2)))
-            .andThen(Commands.parallel(new HorizontalElevatorOutCmd(horizontalElevatorSubsystem), new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberShootCubeHighSetpoint)))
-            .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 3)))
-            .andThen(new OpenGrabberCmd(pneumaticsSubsystem))
-            .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 4)))
-            .andThen(Commands.parallel(new HorizontalElevatorInCmd(horizontalElevatorSubsystem), new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberInSetpoint)))
-            .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 5)))
-            .andThen(Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0), grabberSubsystem))
-            .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 6)))
-            .andThen(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalLowHeight))
-            .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 7)))
-            .andThen(Commands.runOnce(() -> verticalElevatorSubsystem.setVerticalElevatorVoltage(0), verticalElevatorSubsystem).andThen(Commands.runOnce(verticalElevatorSubsystem::resetVerticalElevatorEncoder, verticalElevatorSubsystem)))
-            .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 8)))
-            .andThen(Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem))))
-            .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 9)))
-            .andThen(Commands.runOnce(() -> SmartDashboard.putString("Score Cone Mid", "done")))
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 0)));
   }
 
@@ -225,7 +201,7 @@ public class RobotContainer {
     vertMidButton.whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, Units.inchesToMeters(10)));
     vertLowButton.whileTrue((new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalLowHeight)).andThen(Commands.runOnce(() -> verticalElevatorSubsystem.setVerticalElevatorVoltage(0), verticalElevatorSubsystem)));
     scoreCubeMidButton.whileTrue(generateScoreCubeMidCmd());
-    scoreConeMidButton.whileTrue(generateScoreConeMidCmd());
+    doubleSubstationElevatorButton.whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, Units.inchesToMeters(26)));
 
 
     operatorController.a().onTrue(Commands.runOnce(() -> verticalElevatorSubsystem.setVerticalElevatorVoltage(0), verticalElevatorSubsystem).andThen(Commands.runOnce(verticalElevatorSubsystem::resetVerticalElevatorEncoder, verticalElevatorSubsystem)));
