@@ -27,7 +27,10 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.GrabberConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToAprilTagCubeCmd;
+import frc.robot.commands.drive.AutoBalanceCmd;
+import frc.robot.commands.drive.CrossWheelsCmd;
 import frc.robot.commands.drive.SwerveJoystickCmd;
+import frc.robot.commands.drive.TipCmd;
 import frc.robot.commands.elevator.*;
 import frc.robot.commands.grabber.*;
 import frc.robot.commands.operation.ScoreHighCmd;
@@ -110,6 +113,10 @@ public class RobotContainer {
 
   private void configureBindings() {
     driverController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
+    driverController.a().whileTrue(
+            (new TipCmd(swerveSubsystem))
+            .andThen(new AutoBalanceCmd(swerveSubsystem))
+            .andThen(new CrossWheelsCmd(swerveSubsystem)));
 
     operatorController.leftBumper().whileTrue(new ClampGrabberCmd(pneumaticsSubsystem));
     operatorController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));

@@ -4,7 +4,6 @@
 
 package frc.robot.commands.drive;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.BangBangController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -12,38 +11,31 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class AutoBalance extends CommandBase {
+public class AutoBalanceCmd extends CommandBase {
   /** Creates a new AutoBalance. */
   private SwerveSubsystem swerveSubsystem;
-  private BangBangController balancer;
-  public AutoBalance(SwerveSubsystem swerveSubsystem) {
+  private final static double tolerance = 3;
+  public AutoBalanceCmd(SwerveSubsystem swerveSubsystem) {
 
     this.swerveSubsystem = swerveSubsystem;
-    this.balancer = new BangBangController();
+
     addRequirements(swerveSubsystem);
 
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() 
-  {
-    //Sets the goal balance of 0 degrees
-    balancer.setSetpoint(0);
+  public void initialize() {
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() 
-  {
-
-    double yDistanceOutput = balancer.calculate(swerveSubsystem.getPitch()); 
-
-    // Convert P[ID] outputs to ChassisSpeed values, clamping the distance P[ID] to a max speed
-    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(
-            MathUtil.clamp(0, -AutoConstants.kAutoMaxSpeedMetersPerSecond, AutoConstants.kAutoMaxSpeedMetersPerSecond),
-            MathUtil.clamp(yDistanceOutput, -AutoConstants.kAutoMaxSpeedMetersPerSecond, AutoConstants.kAutoMaxSpeedMetersPerSecond),
-            0
+  public void execute() {
+    ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+            AutoConstants.kBalanceSpeedMetersPerSecond,
+            0,
+            0,
+            swerveSubsystem.getRotation2d()
     );
 
     // Convert ChassisSpeeds to SwerveModuleStates and send them off through the SwerveSubsystem
@@ -60,6 +52,6 @@ public class AutoBalance extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return balancer.atSetpoint();
+    return Math.abs(swerveSubsystem.getPitch()) <= tolerance;
   }
 }

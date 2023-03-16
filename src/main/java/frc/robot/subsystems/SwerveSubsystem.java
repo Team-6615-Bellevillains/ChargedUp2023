@@ -118,6 +118,11 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putString("Robot Location",
                 getPose().getTranslation().toString());
 
+        SmartDashboard.putNumber("Robot velocity",
+                (frontLeft.getVelocity()+frontRight.getVelocity()+backLeft.getVelocity()+backRight.getVelocity())/4);
+
+        SmartDashboard.putNumber("Pitch", getPitch());
+
         SmartDashboard.putNumber("Last known correct heading Rads", lastKnownCorrectHeadingRadians);
 
     }

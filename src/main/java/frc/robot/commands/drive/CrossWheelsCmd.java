@@ -48,6 +48,11 @@ public class CrossWheelsCmd extends CommandBase {
     }
 
     @Override
+    public void end(boolean interrupted) {
+        swerveSubsystem.stopModules();
+    }
+
+    @Override
     public boolean isFinished() {
         return Timer.getFPGATimestamp() > (initializeTS + convergenceTime);
     }

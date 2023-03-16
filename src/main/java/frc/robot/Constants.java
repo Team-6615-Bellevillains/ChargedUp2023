@@ -241,6 +241,9 @@ public final class Constants {
         public static final double kAutoMaxSpeedMetersPerSecond = 1;
         public static final double kAutoMaxAccelerationMetersPerSecond = 0.5;
 
+        public static final double kTipSpeedMetersPerSecond = 0.7;
+        public static final double kBalanceSpeedMetersPerSecond = 0.7;
+
         public static final double kPTrackingYaw = .05;
         public static final double kPTrackingDriveX = 0.8;
         public static final double kTrackingDistance = .45;
