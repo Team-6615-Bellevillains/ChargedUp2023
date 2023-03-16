@@ -15,7 +15,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class AutoBalance extends CommandBase {
   /** Creates a new AutoBalance. */
   private SwerveSubsystem swerveSubsystem;
-  private PIDController balancePID = new PIDController(1.2, 0, 0);
+  private PIDController balancePID = new PIDController(0.05, 0, 0);
   private CrossWheelsCmd crossWheelsCmd;  
   public AutoBalance(SwerveSubsystem swerveSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
