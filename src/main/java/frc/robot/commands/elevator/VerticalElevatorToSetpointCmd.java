@@ -70,7 +70,7 @@ public class VerticalElevatorToSetpointCmd extends CommandBase {
     // TODO: Add position tolerance
     @Override
     public boolean isFinished() {
-        return Math.abs(verticalElevatorSubsystem.getVerticalElevatorPosition()-profiledPIDController.getGoal().position) <= Units.inchesToMeters(.1);
+        return Math.abs(verticalElevatorSubsystem.getVerticalElevatorPosition()-profiledPIDController.getGoal().position) <= Units.inchesToMeters(.75);
     }
 
 }

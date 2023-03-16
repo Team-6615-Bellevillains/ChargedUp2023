@@ -143,13 +143,13 @@ public final class Constants {
         public static final int verticalEncoderPulsesPerRevolution = kCimcoderPulsesPerRevolution;
         public static final double verticalRotationsToDistance = verticalGearDiameter * Math.PI * verticalGearRatio;
 
-        public static final double verticalLowHeight = Units.inchesToMeters(1);
+        public static final double verticalLowHeight = Units.inchesToMeters(1.5);
         public static final double verticalMidHeight = Units.inchesToMeters(21);
         public static final double verticalHighHeight = 0.598;
         public static final double verticalRestThreshold = Units.inchesToMeters(1); // Measurement of elevator, in meters, that is considered all the way down.
         public static final double kVerticalSlowFallVoltage = 2;
 
-        public static final double kPVerticalElevator = 9;
+        public static final double kPVerticalElevator = 12;
         public static final double kIVerticalElevator = 0;
         public static final double kDVerticalElevator = 0;
         public static final double kMaxVelocityVerticalElevator = .5;
@@ -216,7 +216,7 @@ public final class Constants {
 
         public static final double grabberInSetpoint = Units.degreesToRadians(130);
         public static final double grabberShootCubeSetpoint = Units.degreesToRadians(21);
-        public static final double grabberIntakeSetpoint = Units.degreesToRadians(-20);
+        public static final double grabberIntakeSetpoint = Units.degreesToRadians(-23);
 
         public static final double grabberRestThreshold = Units.degreesToRadians(125);
         public static double grabberOutSetpoint;
@@ -230,6 +230,9 @@ public final class Constants {
         public static final double cameraPitchRadians =  Units.degreesToRadians(0);
         public static final double midGoalRange = 0;
         public static final double distanceFromAprilTagToRung = Units.inchesToMeters(21.25);
+        public static final double cameraOffset = 0.308;
+        public static final double xCameraOffset = 0.350;
+        public static final double bumperOffset = 0.083;
         public static Transform3d robotToCam = new Transform3d(
             new Translation3d(-0.047, 0.331, 0.858),
             new Rotation3d(
