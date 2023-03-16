@@ -26,6 +26,8 @@ import frc.robot.Constants.GrabberConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToAprilTagCubeCmd;
 import frc.robot.commands.AlignToDoubleSubstation;
+import frc.robot.commands.drive.AutoBalance;
+import frc.robot.commands.drive.CrossWheelsCmd;
 import frc.robot.commands.drive.SwerveJoystickCmd;
 import frc.robot.commands.elevator.*;
 import frc.robot.commands.grabber.*;
@@ -98,7 +100,8 @@ public class RobotContainer {
     setMechanismDefaultCommands();
 
     PathPlannerTrajectory testPath = PathPlanner.loadPath("Inside Cube ID8 Copy Copy", new PathConstraints(0.75, 1));
-
+    PathPlannerTrajectory middlePath = PathPlanner.loadPath("Middle Cube ID7", new PathConstraints(0.8, 1));
+    PathPlannerTrajectory rightPath = PathPlanner.loadPath("Outside Cube ID6", new PathConstraints(0.75, 1));
     eventMap.put("intake", new AutoSuckPieceCmd(rollerSubsystem));
     eventMap.put("grabberdown", new GrabberToSetpointCmd(grabberSubsystem, Constants.GrabberConstants.grabberIntakeSetpoint));
     eventMap.put("grabberin", new GrabberToSetpointCmd(grabberSubsystem, Constants.GrabberConstants.grabberInSetpoint));
@@ -118,6 +121,7 @@ public class RobotContainer {
 
     CommandBase pathPlannerCommand = autoBuilder.fullAuto(testPath);
 
+    
     Command alignToApriltagCubeCmd = new AlignToAprilTagCubeCmd(limelightSubsystem, swerveSubsystem);
     Command alignToDoubleSubstation = new AlignToDoubleSubstation(limelightSubsystem, swerveSubsystem);
     Command scoreHighCmd = generateScoreHighCmd();
@@ -131,6 +135,11 @@ public class RobotContainer {
     m_chooser.addOption("ScoreHighCmd", scoreHighCmd);
     m_chooser.addOption("Double Sub", alignToDoubleSubstation);
     m_chooser.addOption("AutoSuck", autoSuckPieceCmd);
+    m_chooser.addOption("Middle Path", autoBuilder.fullAuto(middlePath));
+    m_chooser.addOption("Right Path", autoBuilder.fullAuto(rightPath));
+
+
+    
 //    m_chooser.addOption("AlignAndScoreHigh", alignToApriltagCubeCmd.andThen(scoreHighCmd));
 
     //m_chooser.addOption("ScoreCubeLowCmd", new ScoreCubeLowCmd(horizontalElevatorSubsystem, grabberSubsystem, swerveSubsystem, limelightSubsystem)); 
@@ -161,7 +170,7 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));
     driverController.leftTrigger(0.4).whileTrue(new SuckObjectCmd(rollerSubsystem));
     driverController.rightTrigger(0.4).whileTrue(new ShootPieceCmd(rollerSubsystem));
-
+    driverController.x().whileTrue(new CrossWheelsCmd(swerveSubsystem));
     operatorController.leftBumper().whileTrue(new ClampGrabberCmd(pneumaticsSubsystem));
     operatorController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));
     operatorController.leftTrigger(0.4).whileTrue(new SuckObjectCmd(rollerSubsystem));

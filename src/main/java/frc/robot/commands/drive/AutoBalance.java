@@ -8,6 +8,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.SwerveModule;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -15,7 +16,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class AutoBalance extends CommandBase {
   /** Creates a new AutoBalance. */
   private SwerveSubsystem swerveSubsystem;
-  private PIDController balancePID = new PIDController(0.05, 0, 0);
+  private PIDController balancePID = new PIDController(0.10, 0, 0);
   private CrossWheelsCmd crossWheelsCmd;  
   public AutoBalance(SwerveSubsystem swerveSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -62,6 +63,8 @@ public class AutoBalance extends CommandBase {
   {
     crossWheelsCmd.execute();
     swerveSubsystem.stopModules();
+
+    
   }
 
   // Returns true when the command should end.
