@@ -16,11 +16,14 @@ public class AutoBalance extends CommandBase {
   /** Creates a new AutoBalance. */
   private SwerveSubsystem swerveSubsystem;
   private PIDController balancePID = new PIDController(1.2, 0, 0);
+  private CrossWheelsCmd crossWheelsCmd;  
   public AutoBalance(SwerveSubsystem swerveSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerveSubsystem = swerveSubsystem;
     balancePID.setSetpoint(0);
+    this.crossWheelsCmd = new CrossWheelsCmd(swerveSubsystem);
     addRequirements(swerveSubsystem);
+
 
   }
 
@@ -57,7 +60,8 @@ public class AutoBalance extends CommandBase {
   @Override
   public void end(boolean interrupted) 
   {
-    
+    crossWheelsCmd.execute();
+    swerveSubsystem.stopModules();
   }
 
   // Returns true when the command should end.
