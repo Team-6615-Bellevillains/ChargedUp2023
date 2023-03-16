@@ -135,6 +135,7 @@ public class RobotContainer {
 //    m_chooser.addOption("AlignAndScoreHigh", alignToApriltagCubeCmd.andThen(scoreHighCmd));
 
     //m_chooser.addOption("ScoreCubeLowCmd", new ScoreCubeLowCmd(horizontalElevatorSubsystem, grabberSubsystem, swerveSubsystem, limelightSubsystem)); 
+    
     m_chooser.addOption("Path Tester", autoBuilder.fullAuto(testPath));
     SmartDashboard.putData(m_chooser);
 
