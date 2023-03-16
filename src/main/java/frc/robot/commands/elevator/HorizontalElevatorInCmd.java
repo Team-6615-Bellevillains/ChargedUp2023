@@ -20,6 +20,7 @@ public class HorizontalElevatorInCmd extends CommandBase {
 
     @Override
     public void initialize() {
+        horizontalElevatorSubsystem.setDefaultCommand(this);
     }
 
     @Override

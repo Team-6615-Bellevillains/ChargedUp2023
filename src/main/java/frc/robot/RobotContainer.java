@@ -17,9 +17,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.DriveConstants;
@@ -27,6 +25,9 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.GrabberConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AlignToAprilTagCubeCmd;
+import frc.robot.commands.AlignToDoubleSubstation;
+import frc.robot.commands.drive.AutoBalance;
+import frc.robot.commands.drive.CrossWheelsCmd;
 import frc.robot.commands.drive.SwerveJoystickCmd;
 import frc.robot.commands.elevator.*;
 import frc.robot.commands.grabber.*;
@@ -79,10 +80,11 @@ public class RobotContainer {
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 6)))
             .andThen(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalLowHeight))
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 7)))
-            .andThen(Commands.runOnce(() -> verticalElevatorSubsystem.setVerticalElevatorVoltage(0), verticalElevatorSubsystem).andThen(Commands.runOnce(verticalElevatorSubsystem::resetVerticalElevatorEncoder, verticalElevatorSubsystem)))
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 8)))
-            .andThen(Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem))))
+            .andThen(Commands.runOnce(() -> verticalElevatorSubsystem.setVerticalElevatorVoltage(0), verticalElevatorSubsystem).andThen(Commands.runOnce(verticalElevatorSubsystem::resetVerticalElevatorEncoder, verticalElevatorSubsystem)))
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 9)))
+            .andThen(Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem))))
+            .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 10)))
             .andThen(Commands.runOnce(() -> SmartDashboard.putString("Score High", "done")))
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 0)));
   }
@@ -136,7 +138,8 @@ public class RobotContainer {
     setMechanismDefaultCommands();
 
     PathPlannerTrajectory testPath = PathPlanner.loadPath("Inside Cube ID8 Copy Copy", new PathConstraints(0.75, 1));
-
+    PathPlannerTrajectory middlePath = PathPlanner.loadPath("Middle Cube ID7", new PathConstraints(0.8, 1));
+    PathPlannerTrajectory rightPath = PathPlanner.loadPath("Outside Cube ID6", new PathConstraints(0.75, 1));
     eventMap.put("intake", new AutoSuckPieceCmd(rollerSubsystem));
     eventMap.put("grabberdown", new GrabberToSetpointCmd(grabberSubsystem, Constants.GrabberConstants.grabberIntakeSetpoint));
     eventMap.put("grabberin", new GrabberToSetpointCmd(grabberSubsystem, Constants.GrabberConstants.grabberInSetpoint));
@@ -154,10 +157,12 @@ public class RobotContainer {
     swerveSubsystem // The drive subsystem. Used to properly set the requirements of path following commands
 );
 
+    CommandBase pathPlannerCommand = autoBuilder.fullAuto(testPath);
 
+    
     Command alignToApriltagCubeCmd = new AlignToAprilTagCubeCmd(limelightSubsystem, swerveSubsystem);
+    Command alignToDoubleSubstation = new AlignToDoubleSubstation(limelightSubsystem, swerveSubsystem);
     Command scoreHighCmd = generateScoreHighCmd();
-
     Command autoSuckPieceCmd = new AutoSuckPieceCmd(rollerSubsystem);
 
     //Adds a smartdashboard widget that will allow us to select the autonomous we want to use. 
@@ -166,11 +171,19 @@ public class RobotContainer {
 
     m_chooser.setDefaultOption("AlignToAprilTagCubeCmd",alignToApriltagCubeCmd);
     m_chooser.addOption("ScoreHighCmd", scoreHighCmd);
+    m_chooser.addOption("Double Sub", alignToDoubleSubstation);
     m_chooser.addOption("AutoSuck", autoSuckPieceCmd);
+    m_chooser.addOption("Middle Path", autoBuilder.fullAuto(middlePath));
+    m_chooser.addOption("Right Path", autoBuilder.fullAuto(rightPath));
+
+
+    
 //    m_chooser.addOption("AlignAndScoreHigh", alignToApriltagCubeCmd.andThen(scoreHighCmd));
 
     //m_chooser.addOption("ScoreCubeLowCmd", new ScoreCubeLowCmd(horizontalElevatorSubsystem, grabberSubsystem, swerveSubsystem, limelightSubsystem)); 
-    m_chooser.addOption("Path Tester", autoBuilder.fullAuto(testPath));
+    
+    m_chooser.addOption("Path Tester", pathPlannerCommand);
+    m_chooser.addOption("Score Cube High, Pickup, Park", new SequentialCommandGroup(scoreHighCmd, Commands.runOnce(horizontalElevatorSubsystem::removeDefaultCommand).andThen(Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(-2))), pathPlannerCommand, Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(0)),Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem)))));
     SmartDashboard.putData(m_chooser);
 
     configureBindings();
@@ -195,7 +208,7 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));
     driverController.leftTrigger(0.4).whileTrue(new SuckObjectCmd(rollerSubsystem));
     driverController.rightTrigger(0.4).whileTrue(new ShootPieceCmd(rollerSubsystem));
-
+    driverController.x().whileTrue(new CrossWheelsCmd(swerveSubsystem));
     operatorController.leftBumper().whileTrue(new ClampGrabberCmd(pneumaticsSubsystem));
     operatorController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));
     operatorController.leftTrigger(0.4).whileTrue(new SuckObjectCmd(rollerSubsystem));
