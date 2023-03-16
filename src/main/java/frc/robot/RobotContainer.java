@@ -72,7 +72,7 @@ public class RobotContainer {
     swerveSubsystem::getPose, // Pose2d supplier
     swerveSubsystem::resetPoseEstimator, // Pose2d consumer, used to reset odometry at the beginning of auto
     DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-    new PIDConstants(Constants.AutoConstants.kPTrackingDriveX + 0.1, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+    new PIDConstants(1.2, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
     new PIDConstants(0.3, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
     (SwerveModuleState[] desiredStates) -> swerveSubsystem.setModuleStates(desiredStates, true), // Module states consumer used to output to the drive subsytem
     eventMap,
