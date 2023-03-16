@@ -143,13 +143,13 @@ public final class Constants {
         public static final int verticalEncoderPulsesPerRevolution = kCimcoderPulsesPerRevolution;
         public static final double verticalRotationsToDistance = verticalGearDiameter * Math.PI * verticalGearRatio;
 
-        public static final double verticalLowHeight = Units.inchesToMeters(1);
+        public static final double verticalLowHeight = Units.inchesToMeters(1.5);
         public static final double verticalMidHeight = Units.inchesToMeters(21);
         public static final double verticalHighHeight = 0.598;
         public static final double verticalRestThreshold = Units.inchesToMeters(1); // Measurement of elevator, in meters, that is considered all the way down.
         public static final double kVerticalSlowFallVoltage = 2;
 
-        public static final double kPVerticalElevator = 9;
+        public static final double kPVerticalElevator = 12;
         public static final double kIVerticalElevator = 0;
         public static final double kDVerticalElevator = 0;
         public static final double kMaxVelocityVerticalElevator = .5;

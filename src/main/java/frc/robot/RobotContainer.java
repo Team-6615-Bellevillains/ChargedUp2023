@@ -78,10 +78,11 @@ public class RobotContainer {
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 6)))
             .andThen(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalLowHeight))
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 7)))
-            .andThen(Commands.runOnce(() -> verticalElevatorSubsystem.setVerticalElevatorVoltage(0), verticalElevatorSubsystem).andThen(Commands.runOnce(verticalElevatorSubsystem::resetVerticalElevatorEncoder, verticalElevatorSubsystem)))
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 8)))
-            .andThen(Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem))))
+            .andThen(Commands.runOnce(() -> verticalElevatorSubsystem.setVerticalElevatorVoltage(0), verticalElevatorSubsystem).andThen(Commands.runOnce(verticalElevatorSubsystem::resetVerticalElevatorEncoder, verticalElevatorSubsystem)))
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 9)))
+            .andThen(Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem))))
+            .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 10)))
             .andThen(Commands.runOnce(() -> SmartDashboard.putString("Score High", "done")))
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 0)));
   }
@@ -135,7 +136,7 @@ public class RobotContainer {
     //m_chooser.addOption("ScoreCubeLowCmd", new ScoreCubeLowCmd(horizontalElevatorSubsystem, grabberSubsystem, swerveSubsystem, limelightSubsystem)); 
     
     m_chooser.addOption("Path Tester", pathPlannerCommand);
-    m_chooser.addOption("Score Cube High, Pickup, Park", new SequentialCommandGroup(scoreHighCmd, pathPlannerCommand));
+    m_chooser.addOption("Score Cube High, Pickup, Park", new SequentialCommandGroup(scoreHighCmd, Commands.runOnce(horizontalElevatorSubsystem::removeDefaultCommand).andThen(Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(-2))), pathPlannerCommand, Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(0)),Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem)))));
     SmartDashboard.putData(m_chooser);
 
     configureBindings();
