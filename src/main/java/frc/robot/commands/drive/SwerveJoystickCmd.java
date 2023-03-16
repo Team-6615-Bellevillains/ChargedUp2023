@@ -56,9 +56,9 @@ public class SwerveJoystickCmd extends CommandBase {
         steerSpeed = Math.abs(steerSpeed) > OIConstants.kDefaultJoystickDeadband ? steerSpeed : 0.0;
 
         // 3. Smooth driving
-        xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleOpMaxSpeedMetersPerSecond;
-        ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleOpMaxSpeedMetersPerSecond;
-        steerSpeed = steerLimiter.calculate(steerSpeed) * DriveConstants.kTeleOpMaxAngularSpeedRadiansPerSecond;
+        xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleOpMaxSpeedMetersPerSecond * swerveSubsystem.getSpeedMultiplier();
+        ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleOpMaxSpeedMetersPerSecond * swerveSubsystem.getSpeedMultiplier();
+        steerSpeed = steerLimiter.calculate(steerSpeed) * DriveConstants.kTeleOpMaxAngularSpeedRadiansPerSecond * swerveSubsystem.getSpeedMultiplier();
 
         /*
          * 4. Calculate ChassisSpeeds
