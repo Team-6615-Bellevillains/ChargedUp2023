@@ -5,9 +5,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.utils.TunablePIDController;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import frc.robot.utils.TunablePIDController;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.MathUtil;
@@ -28,7 +27,7 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
 
   // These PID controllers will calculate the velocities required to make the
   // robot move to a certain position at a certain angle
-  private PIDController yawController;
+  //private PIDController yawController;
   private PIDController xdistanceController;
   private PIDController ydistanceController;
   private double ySetpoint;
@@ -43,8 +42,8 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
     this.swerveSubsystem = swerveSubsystem;
 
     // yawController = new PIDController(AutoConstants.kPTrackingYaw, 0, 0);
-    xdistanceController = new TunablePIDController("xdistance", AutoConstants.kPTrackingDriveX, 0, 0).getController();
-    ydistanceController = new TunablePIDController("ydistance", AutoConstants.kPTrackingDriveY, 0, 0).getController();
+    xdistanceController = new PIDController(AutoConstants.kPTrackingDriveX, 0, 0);
+    ydistanceController = new PIDController(AutoConstants.kPTrackingDriveY, 0,0);
     ySetpoint = 0;
     xSetpoint = 0;
 
@@ -54,6 +53,8 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    xdistanceController.reset();
+    ydistanceController.reset();
     currentPosition = swerveSubsystem.getPose();
     currentYPosition = currentPosition.getY();
     currentXPosition = currentPosition.getX();
@@ -62,7 +63,7 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
       target = limelightSubsystem.getBestTarget();
       Transform3d cameraTransform = target.getBestCameraToTarget();
 
-      ySetpoint = currentYPosition + cameraTransform.getY() + 0.331 - Units.inchesToMeters(5);
+      ySetpoint = currentYPosition + cameraTransform.getY() + 0.331 + 0.250 -0.19 - Units.inchesToMeters(5);
       xSetpoint = currentXPosition + (cameraTransform.getX() - 1 + Units.inchesToMeters(9));
     }
   }
@@ -79,12 +80,14 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
     double ydistanceOutput = ydistanceController.calculate(currentYPosition, ySetpoint);
     double xdistanceOutput = xdistanceController.calculate(currentXPosition, xSetpoint);
 
+    
+    /*
     SmartDashboard.putNumber("y curr", currentYPosition);
     SmartDashboard.putNumber("x curr", currentXPosition);
     SmartDashboard.putNumber("x P", xdistanceController.getP());
     SmartDashboard.putNumber("x goal", xSetpoint);
     SmartDashboard.putNumber("y goal", ySetpoint);
-
+    */
     // Convert P[ID] outputs to ChassisSpeed values, clamping the distance P[ID] to
     // a max speed
     ChassisSpeeds chassisSpeeds = new ChassisSpeeds(
@@ -102,7 +105,7 @@ public class AlignToAprilTagCubeCmd extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    SmartDashboard.putNumber("Align end TS", Timer.getFPGATimestamp());
+    //SmartDashboard.putNumber("Align end TS", Timer.getFPGATimestamp());
     swerveSubsystem.stopModules();
   }
 
