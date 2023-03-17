@@ -5,6 +5,7 @@
 package frc.robot;
 
 import java.util.HashMap;
+import java.util.function.Supplier;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -135,14 +136,13 @@ public class RobotContainer {
     swerveSubsystem // The drive subsystem. Used to properly set the requirements of path following commands
 );
 
-    CommandBase pathPlannerCommand = autoBuilder.fullAuto(testPath);
-    CommandBase middlePathCommand = autoBuilder.fullAuto(middlePath);
-    CommandBase rightPathCommand = autoBuilder.fullAuto(rightPath);
+    Supplier<CommandBase> pathPlannerCommand = () -> autoBuilder.fullAuto(testPath);
+    Supplier<CommandBase> middlePathCommand = () -> autoBuilder.fullAuto(middlePath);
+    Supplier<CommandBase> rightPathCommand = () -> autoBuilder.fullAuto(rightPath);
 
     
     Command alignToApriltagCubeCmd = new AlignToAprilTagCubeCmd(limelightSubsystem, swerveSubsystem);
     Command alignToDoubleSubstation = new AlignToDoubleSubstation(limelightSubsystem, swerveSubsystem);
-    Command scoreHighCmd = generateScoreHighCmd();
     Command autoSuckPieceCmd = new AutoSuckPieceCmd(rollerSubsystem);
 
     //Adds a smartdashboard widget that will allow us to select the autonomous we want to use. 
@@ -150,7 +150,7 @@ public class RobotContainer {
     //Default Autonomous that will be run if no other auto is selected
 
     m_chooser.setDefaultOption("AlignToAprilTagCubeCmd",alignToApriltagCubeCmd);
-    m_chooser.addOption("ScoreHighCmd", scoreHighCmd);
+    m_chooser.addOption("ScoreHighCmd", generateScoreHighCmd());
     m_chooser.addOption("Double Sub", alignToDoubleSubstation);
     m_chooser.addOption("AutoSuck", autoSuckPieceCmd);
     m_chooser.addOption("Middle Path", autoBuilder.fullAuto(middlePath));
@@ -162,10 +162,31 @@ public class RobotContainer {
 
     //m_chooser.addOption("ScoreCubeLowCmd", new ScoreCubeLowCmd(horizontalElevatorSubsystem, grabberSubsystem, swerveSubsystem, limelightSubsystem)); 
     
-    m_chooser.addOption("Path Tester", pathPlannerCommand);
-    m_chooser.addOption("6 / 3 LOADING ZONE", new SequentialCommandGroup(scoreHighCmd, Commands.runOnce(horizontalElevatorSubsystem::removeDefaultCommand).andThen(Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(-2))), pathPlannerCommand, Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(0)),Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem)))));
-    m_chooser.addOption("2 / 7 MIDDLE BALANCE", new SequentialCommandGroup(scoreHighCmd, Commands.runOnce(horizontalElevatorSubsystem::removeDefaultCommand).andThen(Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(-2))), middlePathCommand, Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(0)),Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem)))));
-    m_chooser.addOption("1 / 8 ", new SequentialCommandGroup(scoreHighCmd, Commands.runOnce(horizontalElevatorSubsystem::removeDefaultCommand).andThen(Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(-2))), rightPathCommand, Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(0)),Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem)))));
+    m_chooser.addOption("Path Tester", pathPlannerCommand.get());
+    m_chooser.addOption("6 / 3 LOADING ZONE",
+            new SequentialCommandGroup(
+                    generateScoreHighCmd(),
+                    Commands.runOnce(horizontalElevatorSubsystem::removeDefaultCommand),
+                    Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(-2)),
+                    pathPlannerCommand.get(),
+                    Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(0)),
+                    Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem)))));
+    m_chooser.addOption("2 / 7 MIDDLE BALANCE",
+            new SequentialCommandGroup(
+                    generateScoreHighCmd(),
+                    Commands.runOnce(horizontalElevatorSubsystem::removeDefaultCommand),
+                    Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(-2)),
+                    middlePathCommand.get(),
+                    Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(0)),
+                    Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem)))));
+    m_chooser.addOption("1 / 8 ",
+            new SequentialCommandGroup(
+                    generateScoreHighCmd(),
+                    Commands.runOnce(horizontalElevatorSubsystem::removeDefaultCommand),
+                    Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(-2)),
+                    rightPathCommand.get(),
+                    Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(0)),
+                    Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem)))));
 
     SmartDashboard.putData(m_chooser);
 
@@ -209,7 +230,7 @@ public class RobotContainer {
 
     operatorController.a().onTrue(Commands.runOnce(() -> verticalElevatorSubsystem.setVerticalElevatorVoltage(0), verticalElevatorSubsystem).andThen(Commands.runOnce(verticalElevatorSubsystem::resetVerticalElevatorEncoder, verticalElevatorSubsystem)));
     operatorController.b().onTrue(Commands.runOnce(horizontalElevatorSubsystem::resetHorizontalElevatorEncoder));
-    setDefaultCommandsButton.onTrue(Commands.runOnce(() -> setMechanismDefaultCommands()));
+    setDefaultCommandsButton.onTrue(Commands.runOnce(this::setMechanismDefaultCommands));
 //    operatorController.y().onTrue(new AutoShootPieceCmd(rollerSubsystem));
 
 //    operatorController.a().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight));
