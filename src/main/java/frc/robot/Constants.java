@@ -201,7 +201,7 @@ public final class Constants {
 
         public static final double kGrabberPositionConversionFactor = (kGrabberHighestPositionDegrees-kGrabberLowestPositionDegrees)/kRotationsFromLowestToHighest;
 
-        public static final double kPFlip = 5;
+        public static final double kPFlip = 8;
         public static final double kIFlip = 0.1;
         public static final double kDFlip = 0.1;
 
