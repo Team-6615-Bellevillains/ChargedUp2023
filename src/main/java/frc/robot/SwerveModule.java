@@ -77,9 +77,9 @@ public class SwerveModule {
         return driveEncoder.getPosition();
     }
 
-//    public double getVelocity() {
-//        return driveEncoder.getVelocity();
-//    }
+    public double getVelocity() {
+        return driveEncoder.getVelocity();
+    }
 
     private String appendIdx(String input) {
         return String.format("[%s] %s", idx, input);

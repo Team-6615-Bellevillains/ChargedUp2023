@@ -121,10 +121,12 @@ public class SwerveSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Last known correct heading Rads", lastKnownCorrectHeadingRadians);
 
-//        SmartDashboard.putNumber("[0] true speed", frontLeft.getVelocity());
-//        SmartDashboard.putNumber("[1] true speed", frontRight.getVelocity());
-//        SmartDashboard.putNumber("[2] true speed", backLeft.getVelocity());
-//        SmartDashboard.putNumber("[3] true speed", backRight.getVelocity());
+        SmartDashboard.putNumber("Speed Multi", getSpeedMultiplier());
+
+        SmartDashboard.putNumber("[0] true speed", frontLeft.getVelocity());
+        SmartDashboard.putNumber("[1] true speed", frontRight.getVelocity());
+        SmartDashboard.putNumber("[2] true speed", backLeft.getVelocity());
+        SmartDashboard.putNumber("[3] true speed", backRight.getVelocity());
 //
 //        frontLeft.putAppliedOutput();
 //        frontRight.putAppliedOutput();
