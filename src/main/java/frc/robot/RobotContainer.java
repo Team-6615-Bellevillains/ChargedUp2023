@@ -188,6 +188,8 @@ public class RobotContainer {
                     Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(0)),
                     Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem)))));
 
+    m_chooser.addOption("Score Cube Mid", generateScoreCubeMidCmd());
+
     SmartDashboard.putData(m_chooser);
 
     configureBindings();
