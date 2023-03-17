@@ -134,6 +134,8 @@ public class RobotContainer {
 );
 
     CommandBase pathPlannerCommand = autoBuilder.fullAuto(testPath);
+    CommandBase middlePathCommand = autoBuilder.fullAuto(middlePath);
+    CommandBase rightPathCommand = autoBuilder.fullAuto(rightPath);
 
     
     Command alignToApriltagCubeCmd = new AlignToAprilTagCubeCmd(limelightSubsystem, swerveSubsystem);
@@ -159,7 +161,10 @@ public class RobotContainer {
     //m_chooser.addOption("ScoreCubeLowCmd", new ScoreCubeLowCmd(horizontalElevatorSubsystem, grabberSubsystem, swerveSubsystem, limelightSubsystem)); 
     
     m_chooser.addOption("Path Tester", pathPlannerCommand);
-    m_chooser.addOption("Score Cube High, Pickup, Park", new SequentialCommandGroup(scoreHighCmd, Commands.runOnce(horizontalElevatorSubsystem::removeDefaultCommand).andThen(Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(-2))), pathPlannerCommand, Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(0)),Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem)))));
+    m_chooser.addOption("6 / 3 LOADING ZONE", new SequentialCommandGroup(scoreHighCmd, Commands.runOnce(horizontalElevatorSubsystem::removeDefaultCommand).andThen(Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(-2))), pathPlannerCommand, Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(0)),Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem)))));
+    m_chooser.addOption("2 / 7 MIDDLE BALANCE", new SequentialCommandGroup(scoreHighCmd, Commands.runOnce(horizontalElevatorSubsystem::removeDefaultCommand).andThen(Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(-2))), middlePathCommand, Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(0)),Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem)))));
+    m_chooser.addOption("1 / 8 ", new SequentialCommandGroup(scoreHighCmd, Commands.runOnce(horizontalElevatorSubsystem::removeDefaultCommand).andThen(Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(-2))), rightPathCommand, Commands.runOnce(() -> horizontalElevatorSubsystem.setHorizontalElevatorVoltage(0)),Commands.runOnce(() -> horizontalElevatorSubsystem.setDefaultCommand(new HorizontalElevatorInCmd(horizontalElevatorSubsystem)))));
+
     SmartDashboard.putData(m_chooser);
 
     configureBindings();
