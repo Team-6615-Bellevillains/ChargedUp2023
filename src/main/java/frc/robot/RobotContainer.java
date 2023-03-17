@@ -187,7 +187,7 @@ public class RobotContainer {
     driverController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));
     driverController.leftTrigger(0.4).whileTrue(new SuckObjectCmd(rollerSubsystem));
     driverController.rightTrigger(0.4).whileTrue(new ShootPieceCmd(rollerSubsystem));
-    driverController.x().whileTrue(new CrossWheelsCmd(swerveSubsystem));
+//    driverController.x().whileTrue(new CrossWheelsCmd(swerveSubsystem));
     operatorController.leftBumper().whileTrue(new ClampGrabberCmd(pneumaticsSubsystem));
     operatorController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));
     operatorController.leftTrigger(0.4).whileTrue(new SuckObjectCmd(rollerSubsystem));
@@ -206,6 +206,7 @@ public class RobotContainer {
 
     operatorController.a().onTrue(Commands.runOnce(() -> verticalElevatorSubsystem.setVerticalElevatorVoltage(0), verticalElevatorSubsystem).andThen(Commands.runOnce(verticalElevatorSubsystem::resetVerticalElevatorEncoder, verticalElevatorSubsystem)));
     operatorController.b().onTrue(Commands.runOnce(horizontalElevatorSubsystem::resetHorizontalElevatorEncoder));
+    operatorController.x().onTrue(Commands.runOnce(() -> setMechanismDefaultCommands()));
 //    operatorController.y().onTrue(new AutoShootPieceCmd(rollerSubsystem));
 
 //    operatorController.a().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight));
