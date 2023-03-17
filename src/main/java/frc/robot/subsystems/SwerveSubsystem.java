@@ -67,7 +67,7 @@ public class SwerveSubsystem extends SubsystemBase {
     private final ProfiledPIDController thetaCorrectionPID = new ProfiledPIDController(DriveConstants.kPThetaCorrection, DriveConstants.kIThetaCorrection, DriveConstants.kDThetaCorrection, new TrapezoidProfile.Constraints(DriveConstants.kMaxVelocityThetaCorrection, DriveConstants.kMaxAccelerationThetaCorrection));
     private static final TunableSimpleMotorFeedforward driveFeedforward = new TunableSimpleMotorFeedforward("drive", 0.440000, 2.350000);
     private static final TunableSimpleMotorFeedforward steerFeedforward = new TunableSimpleMotorFeedforward("steer", 1.112500, 1.300000);
-    private double speedMultiplier = 5;
+    private double speedMultiplier = 3.5;
 
     public SwerveSubsystem() {
         this.thetaCorrectionPID.enableContinuousInput(0, 2 * Math.PI);
@@ -120,6 +120,26 @@ public class SwerveSubsystem extends SubsystemBase {
                 getPose().getTranslation().toString());
 
         SmartDashboard.putNumber("Last known correct heading Rads", lastKnownCorrectHeadingRadians);
+
+//        SmartDashboard.putNumber("[0] true speed", frontLeft.getVelocity());
+//        SmartDashboard.putNumber("[1] true speed", frontRight.getVelocity());
+//        SmartDashboard.putNumber("[2] true speed", backLeft.getVelocity());
+//        SmartDashboard.putNumber("[3] true speed", backRight.getVelocity());
+//
+//        frontLeft.putAppliedOutput();
+//        frontRight.putAppliedOutput();
+//        backLeft.putAppliedOutput();
+//        backRight.putAppliedOutput();
+//
+//        frontLeft.putOutputCurrent();
+//        frontRight.putOutputCurrent();
+//        backLeft.putOutputCurrent();
+//        backRight.putOutputCurrent();
+//
+//        frontLeft.putBusVoltage();
+//        frontRight.putBusVoltage();
+//        backLeft.putBusVoltage();
+//        backRight.putBusVoltage();
 
     }
 

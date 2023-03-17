@@ -77,9 +77,25 @@ public class SwerveModule {
         return driveEncoder.getPosition();
     }
 
+//    public double getVelocity() {
+//        return driveEncoder.getVelocity();
+//    }
+
     private String appendIdx(String input) {
         return String.format("[%s] %s", idx, input);
     }
+
+//    public void putOutputCurrent() {
+//        SmartDashboard.putNumber(appendIdx("Output Current"), driveMotor.getOutputCurrent());
+//    }
+//
+//    public void putAppliedOutput() {
+//        SmartDashboard.putNumber(appendIdx("Applied Output"), driveMotor.getAppliedOutput());
+//    }
+//
+//    public void putBusVoltage() {
+//        SmartDashboard.putNumber(appendIdx("Bus Voltage"), driveMotor.getBusVoltage());
+//    }
 
     public double getModuleRotationRadiansFromAbsoluteEncoder() {
         /*
@@ -110,12 +126,17 @@ public class SwerveModule {
             return;
         }
 
+
+
         state = SwerveModuleState.optimize(state, getModuleRotation2dFromPGEncoder());
 
         double steerPIDOut = steerPIDController.calculate(getModuleRotation2dFromPGEncoder().getRadians(),
                 state.angle.getRadians());
 
         double feedforward = SwerveSubsystem.calculateSteerFeedforward(steerPIDController.getSetpoint().velocity);
+
+
+//        SmartDashboard.putNumber(appendIdx("wheel ffout"), SwerveSubsystem.calculateDriveFeedforward(state.speedMetersPerSecond));
 
         driveMotor.setVoltage(SwerveSubsystem.calculateDriveFeedforward(state.speedMetersPerSecond));
         steerMotor.setVoltage(steerPIDOut + feedforward);
