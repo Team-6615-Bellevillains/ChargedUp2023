@@ -60,6 +60,8 @@ public class RobotContainer {
 
 
   private final JoystickButton scoreCubeMidButton = new JoystickButton(buttonBox, 7);
+  private final JoystickButton setDefaultCommandsButton = new JoystickButton(buttonBox, 5); 
+  private final JoystickButton forceInButton = new JoystickButton(buttonBox, 4); 
 
   private SwerveAutoBuilder autoBuilder;
   private HashMap<String, Command> eventMap = new HashMap<>();
@@ -184,9 +186,6 @@ public class RobotContainer {
 
   private void configureBindings() {
     driverController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
-    driverController.x().onTrue(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(1.25)));
-    driverController.a().onTrue(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(.35)));
-    driverController.b().onTrue(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(1)));
 
     driverController.leftBumper().whileTrue(new ClampGrabberCmd(pneumaticsSubsystem));
     driverController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));
@@ -204,14 +203,13 @@ public class RobotContainer {
     vertHighButton.whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight));
     scoreCubeHighButton.whileTrue(generateScoreHighCmd());
     vertMidButton.whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, Units.inchesToMeters(10)));
-    vertLowButton.whileTrue((new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalLowHeight)).andThen(Commands.runOnce(() -> verticalElevatorSubsystem.setVerticalElevatorVoltage(0), verticalElevatorSubsystem)));
+    // setHorizontalToOutButton.onTrue(Commands.runOnce(() -> horizontalElevatorSubsystem.set, null));
     scoreCubeMidButton.whileTrue(generateScoreCubeMidCmd());
     doubleSubstationElevatorButton.whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, Units.inchesToMeters(26)));
 
-
     operatorController.a().onTrue(Commands.runOnce(() -> verticalElevatorSubsystem.setVerticalElevatorVoltage(0), verticalElevatorSubsystem).andThen(Commands.runOnce(verticalElevatorSubsystem::resetVerticalElevatorEncoder, verticalElevatorSubsystem)));
     operatorController.b().onTrue(Commands.runOnce(horizontalElevatorSubsystem::resetHorizontalElevatorEncoder));
-    operatorController.x().onTrue(Commands.runOnce(() -> setMechanismDefaultCommands()));
+    setDefaultCommandsButton.onTrue(Commands.runOnce(() -> setMechanismDefaultCommands()));
 //    operatorController.y().onTrue(new AutoShootPieceCmd(rollerSubsystem));
 
 //    operatorController.a().whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, ElevatorConstants.verticalHighHeight));

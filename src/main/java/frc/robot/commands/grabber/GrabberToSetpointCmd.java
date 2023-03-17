@@ -60,7 +60,7 @@ public class GrabberToSetpointCmd extends CommandBase {
     // TODO: Add position tolerance
     @Override
     public boolean isFinished() {
-        return Math.abs(grabberSubsystem.getFlipEncoderPositionInRads()-profiledPIDController.getController().getGoal().position) <= Units.degreesToRadians(3);
+        return Math.abs(grabberSubsystem.getFlipEncoderPositionInRads()-profiledPIDController.getController().getGoal().position) <= Units.degreesToRadians(6);
     }
 
 }
