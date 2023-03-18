@@ -209,8 +209,6 @@ public class RobotContainer {
 
   private void configureBindings() {
     driverController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
-    driverController.a().onTrue(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(1.75)));
-    driverController.b().onTrue(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(1)));
 
     driverController.leftBumper().whileTrue(new ClampGrabberCmd(pneumaticsSubsystem));
     driverController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));
@@ -234,6 +232,8 @@ public class RobotContainer {
 
     operatorController.a().onTrue(Commands.runOnce(() -> verticalElevatorSubsystem.setVerticalElevatorVoltage(0), verticalElevatorSubsystem).andThen(Commands.runOnce(verticalElevatorSubsystem::resetVerticalElevatorEncoder, verticalElevatorSubsystem)));
     operatorController.b().onTrue(Commands.runOnce(horizontalElevatorSubsystem::resetHorizontalElevatorEncoder));
+    operatorController.x().onTrue(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(1)));
+    operatorController.x().onFalse(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(1.75)));
     setDefaultCommandsButton.onTrue(Commands.runOnce(this::setMechanismDefaultCommands));
 //    operatorController.y().onTrue(new AutoShootPieceCmd(rollerSubsystem));
 
