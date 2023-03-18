@@ -210,8 +210,8 @@ public class RobotContainer {
   private void configureBindings() {
     driverController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
 
-    driverController.leftBumper().whileTrue(new ClampGrabberCmd(pneumaticsSubsystem));
-    driverController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));
+    // driverController.leftBumper().whileTrue(new ClampGrabberCmd(pneumaticsSubsystem));
+    // driverController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));
     driverController.leftTrigger(0.4).whileTrue(new SuckObjectCmd(rollerSubsystem));
     driverController.rightTrigger(0.4).whileTrue(new ShootPieceCmd(rollerSubsystem));
 //    driverController.x().whileTrue(new CrossWheelsCmd(swerveSubsystem));
