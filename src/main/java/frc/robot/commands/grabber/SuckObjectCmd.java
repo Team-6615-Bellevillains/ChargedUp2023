@@ -17,7 +17,7 @@ public class SuckObjectCmd extends CommandBase {
 
     @Override
     public void execute() {
-        rollerSubsystem.setRollerSpeedPercentage(-.1);
+        rollerSubsystem.setRollerSpeedPercentage(-.2);
     }
 
     @Override

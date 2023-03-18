@@ -71,7 +71,7 @@ public final class Constants {
         public static final boolean kBackRightDriveMotorReversed = true;
 
         public static final double kFrontLeftDriveAbsoluteEncoderOffsetCounts = 137;
-        public static final double kFrontRightDriveAbsoluteEncoderOffsetCounts = 527;
+        public static final double kFrontRightDriveAbsoluteEncoderOffsetCounts = 0;
         public static final double kBackLeftDriveAbsoluteEncoderOffsetCounts = 291;
         public static final double kBackRightDriveAbsoluteEncoderOffsetCounts = 754;
 
@@ -256,6 +256,7 @@ public final class Constants {
 
     public static final class OIConstants {
         public static final double kDefaultJoystickDeadband = 0.07;
+        public static final double kSwerveJoystickDeadband = 0.14;
         public static final double kOperatorRightYDeadband = 0.13;
         public static final int kDriverControllerPort = 0;
         public static final int kOperatorControllerPort = 1;

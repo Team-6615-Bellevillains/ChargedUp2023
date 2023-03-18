@@ -52,9 +52,9 @@ public class SwerveJoystickCmd extends CommandBase {
          * In our case, we take a number and for every number 0 to that number, we map
          * the input to 0.
          */
-        xSpeed = Math.abs(xSpeed) > OIConstants.kDefaultJoystickDeadband ? xSpeed : 0.0;
-        ySpeed = Math.abs(ySpeed) > OIConstants.kDefaultJoystickDeadband ? ySpeed : 0.0;
-        steerSpeed = Math.abs(steerSpeed) > OIConstants.kDefaultJoystickDeadband ? steerSpeed : 0.0;
+        xSpeed = Math.abs(xSpeed) > OIConstants.kSwerveJoystickDeadband ? xSpeed : 0.0;
+        ySpeed = Math.abs(ySpeed) > OIConstants.kSwerveJoystickDeadband ? ySpeed : 0.0;
+        steerSpeed = Math.abs(steerSpeed) > OIConstants.kSwerveJoystickDeadband ? steerSpeed : 0.0;
 
         // 3. Smooth driving
         xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleOpMaxSpeedMetersPerSecond * swerveSubsystem.getSpeedMultiplier();
