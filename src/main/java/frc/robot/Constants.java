@@ -170,7 +170,7 @@ public final class Constants {
         public static final int horizontalEncoderPulsesPerRevolution = kCimcoder256PulsesPerRevolution;
         public static final double horizontalRotationsToDistance = 3328.0/11585.0;
 
-        public static final double kHorizontalElevatorInThreshold = 0.5;
+        public static final double kHorizontalElevatorInThreshold = 1;
         public static final double kHorizontalElevatorOutThreshold = 11.4;
 
         public static final double kPHorizontalElevator = 0;
@@ -190,7 +190,7 @@ public final class Constants {
         public static final int kLeftRollerMotorPort = 15;
         public static final int kRightRollerMotorPort = 14;
 
-        public static final int kSolenoidChannel = 0;
+        public static final int kSolenoidChannel = 2;
 
         public static final int kFlipMotorPort = 16;
         public static final double kFlipReverseThreshold = 0;
