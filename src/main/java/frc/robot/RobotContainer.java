@@ -209,6 +209,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     driverController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
+    driverController.a().whileTrue(new CrossWheelsCmd(swerveSubsystem));
 
     // driverController.leftBumper().whileTrue(new ClampGrabberCmd(pneumaticsSubsystem));
     // driverController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));

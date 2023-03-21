@@ -21,10 +21,10 @@ public class CrossWheelsCmd extends CommandBase {
     private double initializeTS;
     private final static double convergenceTime = .5;
 
-    private static final Rotation2d frontLeftWheelLockAngle = Rotation2d.fromDegrees(45);
-    private static final Rotation2d frontRightWheelLockAngle = Rotation2d.fromDegrees(90 + 45);
-    private static final Rotation2d backLeftWheelLockAngle = Rotation2d.fromDegrees(90 + 45);
-    private static final Rotation2d backRightWheelLockAngle = Rotation2d.fromDegrees(45);
+    private static final Rotation2d frontLeftWheelLockAngle = Rotation2d.fromDegrees(-45);
+    private static final Rotation2d frontRightWheelLockAngle = Rotation2d.fromDegrees(45);
+    private static final Rotation2d backLeftWheelLockAngle = Rotation2d.fromDegrees(45);
+    private static final Rotation2d backRightWheelLockAngle = Rotation2d.fromDegrees(-45);
 
     public CrossWheelsCmd(SwerveSubsystem swerveSubsystem) {
         this.swerveSubsystem = swerveSubsystem;
