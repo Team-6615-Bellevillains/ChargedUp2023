@@ -112,7 +112,7 @@ public class RobotContainer {
         () -> -driverController.getLeftY(),
         () -> -driverController.getLeftX(),
         () -> -driverController.getRightX(),
-        () -> driverController.leftBumper().getAsBoolean()));
+        () -> true));
 
     setMechanismDefaultCommands();
 
@@ -234,7 +234,7 @@ public class RobotContainer {
     operatorController.a().onTrue(Commands.runOnce(() -> verticalElevatorSubsystem.setVerticalElevatorVoltage(0), verticalElevatorSubsystem).andThen(Commands.runOnce(verticalElevatorSubsystem::resetVerticalElevatorEncoder, verticalElevatorSubsystem)));
     operatorController.b().onTrue(Commands.runOnce(horizontalElevatorSubsystem::resetHorizontalElevatorEncoder));
     operatorController.x().onTrue(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(1)));
-    operatorController.x().onFalse(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(1.75)));
+    operatorController.x().onFalse(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(2)));
     setDefaultCommandsButton.onTrue(Commands.runOnce(this::setMechanismDefaultCommands));
 //    operatorController.y().onTrue(new AutoShootPieceCmd(rollerSubsystem));
 
