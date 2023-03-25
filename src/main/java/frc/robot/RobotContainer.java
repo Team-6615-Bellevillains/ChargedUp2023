@@ -96,7 +96,7 @@ public class RobotContainer {
     return Commands.runOnce(() -> SmartDashboard.putString("Score Cube Mid", "running"))
             .andThen(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberShootCubeMidSetpoint))
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 1)))
-            .andThen(new AutoShootPieceCmd(rollerSubsystem))
+            .andThen(new AutoShootPieceCmd(rollerSubsystem, 0.5))
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 2)))
             .andThen(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberInSetpoint))
             .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 3)))

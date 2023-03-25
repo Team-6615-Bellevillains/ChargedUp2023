@@ -218,7 +218,7 @@ public final class Constants {
         public static final double kMaxFlipAccelerationRadiansPerSecondSquared = 3;
 
         public static final double grabberInSetpoint = Units.degreesToRadians(130);
-        public static final double grabberShootCubeMidSetpoint = Units.degreesToRadians(80);
+        public static final double grabberShootCubeMidSetpoint = Units.degreesToRadians(50);
         public static final double grabberShootCubeHighSetpoint = Units.degreesToRadians(21);
         public static final double grabberIntakeSetpoint = Units.degreesToRadians(-23);
 

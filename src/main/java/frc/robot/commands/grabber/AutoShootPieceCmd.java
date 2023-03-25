@@ -14,7 +14,12 @@ public class AutoShootPieceCmd extends CommandBase {
     private boolean isDone;
 
     public AutoShootPieceCmd(RollerSubsystem rollerSubsystem) {
+        this(rollerSubsystem, .15);
+    }
+
+    public AutoShootPieceCmd(RollerSubsystem rollerSubsystem, double shootOutTime) {
         this.rollerSubsystem = rollerSubsystem;
+        this.shootOutTime = shootOutTime;
 
         addRequirements(rollerSubsystem);
     }
@@ -22,7 +27,6 @@ public class AutoShootPieceCmd extends CommandBase {
     @Override
     public void initialize() {
         robotTime = 0;
-        shootOutTime = .15;
         isDone = false;
 
         robotTime = Timer.getFPGATimestamp();
