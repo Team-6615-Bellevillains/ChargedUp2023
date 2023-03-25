@@ -67,7 +67,7 @@ public class SwerveSubsystem extends SubsystemBase {
     private final ProfiledPIDController thetaCorrectionPID = new ProfiledPIDController(DriveConstants.kPThetaCorrection, DriveConstants.kIThetaCorrection, DriveConstants.kDThetaCorrection, new TrapezoidProfile.Constraints(DriveConstants.kMaxVelocityThetaCorrection, DriveConstants.kMaxAccelerationThetaCorrection));
     private static final TunableSimpleMotorFeedforward driveFeedforward = new TunableSimpleMotorFeedforward("drive", 0.440000, 2.350000);
     private static final TunableSimpleMotorFeedforward steerFeedforward = new TunableSimpleMotorFeedforward("steer", 1.112500, 1.300000);
-    private double speedMultiplier = 1.75;
+    private double speedMultiplier = 2;
 
     public SwerveSubsystem() {
         this.thetaCorrectionPID.enableContinuousInput(0, 2 * Math.PI);
