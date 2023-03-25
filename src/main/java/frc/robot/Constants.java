@@ -184,6 +184,9 @@ public final class Constants {
         public static final double kAHorizontalElevator = 0;
 
         public static final double kHorizontalElevatorFFInput = 1.5;
+
+        public static final int kHorizontalMotorActiveHoldingSupplyCurrent = 2; // Stator current limit for holding the horizontal elevator in place
+        public static final int kHorizontalMotorHoldingStatorCurrentThreshold = -25; // Threshold of stator current where we are aware that the elevator is holding in place. Once we go beyond this, we apply a current limit to prevent bad things from happening.
     }
 
     public static final class GrabberConstants {

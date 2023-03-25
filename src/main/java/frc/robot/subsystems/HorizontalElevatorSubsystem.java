@@ -5,37 +5,32 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 
-import java.lang.reflect.Field;
-
 public class HorizontalElevatorSubsystem extends SubsystemBase {
 
-    private final WPI_TalonSRX hElevatorMotor;
+    private final WPI_TalonSRX hElevatorMotor = new WPI_TalonSRX(ElevatorConstants.horizontalMotorPort);
 
     private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(ElevatorConstants.kSHorizontalElevator, ElevatorConstants.kVHorizontalElevator);
     private final ProfiledPIDController profiledPIDController = new ProfiledPIDController(ElevatorConstants.kPHorizontalElevator, ElevatorConstants.kIHorizontalElevator, ElevatorConstants.kDHorizontalElevator, new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVelocityHorizontalElevator, ElevatorConstants.kMaxAccelerationHorizontalElevator));
 
 
     public HorizontalElevatorSubsystem() {
-        this.hElevatorMotor = new WPI_TalonSRX(ElevatorConstants.horizontalMotorPort);
-        this.hElevatorMotor.setInverted(true);
-        this.hElevatorMotor.setSensorPhase(true);
+        hElevatorMotor.setInverted(true);
+        hElevatorMotor.setSensorPhase(true);
+        hElevatorMotor.configPeakCurrentLimit(0);
+        hElevatorMotor.configContinuousCurrentLimit(ElevatorConstants.kHorizontalMotorActiveHoldingSupplyCurrent);
 
         resetHorizontalElevatorEncoder();
     }
 
-    double[] velocities = new double[5];
-
-    int idx = 0;
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Horizontal Position", getHorizontalElevatorPosition());
+        SmartDashboard.putNumber("Horizontal Supply Current", hElevatorMotor.getSupplyCurrent());
+        SmartDashboard.putNumber("Horizontal Stator Current", hElevatorMotor.getStatorCurrent());
     }
 
     public double calculateFeedforward(double velocity) {
@@ -50,6 +45,11 @@ public class HorizontalElevatorSubsystem extends SubsystemBase {
         hElevatorMotor.setVoltage(voltage);
     }
 
+    public void setHorizontalElevatorSpeed(double speed) {
+        hElevatorMotor.set(speed);
+    }
+
+
     public double getHorizontalElevatorPosition() {
         if (hElevatorMotor.getSelectedSensorPosition() < 0) {
             hElevatorMotor.setSelectedSensorPosition(0);
@@ -61,6 +61,14 @@ public class HorizontalElevatorSubsystem extends SubsystemBase {
     public double getHorizontalElevatorVelocity() {
         return hElevatorMotor.getSelectedSensorVelocity() * (ElevatorConstants.horizontalRotationsToDistance
                 / ElevatorConstants.horizontalEncoderPulsesPerRevolution) / 60;
+    }
+
+    public double getHorizontalElevatorStatorCurrent() {
+        return hElevatorMotor.getStatorCurrent();
+    }
+
+    public void setHorizontalElevatorCurrentLimitState(boolean enabled) {
+        hElevatorMotor.enableCurrentLimit(enabled);
     }
 
     public void resetHorizontalElevatorEncoder() {
