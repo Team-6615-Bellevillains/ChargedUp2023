@@ -8,16 +8,22 @@ import frc.robot.subsystems.RollerSubsystem;
 public class ShootPieceCmd extends CommandBase {
 
     private RollerSubsystem rollerSubsystem;
+    private double rollerSpeedPercentage;
 
     public ShootPieceCmd(RollerSubsystem rollerSubsystem) {
+        this(rollerSubsystem, 0.25);
+    }
+
+    public ShootPieceCmd(RollerSubsystem rollerSubsystem, double rollerSpeedPercentage) {
         this.rollerSubsystem = rollerSubsystem;
+        this.rollerSpeedPercentage = rollerSpeedPercentage;
 
         addRequirements(rollerSubsystem);
     }
 
     @Override
     public void execute() {
-        rollerSubsystem.setRollerSpeedPercentage(.1);
+        rollerSubsystem.setRollerSpeedPercentage(rollerSpeedPercentage);
     }
 
     @Override

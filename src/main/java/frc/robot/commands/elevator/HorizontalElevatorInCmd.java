@@ -9,7 +9,7 @@ public class HorizontalElevatorInCmd extends CommandBase {
 
     private HorizontalElevatorSubsystem horizontalElevatorSubsystem;
 
-    private SimpleMotorFeedforward simpleMotorFeedforward = new SimpleMotorFeedforward(1.5, 0.75);
+    private SimpleMotorFeedforward simpleMotorFeedforward = new SimpleMotorFeedforward(1.5, 1);
 
 
     public HorizontalElevatorInCmd(HorizontalElevatorSubsystem horizontalElevatorSubsystem) {

@@ -27,6 +27,7 @@ public class PneumaticsSubsystem extends SubsystemBase {
     compressor.enableDigital();
 
     solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kSolenoidChannel);
+    setSolenoidState(false);
   }
 
   @Override
@@ -47,6 +48,10 @@ public class PneumaticsSubsystem extends SubsystemBase {
         }
       }
     }
+  }
+
+  public void reEnableCompressor() {
+    this.hasFilledSystem = false;
   }
 
 

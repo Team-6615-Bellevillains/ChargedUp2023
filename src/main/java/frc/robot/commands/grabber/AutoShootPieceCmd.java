@@ -1,7 +1,6 @@
 package frc.robot.commands.grabber;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.RollerSubsystem;
 
@@ -10,16 +9,13 @@ public class AutoShootPieceCmd extends CommandBase {
     private RollerSubsystem rollerSubsystem;
 
     private double robotTime;
-    private double shootOutTime;
+    private double shootDuration;
     private boolean isDone;
+    private double shootOutTime;
 
-    public AutoShootPieceCmd(RollerSubsystem rollerSubsystem) {
-        this(rollerSubsystem, .15);
-    }
-
-    public AutoShootPieceCmd(RollerSubsystem rollerSubsystem, double shootOutTime) {
+    public AutoShootPieceCmd(RollerSubsystem rollerSubsystem, double shootDuration) {
         this.rollerSubsystem = rollerSubsystem;
-        this.shootOutTime = shootOutTime;
+        this.shootDuration = shootDuration;
 
         addRequirements(rollerSubsystem);
     }
@@ -30,14 +26,14 @@ public class AutoShootPieceCmd extends CommandBase {
         isDone = false;
 
         robotTime = Timer.getFPGATimestamp();
-        shootOutTime += robotTime;
+        shootOutTime = shootDuration + robotTime;
     }
 
     @Override
     public void execute() {
         robotTime = Timer.getFPGATimestamp();
         if(robotTime < shootOutTime){
-            rollerSubsystem.setRollerSpeedPercentage(.1);
+            rollerSubsystem.setRollerSpeedPercentage(.20);
         }
         else
         {
