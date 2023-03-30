@@ -9,13 +9,11 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.SwerveModule;
@@ -112,6 +110,10 @@ public class SwerveSubsystem extends SubsystemBase {
         poseEstimator.resetPosition(getRotation2d(), getModulePositions(), pose);
     }
 
+    public float getRawRollVelocity() {
+        return gyro.getRawGyroY();
+    }
+
     @Override
     public void periodic() {
         poseEstimator.update(getRotation2d(), getModulePositions());
@@ -122,6 +124,9 @@ public class SwerveSubsystem extends SubsystemBase {
                 getPose().getTranslation().toString());
 
         SmartDashboard.putNumber("Last known correct heading Rads", lastKnownCorrectHeadingRadians);
+
+        SmartDashboard.putNumber("Pitch", gyro.getPitch());
+        SmartDashboard.putNumber("Roll", gyro.getRoll());
 
         SmartDashboard.putNumber("Speed Multi", getSpeedMultiplier());
 
@@ -237,9 +242,13 @@ public class SwerveSubsystem extends SubsystemBase {
              )
          );
      }
-     
-     public double getPitch ()
-     {
+
+    public double getPitch ()
+    {
         return gyro.getPitch();
-     }
+    }
+    public double getRoll ()
+    {
+        return gyro.getRoll();
+    }
 }

@@ -22,11 +22,9 @@ import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.GrabberConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.AlignToAprilTagCubeCmd;
-import frc.robot.commands.AlignToDoubleSubstation;
+import frc.robot.commands.drive.VeloAutoBalanceCmd;
 import frc.robot.commands.drive.CrossWheelsCmd;
 import frc.robot.commands.drive.SwerveJoystickCmd;
 import frc.robot.commands.elevator.*;
@@ -106,6 +104,7 @@ public class RobotContainer {
 
         PathPlannerTrajectory nonSubMobilityPath = PathPlanner.loadPath("Non Sub Mobility", new PathConstraints(0.75, 1));
         PathPlannerTrajectory subMobilityPath = PathPlanner.loadPath("Sub Mobility", new PathConstraints(0.75, 1));
+        PathPlannerTrajectory balancePath = PathPlanner.loadPath("Get on charge", new PathConstraints(0.75, 1));
 
 
         autoBuilder = new SwerveAutoBuilder(
@@ -113,7 +112,7 @@ public class RobotContainer {
                 swerveSubsystem::resetPoseEstimator, // Pose2d consumer, used to reset odometry at the beginning of auto
                 DriveConstants.kDriveKinematics, // SwerveDriveKinematics
                 new PIDConstants(1.2, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-                new PIDConstants(0.3, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+                new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
                 (SwerveModuleState[] desiredStates) -> swerveSubsystem.setModuleStates(desiredStates, true), // Module states consumer used to output to the drive subsytem
                 eventMap,
                 true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
@@ -122,6 +121,7 @@ public class RobotContainer {
 
         Supplier<CommandBase> nonSubMobilityPathCommand = () -> autoBuilder.fullAuto(nonSubMobilityPath);
         Supplier<CommandBase> subMobilityPathCommand = () -> autoBuilder.fullAuto(subMobilityPath);
+        Supplier<CommandBase> balancePathCommand = () -> autoBuilder.fullAuto(balancePath);
 
         //Adds a smartdashboard widget that will allow us to select the autonomous we want to use.
         m_chooser = new SendableChooser<>();
@@ -135,6 +135,18 @@ public class RobotContainer {
                 new SequentialCommandGroup(
                         generateScoreHighCmd(),
                         subMobilityPathCommand.get()));
+        m_chooser.addOption("Score High and Balance",
+                new SequentialCommandGroup(
+                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 1)),
+                        generateScoreHighCmd(),
+                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 2)),
+                        balancePathCommand.get().until(() -> swerveSubsystem.getRoll() > 5),
+                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 3)),
+                        new VeloAutoBalanceCmd(swerveSubsystem),
+                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 4)),
+                        new CrossWheelsCmd(swerveSubsystem),
+                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 5))
+                ));
 
 
         SmartDashboard.putData(m_chooser);
@@ -157,6 +169,10 @@ public class RobotContainer {
     private void configureBindings() {
         driverController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
         driverController.a().whileTrue(new CrossWheelsCmd(swerveSubsystem));
+        driverController.x().whileTrue(new SequentialCommandGroup(
+                new VeloAutoBalanceCmd(swerveSubsystem),
+                new CrossWheelsCmd(swerveSubsystem)
+        ));
 
         driverController.leftTrigger(0.4).whileTrue(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(1)));
         driverController.leftTrigger(0.4).onFalse(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(2)));
@@ -178,8 +194,7 @@ public class RobotContainer {
 
         operatorController.a().onTrue(Commands.runOnce(() -> verticalElevatorSubsystem.setVerticalElevatorVoltage(0), verticalElevatorSubsystem).andThen(Commands.runOnce(verticalElevatorSubsystem::resetVerticalElevatorEncoder, verticalElevatorSubsystem)));
         operatorController.b().onTrue(Commands.runOnce(horizontalElevatorSubsystem::resetHorizontalElevatorEncoder));
-        operatorController.x().onTrue(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(1)));
-        operatorController.x().onFalse(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(2)));
+
         setDefaultCommandsButton.onTrue(Commands.runOnce(this::setMechanismDefaultCommands));
 
         cubeMidAngleButton.whileTrue(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberShootCubeMidSetpoint));
