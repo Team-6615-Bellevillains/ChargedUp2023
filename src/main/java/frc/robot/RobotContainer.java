@@ -51,15 +51,12 @@ public class RobotContainer {
     private final CommandXboxController operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
     private final Joystick buttonBox = new Joystick(OIConstants.kButtonBoxPort);
 
-    private final JoystickButton scoreCubeHighButton = new JoystickButton(buttonBox, 2);
-
-    private final JoystickButton reEnableCompressorButton = new JoystickButton(buttonBox, 4);
-    private final JoystickButton doubleSubstationElevatorButton = new JoystickButton(buttonBox, 6);
-
 
     private final JoystickButton scoreCubeMidButton = new JoystickButton(buttonBox, 1);
+    private final JoystickButton scoreCubeHighButton = new JoystickButton(buttonBox, 2);
+    private final JoystickButton reEnableCompressorButton = new JoystickButton(buttonBox, 4);
     private final JoystickButton setDefaultCommandsButton = new JoystickButton(buttonBox, 5);
-    private final JoystickButton forceInButton = new JoystickButton(buttonBox, 4);
+
 
     private SwerveAutoBuilder autoBuilder;
     private HashMap<String, Command> eventMap = new HashMap<>();
@@ -145,51 +142,12 @@ public class RobotContainer {
                         new CrossWheelsCmd(swerveSubsystem),
                         Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 5))
                 ));
-        m_chooser.addOption("[Timed] 0.25 Score High and Balance",
-                new SequentialCommandGroup(
-                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 1)),
-                        generateScoreHighCmd(),
-                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 2)),
-                        new ParallelDeadlineGroup(new WaitUntilConditionForTimeCmd(() -> swerveSubsystem.getRoll() > 14, 0.25), balancePathCommand.get(), Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0.2)))
-                                .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 3)))
-                                .andThen(new VeloAutoBalanceCmd(swerveSubsystem)),
-                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 4)),
-                        new CrossWheelsCmd(swerveSubsystem),
-                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 5)),
-                        Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0))
-                ));
-        m_chooser.addOption("[Timed] 0.5 Score High and Balance",
-                new SequentialCommandGroup(
-                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 1)),
-                        generateScoreHighCmd(),
-                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 2)),
-                        new ParallelDeadlineGroup(new WaitUntilConditionForTimeCmd(() -> swerveSubsystem.getRoll() > 14, 0.5), balancePathCommand.get(), Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0.2)))
-                                .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 3)))
-                                .andThen(new VeloAutoBalanceCmd(swerveSubsystem)),
-                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 4)),
-                        new CrossWheelsCmd(swerveSubsystem),
-                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 5)),
-                        Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0))
-                ));
-        m_chooser.addOption("[Timed] 0.75 Score High and Balance",
-                new SequentialCommandGroup(
-                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 1)),
-                        generateScoreHighCmd(),
-                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 2)),
-                        new ParallelDeadlineGroup(new WaitUntilConditionForTimeCmd(() -> swerveSubsystem.getRoll() > 14, 0.75), balancePathCommand.get(), Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0.2)))
-                                .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 3)))
-                                .andThen(new VeloAutoBalanceCmd(swerveSubsystem)),
-                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 4)),
-                        new CrossWheelsCmd(swerveSubsystem),
-                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 5)),
-                        Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0))
-                ));
         m_chooser.addOption("[Timed] 1 Score High and Balance",
                 new SequentialCommandGroup(
                         Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 1)),
                         generateScoreHighCmd(),
                         Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 2)),
-                        new ParallelDeadlineGroup(new WaitUntilConditionForTimeCmd(() -> swerveSubsystem.getRoll() > 14, 1), balancePathCommand.get(), Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0.2)))
+                        new ParallelDeadlineGroup(new WaitUntilConditionForTimeCmd(() -> swerveSubsystem.getRoll() > 14, 1.05), balancePathCommand.get(), Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0.2)))
                                 .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 3)))
                                 .andThen(new VeloAutoBalanceCmd(swerveSubsystem)),
                         Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 4)),
@@ -239,9 +197,7 @@ public class RobotContainer {
         operatorController.back().whileTrue(new HorizontalElevatorInCmd(horizontalElevatorSubsystem));
 
         scoreCubeHighButton.whileTrue(generateScoreHighCmd());
-        // setHorizontalToOutButton.onTrue(Commands.runOnce(() -> horizontalElevatorSubsystem.set, null));
         scoreCubeMidButton.whileTrue(generateScoreCubeMidCmd());
-        doubleSubstationElevatorButton.whileTrue(new VerticalElevatorToSetpointCmd(verticalElevatorSubsystem, Units.inchesToMeters(26)));
 
         operatorController.a().onTrue(Commands.runOnce(() -> verticalElevatorSubsystem.setVerticalElevatorVoltage(0), verticalElevatorSubsystem).andThen(Commands.runOnce(verticalElevatorSubsystem::resetVerticalElevatorEncoder, verticalElevatorSubsystem)));
         operatorController.b().onTrue(Commands.runOnce(horizontalElevatorSubsystem::resetHorizontalElevatorEncoder));
@@ -249,6 +205,8 @@ public class RobotContainer {
         setDefaultCommandsButton.onTrue(Commands.runOnce(this::setMechanismDefaultCommands));
 
         reEnableCompressorButton.onTrue(new ReEnableCompressorCmd(pneumaticsSubsystem));
+
+
 
     }
 
