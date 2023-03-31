@@ -25,6 +25,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.GrabberConstants;
 import frc.robot.Constants.OIConstants;
 //import frc.robot.commands.drive.AutoBackupToTippedCmd;
+import frc.robot.commands.WaitUntilConditionForTimeCmd;
 import frc.robot.commands.drive.VeloAutoBalanceCmd;
 import frc.robot.commands.drive.CrossWheelsCmd;
 import frc.robot.commands.drive.SwerveJoystickCmd;
@@ -137,12 +138,64 @@ public class RobotContainer {
                         Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 1)),
                         generateScoreHighCmd(),
                         Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 2)),
-                        balancePathCommand.get().until(() -> swerveSubsystem.getRoll() > 13),
+                        balancePathCommand.get().until(() -> swerveSubsystem.getRoll() > 14),
                         Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 3)),
                         new VeloAutoBalanceCmd(swerveSubsystem),
                         Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 4)),
                         new CrossWheelsCmd(swerveSubsystem),
                         Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 5))
+                ));
+        m_chooser.addOption("[Timed] 0.25 Score High and Balance",
+                new SequentialCommandGroup(
+                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 1)),
+                        generateScoreHighCmd(),
+                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 2)),
+                        new ParallelDeadlineGroup(new WaitUntilConditionForTimeCmd(() -> swerveSubsystem.getRoll() > 14, 0.25), balancePathCommand.get(), Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0.2)))
+                                .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 3)))
+                                .andThen(new VeloAutoBalanceCmd(swerveSubsystem)),
+                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 4)),
+                        new CrossWheelsCmd(swerveSubsystem),
+                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 5)),
+                        Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0))
+                ));
+        m_chooser.addOption("[Timed] 0.5 Score High and Balance",
+                new SequentialCommandGroup(
+                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 1)),
+                        generateScoreHighCmd(),
+                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 2)),
+                        new ParallelDeadlineGroup(new WaitUntilConditionForTimeCmd(() -> swerveSubsystem.getRoll() > 14, 0.5), balancePathCommand.get(), Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0.2)))
+                                .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 3)))
+                                .andThen(new VeloAutoBalanceCmd(swerveSubsystem)),
+                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 4)),
+                        new CrossWheelsCmd(swerveSubsystem),
+                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 5)),
+                        Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0))
+                ));
+        m_chooser.addOption("[Timed] 0.75 Score High and Balance",
+                new SequentialCommandGroup(
+                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 1)),
+                        generateScoreHighCmd(),
+                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 2)),
+                        new ParallelDeadlineGroup(new WaitUntilConditionForTimeCmd(() -> swerveSubsystem.getRoll() > 14, 0.75), balancePathCommand.get(), Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0.2)))
+                                .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 3)))
+                                .andThen(new VeloAutoBalanceCmd(swerveSubsystem)),
+                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 4)),
+                        new CrossWheelsCmd(swerveSubsystem),
+                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 5)),
+                        Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0))
+                ));
+        m_chooser.addOption("[Timed] 1 Score High and Balance",
+                new SequentialCommandGroup(
+                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 1)),
+                        generateScoreHighCmd(),
+                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 2)),
+                        new ParallelDeadlineGroup(new WaitUntilConditionForTimeCmd(() -> swerveSubsystem.getRoll() > 14, 1), balancePathCommand.get(), Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0.2)))
+                                .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 3)))
+                                .andThen(new VeloAutoBalanceCmd(swerveSubsystem)),
+                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 4)),
+                        new CrossWheelsCmd(swerveSubsystem),
+                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 5)),
+                        Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0))
                 ));
 
 
