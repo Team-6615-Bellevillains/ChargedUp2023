@@ -12,10 +12,12 @@ public class AutoShootPieceCmd extends CommandBase {
     private double shootDuration;
     private boolean isDone;
     private double shootOutTime;
+    private double power;
 
-    public AutoShootPieceCmd(RollerSubsystem rollerSubsystem, double shootDuration) {
+    public AutoShootPieceCmd(RollerSubsystem rollerSubsystem, double shootDuration, double power) {
         this.rollerSubsystem = rollerSubsystem;
         this.shootDuration = shootDuration;
+        this.power = power;
 
         addRequirements(rollerSubsystem);
     }
@@ -33,7 +35,7 @@ public class AutoShootPieceCmd extends CommandBase {
     public void execute() {
         robotTime = Timer.getFPGATimestamp();
         if(robotTime < shootOutTime){
-            rollerSubsystem.setRollerSpeedPercentage(.20);
+            rollerSubsystem.setRollerSpeedPercentage(power);
         }
         else
         {

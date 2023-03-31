@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.GrabberConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.drive.AutoBackupToTippedCmd;
 import frc.robot.commands.drive.VeloAutoBalanceCmd;
 import frc.robot.commands.drive.CrossWheelsCmd;
 import frc.robot.commands.drive.SwerveJoystickCmd;
@@ -49,17 +50,13 @@ public class RobotContainer {
     private final CommandXboxController operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
     private final Joystick buttonBox = new Joystick(OIConstants.kButtonBoxPort);
 
-    private final JoystickButton cubeMidAngleButton = new JoystickButton(buttonBox, 1);
-    private final JoystickButton cubeHighAngleButton = new JoystickButton(buttonBox, 2);
-    private final JoystickButton vertLowButton = new JoystickButton(buttonBox, 3);
+    private final JoystickButton scoreCubeHighButton = new JoystickButton(buttonBox, 2);
 
     private final JoystickButton reEnableCompressorButton = new JoystickButton(buttonBox, 4);
-
-    private final JoystickButton scoreCubeHighButton = new JoystickButton(buttonBox, 8);
     private final JoystickButton doubleSubstationElevatorButton = new JoystickButton(buttonBox, 6);
 
 
-    private final JoystickButton scoreCubeMidButton = new JoystickButton(buttonBox, 7);
+    private final JoystickButton scoreCubeMidButton = new JoystickButton(buttonBox, 1);
     private final JoystickButton setDefaultCommandsButton = new JoystickButton(buttonBox, 5);
     private final JoystickButton forceInButton = new JoystickButton(buttonBox, 4);
 
@@ -70,7 +67,7 @@ public class RobotContainer {
         return Commands.runOnce(() -> SmartDashboard.putString("Score High", "running"))
                 .andThen(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberShootCubeHighSetpoint))
                 .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 1)))
-                .andThen(new AutoShootPieceCmd(rollerSubsystem, 0.5))
+                .andThen(new AutoShootPieceCmd(rollerSubsystem, 0.5, 0.20))
                 .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 2)))
                 .andThen(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberInSetpoint))
                 .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 3)))
@@ -82,7 +79,7 @@ public class RobotContainer {
         return Commands.runOnce(() -> SmartDashboard.putString("Score Cube Mid", "running"))
                 .andThen(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberDepositCubeMidSetpoint))
                 .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 1)))
-                .andThen(new AutoShootPieceCmd(rollerSubsystem, 0.5))
+                .andThen(new AutoShootPieceCmd(rollerSubsystem, 0.5, 0.10))
                 .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 2)))
                 .andThen(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberInSetpoint))
                 .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("stage", 3)))
@@ -104,7 +101,7 @@ public class RobotContainer {
 
         PathPlannerTrajectory nonSubMobilityPath = PathPlanner.loadPath("Non Sub Mobility", new PathConstraints(0.75, 1));
         PathPlannerTrajectory subMobilityPath = PathPlanner.loadPath("Sub Mobility", new PathConstraints(0.75, 1));
-        PathPlannerTrajectory balancePath = PathPlanner.loadPath("Get on charge", new PathConstraints(0.75, 1));
+        PathPlannerTrajectory balancePath = PathPlanner.loadPath("Get on charge", new PathConstraints(1, 1));
 
 
         autoBuilder = new SwerveAutoBuilder(
@@ -140,7 +137,7 @@ public class RobotContainer {
                         Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 1)),
                         generateScoreHighCmd(),
                         Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 2)),
-                        balancePathCommand.get().until(() -> swerveSubsystem.getRoll() > 5),
+                        balancePathCommand.get().until(() -> swerveSubsystem.getRoll() > 13),
                         Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 3)),
                         new VeloAutoBalanceCmd(swerveSubsystem),
                         Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 4)),
@@ -170,6 +167,7 @@ public class RobotContainer {
         driverController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
         driverController.a().whileTrue(new CrossWheelsCmd(swerveSubsystem));
         driverController.x().whileTrue(new SequentialCommandGroup(
+//                new AutoBackupToTippedCmd(swerveSubsystem),
                 new VeloAutoBalanceCmd(swerveSubsystem),
                 new CrossWheelsCmd(swerveSubsystem)
         ));
@@ -196,9 +194,6 @@ public class RobotContainer {
         operatorController.b().onTrue(Commands.runOnce(horizontalElevatorSubsystem::resetHorizontalElevatorEncoder));
 
         setDefaultCommandsButton.onTrue(Commands.runOnce(this::setMechanismDefaultCommands));
-
-        cubeMidAngleButton.whileTrue(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberShootCubeMidSetpoint));
-        cubeHighAngleButton.whileTrue(new GrabberToSetpointCmd(grabberSubsystem, GrabberConstants.grabberShootCubeHighSetpoint));
 
         reEnableCompressorButton.onTrue(new ReEnableCompressorCmd(pneumaticsSubsystem));
 
