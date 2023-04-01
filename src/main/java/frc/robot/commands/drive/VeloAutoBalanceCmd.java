@@ -44,7 +44,7 @@ public class VeloAutoBalanceCmd extends CommandBase {
             swerveSubsystem.stopModules();
         } else {
             SmartDashboard.putString("Balance Status", "Balancing");
-            ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(0.35, 0, 0, swerveSubsystem.getRotation2d());
+            ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(0.3, 0, 0, swerveSubsystem.getRotation2d());
 
             swerveSubsystem.setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds), false);
         }

@@ -14,7 +14,6 @@ import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -56,6 +55,7 @@ public class RobotContainer {
     private final JoystickButton scoreCubeHighButton = new JoystickButton(buttonBox, 2);
     private final JoystickButton reEnableCompressorButton = new JoystickButton(buttonBox, 4);
     private final JoystickButton setDefaultCommandsButton = new JoystickButton(buttonBox, 5);
+    private final JoystickButton setGrabberEncoderToLowButton = new JoystickButton(buttonBox, 8);
 
 
     private SwerveAutoBuilder autoBuilder;
@@ -147,7 +147,7 @@ public class RobotContainer {
                         Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 1)),
                         generateScoreHighCmd(),
                         Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 2)),
-                        new ParallelDeadlineGroup(new WaitUntilConditionForTimeCmd(() -> swerveSubsystem.getRoll() > 14, 1.05), balancePathCommand.get(), Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0.2)))
+                        new ParallelDeadlineGroup(new WaitUntilConditionForTimeCmd(() -> swerveSubsystem.getRoll() > 14, 1), balancePathCommand.get(), Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0.2)))
                                 .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 3)))
                                 .andThen(new VeloAutoBalanceCmd(swerveSubsystem)),
                         Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 4)),
@@ -199,14 +199,12 @@ public class RobotContainer {
         scoreCubeHighButton.whileTrue(generateScoreHighCmd());
         scoreCubeMidButton.whileTrue(generateScoreCubeMidCmd());
 
-        operatorController.a().onTrue(Commands.runOnce(() -> verticalElevatorSubsystem.setVerticalElevatorVoltage(0), verticalElevatorSubsystem).andThen(Commands.runOnce(verticalElevatorSubsystem::resetVerticalElevatorEncoder, verticalElevatorSubsystem)));
-        operatorController.b().onTrue(Commands.runOnce(horizontalElevatorSubsystem::resetHorizontalElevatorEncoder));
 
         setDefaultCommandsButton.onTrue(Commands.runOnce(this::setMechanismDefaultCommands));
 
         reEnableCompressorButton.onTrue(new ReEnableCompressorCmd(pneumaticsSubsystem));
 
-
+        setGrabberEncoderToLowButton.onTrue(Commands.runOnce(grabberSubsystem::resetEncoderToLow));
 
     }
 
