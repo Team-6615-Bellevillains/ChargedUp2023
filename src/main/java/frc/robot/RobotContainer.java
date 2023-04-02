@@ -59,6 +59,7 @@ public class RobotContainer {
 
 
     private SwerveAutoBuilder autoBuilder;
+    private SwerveAutoBuilder superRotationAutoBuilder;
     private HashMap<String, Command> eventMap = new HashMap<>();
 
     private Command generateScoreHighCmd() {
@@ -114,9 +115,23 @@ public class RobotContainer {
                 swerveSubsystem // The drive subsystem. Used to properly set the requirements of path following commands
         );
 
+
+
+        superRotationAutoBuilder = new SwerveAutoBuilder(
+                swerveSubsystem::getPose, // Pose2d supplier
+                swerveSubsystem::resetPoseEstimator, // Pose2d consumer, used to reset odometry at the beginning of auto
+                DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+                new PIDConstants(1.2, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+                new PIDConstants(0.7, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+                (SwerveModuleState[] desiredStates) -> swerveSubsystem.setModuleStates(desiredStates, true), // Module states consumer used to output to the drive subsytem
+                eventMap,
+                true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+                swerveSubsystem // The drive subsystem. Used to properly set the requirements of path following commands
+        );
+
         Supplier<CommandBase> nonSubMobilityPathCommand = () -> autoBuilder.fullAuto(nonSubMobilityPath);
         Supplier<CommandBase> subMobilityPathCommand = () -> autoBuilder.fullAuto(subMobilityPath);
-        Supplier<CommandBase> balancePathCommand = () -> autoBuilder.fullAuto(balancePath);
+        Supplier<CommandBase> balancePathCommand = () -> superRotationAutoBuilder.fullAuto(balancePath);
 
         //Adds a smartdashboard widget that will allow us to select the autonomous we want to use.
         m_chooser = new SendableChooser<>();
@@ -130,18 +145,6 @@ public class RobotContainer {
                 new SequentialCommandGroup(
                         generateScoreHighCmd(),
                         subMobilityPathCommand.get()));
-        m_chooser.addOption("Score High and Balance",
-                new SequentialCommandGroup(
-                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 1)),
-                        generateScoreHighCmd(),
-                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 2)),
-                        balancePathCommand.get().until(() -> swerveSubsystem.getRoll() > 14),
-                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 3)),
-                        new VeloAutoBalanceCmd(swerveSubsystem),
-                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 4)),
-                        new CrossWheelsCmd(swerveSubsystem),
-                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 5))
-                ));
         m_chooser.addOption("[Timed] 1 Score High and Balance",
                 new SequentialCommandGroup(
                         Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 1)),
@@ -149,11 +152,12 @@ public class RobotContainer {
                         Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 2)),
                         new ParallelDeadlineGroup(new WaitUntilConditionForTimeCmd(() -> swerveSubsystem.getRoll() > 14, 1), balancePathCommand.get(), Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0.2)))
                                 .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 3)))
-                                .andThen(new VeloAutoBalanceCmd(swerveSubsystem)),
-                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 4)),
-                        new CrossWheelsCmd(swerveSubsystem),
-                        Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 5)),
-                        Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0))
+                                .andThen(new VeloAutoBalanceCmd(swerveSubsystem))
+                                .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 4)))
+                                .andThen(new CrossWheelsCmd(swerveSubsystem))
+                                .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 5)))
+                                .andThen(Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0)))
+
                 ));
 
 
