@@ -6,6 +6,7 @@ import frc.robot.subsystems.PneumaticsSubsystem;
 public class OpenGrabberCmd extends CommandBase {
 
     private PneumaticsSubsystem pneumaticsSubsystem;
+    private boolean finished;
 
     public OpenGrabberCmd(PneumaticsSubsystem pneumaticsSubsystem) {
         this.pneumaticsSubsystem = pneumaticsSubsystem;
@@ -14,8 +15,19 @@ public class OpenGrabberCmd extends CommandBase {
     }
 
     @Override
+    public void initialize() {
+        this.finished = false;
+    }
+
+    @Override
     public void execute() {
-        pneumaticsSubsystem.setSolenoidState(false);
+        pneumaticsSubsystem.setSolenoidState(true);
+        this.finished = true;
+    }
+
+    @Override
+    public boolean isFinished() {
+        return finished;
     }
 
 }

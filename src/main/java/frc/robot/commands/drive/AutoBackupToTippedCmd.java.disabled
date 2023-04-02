@@ -1,0 +1,45 @@
+// Based on https://github.com/STMARobotics/frc-7028-2023/blob/f37a74dc3b0cd4d1e4aff6895266caa4fafdb8cb/src/main/java/frc/robot/commands/autonomous/BalanceCommand.java from team 7028
+package frc.robot.commands.drive;
+
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.SwerveSubsystem;
+
+public class AutoBackupToTippedCmd extends CommandBase {
+
+    private final SwerveSubsystem swerveSubsystem;
+    private boolean finished;
+
+    public AutoBackupToTippedCmd(SwerveSubsystem swerveSubsystem) {
+        this.swerveSubsystem = swerveSubsystem;
+
+        addRequirements(swerveSubsystem);
+    }
+
+    @Override
+    public void initialize() {
+        SmartDashboard.putString("Balance Status", "Initialize backup");
+        finished = false;
+    }
+
+    @Override
+    public void execute() {
+        if (swerveSubsystem.getRoll() > 6) {
+            finished = true;
+        }
+        if (!finished) {
+            SmartDashboard.putString("Balance Status", "Backing up");
+            ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(0.7, 0, 0, swerveSubsystem.getRotation2d());
+
+            swerveSubsystem.setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds), false);
+        }
+    }
+
+    @Override
+    public boolean isFinished() {
+        return finished;
+    }
+
+}

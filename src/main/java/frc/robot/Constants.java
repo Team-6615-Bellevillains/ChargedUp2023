@@ -19,7 +19,7 @@ public final class Constants {
         public static final double kSteerModuleRatio = (48.0/40.0);
         public static final double kSteerPPR = 7;
 
-        public static final double kPTurning = 4; // TODO: Tune, has not yet completely oscillated
+        public static final double kPTurning = 8; // TODO: Tune, has not yet completely oscillated
         public static final double kITurning = 0;
         public static final double kDTurning = 0.0;
 
@@ -28,7 +28,7 @@ public final class Constants {
         public static final double kATurning = 1.0961;
 
         public static final double maxWheelVelocity = 90.0/*revolutions/minute*/ / 60.0/*seconds/minute*/ * 2 * Math.PI /*rads/revolution*/;
-        public static final double maxWheelAcceleration = maxWheelVelocity*4;
+        public static final double maxWheelAcceleration = maxWheelVelocity*6;
 
         public static final double kDriveEncoderRot2Meter = kWheelCircumference / kDriveMotorGearRatio;
         public static final double kSteerEncoderRot2Rad = 2 * Math.PI / ((kSteerGearboxRatio/kSteerModuleRatio)*kSteerPPR);
@@ -70,10 +70,10 @@ public final class Constants {
         public static final boolean kBackLeftDriveMotorReversed = true;
         public static final boolean kBackRightDriveMotorReversed = true;
 
-        public static final double kFrontLeftDriveAbsoluteEncoderOffsetCounts = 137;
-        public static final double kFrontRightDriveAbsoluteEncoderOffsetCounts = 0;
-        public static final double kBackLeftDriveAbsoluteEncoderOffsetCounts = 291;
-        public static final double kBackRightDriveAbsoluteEncoderOffsetCounts = 754;
+        public static final double kFrontLeftDriveAbsoluteEncoderOffsetCounts = 141;
+        public static final double kFrontRightDriveAbsoluteEncoderOffsetCounts = 766;
+        public static final double kBackLeftDriveAbsoluteEncoderOffsetCounts = 282;
+        public static final double kBackRightDriveAbsoluteEncoderOffsetCounts = 777;
 
         /*
          * wheelPoint = (0,0) or (0,kWheelBase) or (kTrackWidth, 0) or (kTrackWidth,
@@ -185,7 +185,7 @@ public final class Constants {
 
         public static final double kHorizontalElevatorFFInput = 1.5;
 
-        public static final int kHorizontalMotorActiveHoldingSupplyCurrent = 2; // Stator current limit for holding the horizontal elevator in place
+        public static final int kHorizontalMotorActiveHoldingSupplyCurrent = 3; // Stator current limit for holding the horizontal elevator in place
         public static final int kHorizontalMotorHoldingStatorCurrentThreshold = -25; // Threshold of stator current where we are aware that the elevator is holding in place. Once we go beyond this, we apply a current limit to prevent bad things from happening.
     }
 
@@ -218,8 +218,10 @@ public final class Constants {
         public static final double kMaxFlipAccelerationRadiansPerSecondSquared = 3;
 
         public static final double grabberInSetpoint = Units.degreesToRadians(130);
-        public static final double grabberShootCubeMidSetpoint = Units.degreesToRadians(50);
-        public static final double grabberShootCubeHighSetpoint = Units.degreesToRadians(21);
+        public static final double grabberDepositCubeMidSetpoint = Units.degreesToRadians(50);
+        public static final double grabberDepositCubeHighSetpoint = Units.degreesToRadians(21);
+        public static final double grabberShootCubeMidSetpoint = Units.degreesToRadians(43);
+        public static final double grabberShootCubeHighSetpoint = Units.degreesToRadians(55);
         public static final double grabberIntakeSetpoint = Units.degreesToRadians(-23);
 
 
@@ -258,9 +260,11 @@ public final class Constants {
     }
 
     public static final class OIConstants {
-        public static final double kDefaultJoystickDeadband = 0.07;
-        public static final double kSwerveJoystickDeadband = 0.17;
-        public static final double kOperatorRightYDeadband = 0.13;
+        public static final double kDriverControllerLeftXDeadband = 0.07;
+        public static final double kDriverControllerLeftYDeadband = 0.06;
+        public static final double kDriverControllerRightXDeadband = 0.06;
+        public static final double kOperatorControllerLeftYDeadband = 0.13;
+        public static final double kOperatorControllerRightYDeadband = 0.05;
         public static final int kDriverControllerPort = 0;
         public static final int kOperatorControllerPort = 1;
         public static final int kButtonBoxPort = 2;

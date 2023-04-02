@@ -97,6 +97,10 @@ public class SwerveModule {
 //        SmartDashboard.putNumber(appendIdx("Bus Voltage"), driveMotor.getBusVoltage());
 //    }
 
+    public double getLampreyOutput() {
+        return this.steerMotor.getSelectedSensorPosition();
+    }
+
     public double getModuleRotationRadiansFromAbsoluteEncoder() {
         /*
          * Magnets that are read on absolute encoders are read as 0 on a random M_point

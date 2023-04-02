@@ -16,12 +16,12 @@ public class GrabberToSetpointCmd extends CommandBase {
 
     private final TunableProfiledPIDController profiledPIDController;
 
-    public GrabberToSetpointCmd(GrabberSubsystem grabberSubsystem, double setpointMeters) {
+    public GrabberToSetpointCmd(GrabberSubsystem grabberSubsystem, double setpointRadians) {
         this.grabberSubsystem = grabberSubsystem;
 
         this.profiledPIDController = new TunableProfiledPIDController("grabber", GrabberConstants.kPFlip, GrabberConstants.kIFlip, GrabberConstants.kDFlip, new TrapezoidProfile.Constraints(GrabberConstants.kMaxFlipVelocityRadiansPerSecond, GrabberConstants.kMaxFlipAccelerationRadiansPerSecondSquared), grabberSubsystem::getFlipEncoderPositionInRads);
 
-        this.profiledPIDController.getController().setGoal(setpointMeters);
+        this.profiledPIDController.getController().setGoal(setpointRadians);
 
         addRequirements(grabberSubsystem);
     }

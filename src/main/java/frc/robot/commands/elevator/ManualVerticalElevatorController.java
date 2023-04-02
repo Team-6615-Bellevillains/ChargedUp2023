@@ -25,18 +25,18 @@ public class ManualVerticalElevatorController extends CommandBase {
 
     @Override
     public void execute() {
-        double controllerPower = MathUtil.applyDeadband(controllerPowerOutput.get(), OIConstants.kOperatorRightYDeadband);
+        double controllerPower = MathUtil.applyDeadband(controllerPowerOutput.get(), OIConstants.kOperatorControllerRightYDeadband);
         double velocity = (controllerPower/ 2);
 
         SmartDashboard.putNumber("Velo Desired (in per s)", Units.metersToInches(velocity));
         SmartDashboard.putNumber("Velo Desired (m per s)", velocity);
 
-//        if (controllerPower == 0 && verticalElevatorSubsystem.getVerticalElevatorPosition() <= ElevatorConstants.verticalRestThreshold) {
-//            verticalElevatorSubsystem.setVerticalElevatorVoltage(0);
-//            verticalElevatorSubsystem.resetVerticalElevatorEncoder();
-//        } else {
+        if (controllerPower == 0 && verticalElevatorSubsystem.getVerticalElevatorPosition() <= ElevatorConstants.verticalRestThreshold) {
+            verticalElevatorSubsystem.setVerticalElevatorVoltage(0);
+            verticalElevatorSubsystem.resetVerticalElevatorEncoder();
+        } else {
             verticalElevatorSubsystem.setVerticalElevatorVoltage(verticalElevatorSubsystem.calculateFeedforward(velocity));
-//        }
+        }
 
     }
 

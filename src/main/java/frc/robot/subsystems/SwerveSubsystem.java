@@ -9,7 +9,6 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -68,6 +67,7 @@ public class SwerveSubsystem extends SubsystemBase {
     private static final TunableSimpleMotorFeedforward driveFeedforward = new TunableSimpleMotorFeedforward("drive", 0.440000, 2.350000);
     private static final TunableSimpleMotorFeedforward steerFeedforward = new TunableSimpleMotorFeedforward("steer", 1.112500, 1.300000);
     private double speedMultiplier = 2;
+    private double gyroYawOffset = 0;
 
     public SwerveSubsystem() {
         this.thetaCorrectionPID.enableContinuousInput(0, 2 * Math.PI);
@@ -93,15 +93,12 @@ public class SwerveSubsystem extends SubsystemBase {
     public void zeroHeading() {
         System.out.println("Zeroing gyro!");
         gyro.reset();
+        gyroYawOffset = 0;
         System.out.println("Zeroed gyro!");
     }
 
-    public double getHeading() {
-        return Math.IEEEremainder(gyro.getAngle(), 360);
-    }
-
     public Rotation2d getRotation2d() {
-        return gyro.getRotation2d();
+        return gyro.getRotation2d().rotateBy(Rotation2d.fromDegrees(gyroYawOffset));
     }
 
     public Pose2d getPose() {
@@ -109,24 +106,39 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void resetPoseEstimator(Pose2d pose) {
+        gyroYawOffset = pose.getRotation().getDegrees();
         poseEstimator.resetPosition(getRotation2d(), getModulePositions(), pose);
+    }
+
+    public float getRawRollVelocity() {
+        return gyro.getRawGyroY();
     }
 
     @Override
     public void periodic() {
         poseEstimator.update(getRotation2d(), getModulePositions());
-        SmartDashboard.putNumber("Robot Heading", getHeading());
+
+
+        SmartDashboard.putNumber("Robot Heading", getRotation2d().getDegrees());
         SmartDashboard.putString("Robot Location",
                 getPose().getTranslation().toString());
 
         SmartDashboard.putNumber("Last known correct heading Rads", lastKnownCorrectHeadingRadians);
 
+        SmartDashboard.putNumber("Pitch", gyro.getPitch());
+        SmartDashboard.putNumber("Roll", gyro.getRoll());
+
         SmartDashboard.putNumber("Speed Multi", getSpeedMultiplier());
 
-        SmartDashboard.putNumber("[0] Pos", frontLeft.getModuleRotation2dFromPGEncoder().getDegrees());
-        SmartDashboard.putNumber("[1] Pos", frontRight.getModuleRotation2dFromPGEncoder().getDegrees());
-        SmartDashboard.putNumber("[2] Pos", backLeft.getModuleRotation2dFromPGEncoder().getDegrees());
-        SmartDashboard.putNumber("[3] Pos", backRight.getModuleRotation2dFromPGEncoder().getDegrees());
+//        SmartDashboard.putNumber("[0] Pos", frontLeft.getModuleRotation2dFromPGEncoder().getDegrees());
+//        SmartDashboard.putNumber("[1] Pos", frontRight.getModuleRotation2dFromPGEncoder().getDegrees());
+//        SmartDashboard.putNumber("[2] Pos", backLeft.getModuleRotation2dFromPGEncoder().getDegrees());
+//        SmartDashboard.putNumber("[3] Pos", backRight.getModuleRotation2dFromPGEncoder().getDegrees());
+//
+//        SmartDashboard.putNumber("[0] Counts", frontLeft.getLampreyOutput());
+//        SmartDashboard.putNumber("[1] Counts", frontRight.getLampreyOutput());
+//        SmartDashboard.putNumber("[2] Counts", backLeft.getLampreyOutput());
+//        SmartDashboard.putNumber("[3] Counts", backRight.getLampreyOutput());
 
         // SmartDashboard.putNumber("[0] true speed", frontLeft.getVelocity());
         // SmartDashboard.putNumber("[1] true speed", frontRight.getVelocity());
@@ -230,9 +242,13 @@ public class SwerveSubsystem extends SubsystemBase {
              )
          );
      }
-     
-     public double getPitch ()
-     {
+
+    public double getPitch ()
+    {
         return gyro.getPitch();
-     }
+    }
+    public double getRoll ()
+    {
+        return gyro.getRoll();
+    }
 }
