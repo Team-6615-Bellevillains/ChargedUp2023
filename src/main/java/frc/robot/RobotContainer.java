@@ -33,6 +33,7 @@ import frc.robot.commands.grabber.*;
 //import frc.robot.commands.operation.ScoreCubeLowCmd;
 //import frc.robot.commands.operation.ScoreCubeMidCmd;
 import frc.robot.subsystems.*;
+import frc.robot.utils.PathFlipper;
 
 public class RobotContainer {
 
@@ -149,9 +150,10 @@ public class RobotContainer {
                                 // commands
         );
 
-        Supplier<CommandBase> nonSubMobilityPathCommand = () -> autoBuilder.fullAuto(nonSubMobilityPath);
-        Supplier<CommandBase> subMobilityPathCommand = () -> autoBuilder.fullAuto(subMobilityPath);
-        Supplier<CommandBase> balancePathCommand = () -> superRotationAutoBuilder.fullAuto(balancePath);
+        Supplier<CommandBase> nonSubMobilityPathCommand = () -> PathFlipper.getFullAuto(autoBuilder,
+                nonSubMobilityPath);
+        Supplier<CommandBase> subMobilityPathCommand = () -> PathFlipper.getFullAuto(autoBuilder, subMobilityPath);
+        Supplier<CommandBase> balancePathCommand = () -> PathFlipper.getFullAuto(superRotationAutoBuilder, balancePath);
 
         // Adds a smartdashboard widget that will allow us to select the autonomous we
         // want to use.

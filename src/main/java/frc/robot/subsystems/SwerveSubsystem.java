@@ -18,7 +18,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.SwerveModule;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.hardware.PhotonCameraWrapper;
 import frc.robot.utils.TunableSimpleMotorFeedforward;
+import org.photonvision.EstimatedRobotPose;
+
+import java.util.Optional;
 
 public class SwerveSubsystem extends SubsystemBase {
 
@@ -61,6 +65,7 @@ public class SwerveSubsystem extends SubsystemBase {
     private final AHRS gyro = new AHRS(SPI.Port.kMXP);
     private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics,
             getRotation2d(), getModulePositions(), new Pose2d());
+    private final PhotonCameraWrapper photonCameraWrapper = new PhotonCameraWrapper();
 
     private double lastKnownCorrectHeadingRadians;
     private final ProfiledPIDController thetaCorrectionPID = new ProfiledPIDController(DriveConstants.kPThetaCorrection,
@@ -121,6 +126,16 @@ public class SwerveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         poseEstimator.update(getRotation2d(), getModulePositions());
+
+        Optional<EstimatedRobotPose> photonPoseEstimatorResult = photonCameraWrapper
+                .getEstimatedGlobalPose(poseEstimator.getEstimatedPosition());
+
+        if (photonPoseEstimatorResult.isPresent()) {
+            EstimatedRobotPose photonEstimatedPose = photonPoseEstimatorResult.get();
+
+            poseEstimator.addVisionMeasurement(photonEstimatedPose.estimatedPose.toPose2d(),
+                    photonEstimatedPose.timestampSeconds);
+        }
 
         SmartDashboard.putNumber("Robot Heading", getRotation2d().getDegrees());
         SmartDashboard.putString("Robot Location",
