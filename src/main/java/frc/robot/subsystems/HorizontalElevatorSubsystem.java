@@ -13,9 +13,13 @@ public class HorizontalElevatorSubsystem extends SubsystemBase {
 
     private final WPI_TalonSRX hElevatorMotor = new WPI_TalonSRX(ElevatorConstants.horizontalMotorPort);
 
-    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(ElevatorConstants.kSHorizontalElevator, ElevatorConstants.kVHorizontalElevator);
-    private final ProfiledPIDController profiledPIDController = new ProfiledPIDController(ElevatorConstants.kPHorizontalElevator, ElevatorConstants.kIHorizontalElevator, ElevatorConstants.kDHorizontalElevator, new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVelocityHorizontalElevator, ElevatorConstants.kMaxAccelerationHorizontalElevator));
-
+    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(ElevatorConstants.kSHorizontalElevator,
+            ElevatorConstants.kVHorizontalElevator);
+    private final ProfiledPIDController profiledPIDController = new ProfiledPIDController(
+            ElevatorConstants.kPHorizontalElevator, ElevatorConstants.kIHorizontalElevator,
+            ElevatorConstants.kDHorizontalElevator,
+            new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVelocityHorizontalElevator,
+                    ElevatorConstants.kMaxAccelerationHorizontalElevator));
 
     public HorizontalElevatorSubsystem() {
         hElevatorMotor.setInverted(true);
@@ -49,7 +53,6 @@ public class HorizontalElevatorSubsystem extends SubsystemBase {
         hElevatorMotor.set(speed);
     }
 
-
     public double getHorizontalElevatorPosition() {
         if (hElevatorMotor.getSelectedSensorPosition() < 0) {
             hElevatorMotor.setSelectedSensorPosition(0);
@@ -75,8 +78,7 @@ public class HorizontalElevatorSubsystem extends SubsystemBase {
         hElevatorMotor.setSelectedSensorPosition(0);
     }
 
-    public double getHorizontalElevatorRawEncoder() 
-    {
+    public double getHorizontalElevatorRawEncoder() {
         return hElevatorMotor.getSelectedSensorPosition();
     }
 

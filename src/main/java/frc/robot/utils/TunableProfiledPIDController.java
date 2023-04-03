@@ -27,8 +27,8 @@ public class TunableProfiledPIDController {
 
     private ProfiledPIDController profiledPIDController;
 
-
-    public TunableProfiledPIDController(String identifier, double Kp, double Ki, double Kd, TrapezoidProfile.Constraints constraints, DoubleSupplier measurementSupplier) {
+    public TunableProfiledPIDController(String identifier, double Kp, double Ki, double Kd,
+            TrapezoidProfile.Constraints constraints, DoubleSupplier measurementSupplier) {
         profiledPIDController = new ProfiledPIDController(Kp, Ki, Kd, constraints);
 
         this.identifier = identifier;
@@ -76,7 +76,8 @@ public class TunableProfiledPIDController {
     }
 
     public void updateConstantsIfOutdated() {
-        if (Timer.getFPGATimestamp() - lastUpdatedTS < updateInterval) return;
+        if (Timer.getFPGATimestamp() - lastUpdatedTS < updateInterval)
+            return;
 
         double tableKP = tuningTable.getValue(appendIdentifier("Kp")).getDouble();
         double tableKI = tuningTable.getValue(appendIdentifier("Ki")).getDouble();
@@ -94,7 +95,8 @@ public class TunableProfiledPIDController {
             profiledPIDController.setP(tableKP);
             profiledPIDController.setI(tableKI);
             profiledPIDController.setD(tableKD);
-            profiledPIDController.setConstraints(new TrapezoidProfile.Constraints(tableMaxVelocity, tableMaxAcceleration));
+            profiledPIDController
+                    .setConstraints(new TrapezoidProfile.Constraints(tableMaxVelocity, tableMaxAcceleration));
             profiledPIDController.reset(measurementSupplier.getAsDouble());
         }
 

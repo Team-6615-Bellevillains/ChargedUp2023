@@ -10,8 +10,6 @@ public class HorizontalElevatorOutCmd extends CommandBase {
 
     private HorizontalElevatorSubsystem horizontalElevatorSubsystem;
 
-
-
     public HorizontalElevatorOutCmd(HorizontalElevatorSubsystem horizontalElevatorSubsystem) {
         this.horizontalElevatorSubsystem = horizontalElevatorSubsystem;
 
@@ -27,7 +25,8 @@ public class HorizontalElevatorOutCmd extends CommandBase {
 
     @Override
     public void execute() {
-        horizontalElevatorSubsystem.setHorizontalElevatorVoltage(horizontalElevatorSubsystem.calculateFeedforward(ElevatorConstants.kHorizontalElevatorFFInput));
+        horizontalElevatorSubsystem.setHorizontalElevatorVoltage(
+                horizontalElevatorSubsystem.calculateFeedforward(ElevatorConstants.kHorizontalElevatorFFInput));
     }
 
     @Override
@@ -39,7 +38,8 @@ public class HorizontalElevatorOutCmd extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return horizontalElevatorSubsystem.getHorizontalElevatorPosition() >= ElevatorConstants.kHorizontalElevatorOutThreshold;
+        return horizontalElevatorSubsystem
+                .getHorizontalElevatorPosition() >= ElevatorConstants.kHorizontalElevatorOutThreshold;
     }
 
 }

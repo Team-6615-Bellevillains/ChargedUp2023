@@ -17,54 +17,53 @@ import frc.robot.Constants.GrabberConstants;
 
 public class PneumaticsSubsystem extends SubsystemBase {
 
-  private Compressor compressor;
-  private Solenoid solenoid;
+    private Compressor compressor;
+    private Solenoid solenoid;
 
-  private boolean hasFilledSystem = false;
+    private boolean hasFilledSystem = false;
 
-  public PneumaticsSubsystem() {
-    compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
-    compressor.enableDigital();
+    public PneumaticsSubsystem() {
+        compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
+        compressor.enableDigital();
 
-    solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kSolenoidChannel);
-    setSolenoidState(false);
-  }
+        solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, GrabberConstants.kSolenoidChannel);
+        setSolenoidState(false);
+    }
 
-  @Override
-  public void periodic() {
+    @Override
+    public void periodic() {
 
-    boolean isSystemFull = compressor.getPressureSwitchValue();
+        boolean isSystemFull = compressor.getPressureSwitchValue();
 
-    SmartDashboard.putBoolean("Compressor/isEnabled", compressor.isEnabled());
-    SmartDashboard.putBoolean("Compressor/isSystemFull", isSystemFull);
+        SmartDashboard.putBoolean("Compressor/isEnabled", compressor.isEnabled());
+        SmartDashboard.putBoolean("Compressor/isSystemFull", isSystemFull);
 
-    if (!hasFilledSystem) {
-      if (isSystemFull) {
-        hasFilledSystem = true;
-        compressor.disable();
-      } else {
-        if (!compressor.isEnabled()) {
-          compressor.enableDigital();
+        if (!hasFilledSystem) {
+            if (isSystemFull) {
+                hasFilledSystem = true;
+                compressor.disable();
+            } else {
+                if (!compressor.isEnabled()) {
+                    compressor.enableDigital();
+                }
+            }
         }
-      }
     }
-  }
 
-  public void reEnableCompressor() {
-    this.hasFilledSystem = false;
-  }
-
-
-  public void setCompressorState(boolean on) {
-    if (on) {
-//      compressor.enableDigital();
-    } else {
-//      compressor.disable();
+    public void reEnableCompressor() {
+        this.hasFilledSystem = false;
     }
-  }
 
-  public void setSolenoidState(boolean on) {
-    solenoid.set(on);
-  }
+    public void setCompressorState(boolean on) {
+        if (on) {
+            // compressor.enableDigital();
+        } else {
+            // compressor.disable();
+        }
+    }
+
+    public void setSolenoidState(boolean on) {
+        solenoid.set(on);
+    }
 
 }

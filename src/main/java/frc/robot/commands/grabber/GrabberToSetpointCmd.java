@@ -19,7 +19,11 @@ public class GrabberToSetpointCmd extends CommandBase {
     public GrabberToSetpointCmd(GrabberSubsystem grabberSubsystem, double setpointRadians) {
         this.grabberSubsystem = grabberSubsystem;
 
-        this.profiledPIDController = new TunableProfiledPIDController("grabber", GrabberConstants.kPFlip, GrabberConstants.kIFlip, GrabberConstants.kDFlip, new TrapezoidProfile.Constraints(GrabberConstants.kMaxFlipVelocityRadiansPerSecond, GrabberConstants.kMaxFlipAccelerationRadiansPerSecondSquared), grabberSubsystem::getFlipEncoderPositionInRads);
+        this.profiledPIDController = new TunableProfiledPIDController("grabber", GrabberConstants.kPFlip,
+                GrabberConstants.kIFlip, GrabberConstants.kDFlip,
+                new TrapezoidProfile.Constraints(GrabberConstants.kMaxFlipVelocityRadiansPerSecond,
+                        GrabberConstants.kMaxFlipAccelerationRadiansPerSecondSquared),
+                grabberSubsystem::getFlipEncoderPositionInRads);
 
         this.profiledPIDController.getController().setGoal(setpointRadians);
 
@@ -34,19 +38,23 @@ public class GrabberToSetpointCmd extends CommandBase {
     @Override
     public void execute() {
         SmartDashboard.putNumber("[GRAB] Setpoint TS", Timer.getFPGATimestamp());
-        SmartDashboard.putNumber("[GRAB] Setpoint Goal Position", profiledPIDController.getController().getGoal().position);
+        SmartDashboard.putNumber("[GRAB] Setpoint Goal Position",
+                profiledPIDController.getController().getGoal().position);
 
-
-        double pidOut = profiledPIDController.getController().calculate(grabberSubsystem.getFlipEncoderPositionInRads());
-        SmartDashboard.putNumber("[GRAB] Intermediate setpoint position (rads)", profiledPIDController.getController().getSetpoint().position);
-        SmartDashboard.putNumber("[GRAB] Intermediate setpoint velocity (rads per second)", profiledPIDController.getController().getSetpoint().velocity);
-        double ffOut = grabberSubsystem.calculateFeedforward(grabberSubsystem.getFlipEncoderPositionInRads(), profiledPIDController.getController().getSetpoint().velocity);
+        double pidOut = profiledPIDController.getController()
+                .calculate(grabberSubsystem.getFlipEncoderPositionInRads());
+        SmartDashboard.putNumber("[GRAB] Intermediate setpoint position (rads)",
+                profiledPIDController.getController().getSetpoint().position);
+        SmartDashboard.putNumber("[GRAB] Intermediate setpoint velocity (rads per second)",
+                profiledPIDController.getController().getSetpoint().velocity);
+        double ffOut = grabberSubsystem.calculateFeedforward(grabberSubsystem.getFlipEncoderPositionInRads(),
+                profiledPIDController.getController().getSetpoint().velocity);
 
         SmartDashboard.putNumber("[GRAB] PID Out", pidOut);
         SmartDashboard.putNumber("[GRAB] FF Out", ffOut);
-        SmartDashboard.putNumber("[GRAB] Theoretical Voltage", pidOut+ffOut);
+        SmartDashboard.putNumber("[GRAB] Theoretical Voltage", pidOut + ffOut);
 
-        grabberSubsystem.setMotorVoltage(pidOut+ffOut);
+        grabberSubsystem.setMotorVoltage(pidOut + ffOut);
     }
 
     @Override
@@ -54,13 +62,15 @@ public class GrabberToSetpointCmd extends CommandBase {
         SmartDashboard.putNumber("[GRAB] End Position", grabberSubsystem.getFlipEncoderPositionInRads());
         SmartDashboard.putNumber("[GRAB] End Velocity", grabberSubsystem.getFlipEncoderVelocityInRadsPerSec());
         SmartDashboard.putNumber("[GRAB] End TS", Timer.getFPGATimestamp());
-        grabberSubsystem.setMotorVoltage(grabberSubsystem.calculateFeedforward(grabberSubsystem.getFlipEncoderPositionInRads(), 0));
+        grabberSubsystem.setMotorVoltage(
+                grabberSubsystem.calculateFeedforward(grabberSubsystem.getFlipEncoderPositionInRads(), 0));
     }
 
     // TODO: Add position tolerance
     @Override
     public boolean isFinished() {
-        return Math.abs(grabberSubsystem.getFlipEncoderPositionInRads()-profiledPIDController.getController().getGoal().position) <= Units.degreesToRadians(6);
+        return Math.abs(grabberSubsystem.getFlipEncoderPositionInRads()
+                - profiledPIDController.getController().getGoal().position) <= Units.degreesToRadians(6);
     }
 
 }

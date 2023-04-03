@@ -19,8 +19,8 @@ public class SwerveJoystickCmd extends CommandBase {
     private final SlewRateLimiter xLimiter, yLimiter, steerLimiter;
 
     public SwerveJoystickCmd(SwerveSubsystem swerveSubsystem,
-                             Supplier<Double> xSpeedFunction, Supplier<Double> ySpeedFunction, Supplier<Double> steerSpeedFunction,
-                             Supplier<Boolean> isFieldOrientedFunction) {
+            Supplier<Double> xSpeedFunction, Supplier<Double> ySpeedFunction, Supplier<Double> steerSpeedFunction,
+            Supplier<Boolean> isFieldOrientedFunction) {
         this.swerveSubsystem = swerveSubsystem;
         this.xSpeedFunction = xSpeedFunction;
         this.ySpeedFunction = ySpeedFunction;
@@ -36,7 +36,6 @@ public class SwerveJoystickCmd extends CommandBase {
     @Override
     public void initialize() {
     }
-
 
     @Override
     public void execute() {
@@ -57,13 +56,16 @@ public class SwerveJoystickCmd extends CommandBase {
         steerSpeed = Math.abs(steerSpeed) > OIConstants.kDriverControllerRightXDeadband ? steerSpeed : 0.0;
 
         // 3. Smooth driving
-        xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleOpMaxSpeedMetersPerSecond * swerveSubsystem.getSpeedMultiplier();
-        ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleOpMaxSpeedMetersPerSecond * swerveSubsystem.getSpeedMultiplier();
-        steerSpeed = steerLimiter.calculate(steerSpeed) * DriveConstants.kTeleOpMaxAngularSpeedRadiansPerSecond * swerveSubsystem.getSpeedMultiplier();
+        xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleOpMaxSpeedMetersPerSecond
+                * swerveSubsystem.getSpeedMultiplier();
+        ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleOpMaxSpeedMetersPerSecond
+                * swerveSubsystem.getSpeedMultiplier();
+        steerSpeed = steerLimiter.calculate(steerSpeed) * DriveConstants.kTeleOpMaxAngularSpeedRadiansPerSecond
+                * swerveSubsystem.getSpeedMultiplier();
 
-//        SmartDashboard.putNumber("X Commanded", xSpeed);
-//        SmartDashboard.putNumber("Y Commanded", ySpeed);
-//        SmartDashboard.putNumber("Steer Commanded", steerSpeed);
+        // SmartDashboard.putNumber("X Commanded", xSpeed);
+        // SmartDashboard.putNumber("Y Commanded", ySpeed);
+        // SmartDashboard.putNumber("Steer Commanded", steerSpeed);
 
         /*
          * 4. Calculate ChassisSpeeds

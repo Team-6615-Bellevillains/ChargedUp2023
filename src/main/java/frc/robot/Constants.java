@@ -16,7 +16,7 @@ public final class Constants {
         public static final double kWheelCircumference = Units.inchesToMeters(4) * Math.PI;
         public static final double kDriveMotorGearRatio = 6.67 / 1;
         public static final double kSteerGearboxRatio = (71.0 / 1.0);
-        public static final double kSteerModuleRatio = (48.0/40.0);
+        public static final double kSteerModuleRatio = (48.0 / 40.0);
         public static final double kSteerPPR = 7;
 
         public static final double kPTurning = 8; // TODO: Tune, has not yet completely oscillated
@@ -27,11 +27,13 @@ public final class Constants {
         public static final double kVTurning = 0.97146;
         public static final double kATurning = 1.0961;
 
-        public static final double maxWheelVelocity = 90.0/*revolutions/minute*/ / 60.0/*seconds/minute*/ * 2 * Math.PI /*rads/revolution*/;
-        public static final double maxWheelAcceleration = maxWheelVelocity*6;
+        public static final double maxWheelVelocity = 90.0/* revolutions/minute */ / 60.0/* seconds/minute */ * 2
+                * Math.PI /* rads/revolution */;
+        public static final double maxWheelAcceleration = maxWheelVelocity * 6;
 
         public static final double kDriveEncoderRot2Meter = kWheelCircumference / kDriveMotorGearRatio;
-        public static final double kSteerEncoderRot2Rad = 2 * Math.PI / ((kSteerGearboxRatio/kSteerModuleRatio)*kSteerPPR);
+        public static final double kSteerEncoderRot2Rad = 2 * Math.PI
+                / ((kSteerGearboxRatio / kSteerModuleRatio) * kSteerPPR);
 
         public static final int maximumTotalCounts = 1024;
     }
@@ -64,7 +66,6 @@ public final class Constants {
         public static final int kBackRightEncoderAPort = 8;
         public static final int kBackRightEncoderBPort = 9;
 
-
         public static final boolean kFrontLeftDriveMotorReversed = true;
         public static final boolean kFrontRightDriveMotorReversed = true;
         public static final boolean kBackLeftDriveMotorReversed = true;
@@ -84,14 +85,17 @@ public final class Constants {
          * kWheelDistanceFromCenter^2 = a^2 + b^2
          * kWheelDistanceFromCenter = sqrt(a^2+b^2)
          */
-        public static final double kWheelDistanceFromCenter = Math.sqrt(Math.pow(kTrackWidth / 2, 2) + Math.pow(kWheelBase / 2, 2));
+        public static final double kWheelDistanceFromCenter = Math
+                .sqrt(Math.pow(kTrackWidth / 2, 2) + Math.pow(kWheelBase / 2, 2));
 
         public static final double kPhysicalMaxSpeedMetersPerSecond = Units.feetToMeters(13.5);
 
         /*
-         * 2pi radians / (Circumference of the circle created by robot rotation aka the distance travelled in one rotation / max speed)
+         * 2pi radians / (Circumference of the circle created by robot rotation aka the
+         * distance travelled in one rotation / max speed)
          */
-        public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * Math.PI / (kWheelDistanceFromCenter / kPhysicalMaxSpeedMetersPerSecond);
+        public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * Math.PI
+                / (kWheelDistanceFromCenter / kPhysicalMaxSpeedMetersPerSecond);
 
         public static final double kTeleOpMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 4;
         public static final double kTeleOpMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond
@@ -104,7 +108,6 @@ public final class Constants {
         public static final double kDThetaCorrection = 0;
         public static final double kMaxVelocityThetaCorrection = 1;
         public static final double kMaxAccelerationThetaCorrection = 2;
-
 
         // TODO: Tune
         public static final double kPRotation = .25;
@@ -146,14 +149,16 @@ public final class Constants {
         public static final double verticalLowHeight = Units.inchesToMeters(1.5);
         public static final double verticalMidHeight = Units.inchesToMeters(21);
         public static final double verticalHighHeight = 0.598;
-        public static final double verticalRestThreshold = Units.inchesToMeters(1); // Measurement of elevator, in meters, that is considered all the way down.
+        public static final double verticalRestThreshold = Units.inchesToMeters(1); // Measurement of elevator, in
+                                                                                    // meters, that is considered all
+                                                                                    // the way down.
         public static final double kVerticalSlowFallVoltage = 2;
 
         public static final double kPVerticalElevator = 12;
         public static final double kIVerticalElevator = 0;
         public static final double kDVerticalElevator = 0;
         public static final double kMaxVelocityVerticalElevator = .5;
-        public static final double kMaxAccelerationVerticalElevator = .5*4;
+        public static final double kMaxAccelerationVerticalElevator = .5 * 4;
 
         public static final double kGVerticalElevator = 3.650000;
         public static final double kSVerticalElevator = 1.000000;
@@ -168,7 +173,7 @@ public final class Constants {
         public static final double horizontalGearDiameter = Units.inchesToMeters(1.751);
 
         public static final int horizontalEncoderPulsesPerRevolution = kCimcoder256PulsesPerRevolution;
-        public static final double horizontalRotationsToDistance = 3328.0/11585.0;
+        public static final double horizontalRotationsToDistance = 3328.0 / 11585.0;
 
         public static final double kHorizontalElevatorInThreshold = 1;
         public static final double kHorizontalElevatorOutThreshold = 11.4;
@@ -185,8 +190,14 @@ public final class Constants {
 
         public static final double kHorizontalElevatorFFInput = 1.5;
 
-        public static final int kHorizontalMotorActiveHoldingSupplyCurrent = 3; // Stator current limit for holding the horizontal elevator in place
-        public static final int kHorizontalMotorHoldingStatorCurrentThreshold = -25; // Threshold of stator current where we are aware that the elevator is holding in place. Once we go beyond this, we apply a current limit to prevent bad things from happening.
+        public static final int kHorizontalMotorActiveHoldingSupplyCurrent = 3; // Stator current limit for holding the
+                                                                                // horizontal elevator in place
+        public static final int kHorizontalMotorHoldingStatorCurrentThreshold = -25; // Threshold of stator current
+                                                                                     // where we are aware that the
+                                                                                     // elevator is holding in place.
+                                                                                     // Once we go beyond this, we apply
+                                                                                     // a current limit to prevent bad
+                                                                                     // things from happening.
     }
 
     public static final class GrabberConstants {
@@ -199,15 +210,15 @@ public final class Constants {
         public static final double kFlipReverseThreshold = 0;
 
         public static final double kGrabberLowestPositionDegrees = -24.9;
-        public static final double kGrabberHighestPositionDegrees = 90+48;
+        public static final double kGrabberHighestPositionDegrees = 90 + 48;
         public static final double kRotationsFromLowestToHighest = 17;
 
-        public static final double kGrabberPositionConversionFactor = (kGrabberHighestPositionDegrees-kGrabberLowestPositionDegrees)/kRotationsFromLowestToHighest;
+        public static final double kGrabberPositionConversionFactor = (kGrabberHighestPositionDegrees
+                - kGrabberLowestPositionDegrees) / kRotationsFromLowestToHighest;
 
         public static final double kPFlip = 8;
         public static final double kIFlip = 0.1;
         public static final double kDFlip = 0.1;
-
 
         public static final double kSGrabber = 0.350000;
         public static final double kGGrabber = 1.100000;
@@ -224,7 +235,6 @@ public final class Constants {
         public static final double grabberShootCubeHighSetpoint = Units.degreesToRadians(55);
         public static final double grabberIntakeSetpoint = Units.degreesToRadians(-23);
 
-
         public static final double grabberRestThreshold = Units.degreesToRadians(125);
         public static double grabberOutSetpoint;
     }
@@ -234,18 +244,18 @@ public final class Constants {
         public static final double cameraHeight = 0.858;
         public static final double midHeight = 0;
         public static final double topHeight = 0;
-        public static final double cameraPitchRadians =  Units.degreesToRadians(0);
+        public static final double cameraPitchRadians = Units.degreesToRadians(0);
         public static final double midGoalRange = 0;
         public static final double distanceFromAprilTagToRung = Units.inchesToMeters(21.25);
         public static final double cameraOffset = 0.308;
         public static final double xCameraOffset = 0.350;
         public static final double bumperOffset = 0.083;
         public static Transform3d robotToCam = new Transform3d(
-            new Translation3d(-0.047, 0.331, 0.858),
-            new Rotation3d(
-                    0, 0,
-                    0)); // Cam mounted facing forward, -0.047 meters backwards of center, 0.858 meter up
-// from center.
+                new Translation3d(-0.047, 0.331, 0.858),
+                new Rotation3d(
+                        0, 0,
+                        0)); // Cam mounted facing forward, -0.047 meters backwards of center, 0.858 meter up
+        // from center.
 
     }
 

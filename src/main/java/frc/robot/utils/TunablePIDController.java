@@ -53,7 +53,8 @@ public class TunablePIDController {
     }
 
     public void updateConstantsIfOutdated() {
-        if (Timer.getFPGATimestamp() - lastUpdatedTS < updateInterval) return;
+        if (Timer.getFPGATimestamp() - lastUpdatedTS < updateInterval)
+            return;
 
         double tableKP = tuningTable.getValue(appendIdentifier("Kp")).getDouble();
         double tableKI = tuningTable.getValue(appendIdentifier("Ki")).getDouble();
