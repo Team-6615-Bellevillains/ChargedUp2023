@@ -37,7 +37,8 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
 
     private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-    //  private final LimelightSubsystem limelightSubsystem = new LimelightSubsystem();
+    // private final LimelightSubsystem limelightSubsystem = new
+    // LimelightSubsystem();
     private final GrabberSubsystem grabberSubsystem = new GrabberSubsystem();
     private final RollerSubsystem rollerSubsystem = new RollerSubsystem();
     private final PneumaticsSubsystem pneumaticsSubsystem = new PneumaticsSubsystem();
@@ -47,16 +48,15 @@ public class RobotContainer {
     private SendableChooser<Command> m_chooser;
 
     private final CommandXboxController driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
-    private final CommandXboxController operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
+    private final CommandXboxController operatorController = new CommandXboxController(
+            OIConstants.kOperatorControllerPort);
     private final Joystick buttonBox = new Joystick(OIConstants.kButtonBoxPort);
-
 
     private final JoystickButton scoreCubeMidButton = new JoystickButton(buttonBox, 1);
     private final JoystickButton scoreCubeHighButton = new JoystickButton(buttonBox, 2);
     private final JoystickButton reEnableCompressorButton = new JoystickButton(buttonBox, 4);
     private final JoystickButton setDefaultCommandsButton = new JoystickButton(buttonBox, 5);
     private final JoystickButton setGrabberEncoderToLowButton = new JoystickButton(buttonBox, 8);
-
 
     private SwerveAutoBuilder autoBuilder;
     private SwerveAutoBuilder superRotationAutoBuilder;
@@ -98,42 +98,63 @@ public class RobotContainer {
 
         setMechanismDefaultCommands();
 
-        PathPlannerTrajectory nonSubMobilityPath = PathPlanner.loadPath("Non Sub Mobility", new PathConstraints(0.75, 1));
+        PathPlannerTrajectory nonSubMobilityPath = PathPlanner.loadPath("Non Sub Mobility",
+                new PathConstraints(0.75, 1));
         PathPlannerTrajectory subMobilityPath = PathPlanner.loadPath("Sub Mobility", new PathConstraints(0.75, 1));
         PathPlannerTrajectory balancePath = PathPlanner.loadPath("Get on charge", new PathConstraints(1, 1));
-
 
         autoBuilder = new SwerveAutoBuilder(
                 swerveSubsystem::getPose, // Pose2d supplier
                 swerveSubsystem::resetPoseEstimator, // Pose2d consumer, used to reset odometry at the beginning of auto
                 DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-                new PIDConstants(1.2, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-                new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
-                (SwerveModuleState[] desiredStates) -> swerveSubsystem.setModuleStates(desiredStates, true), // Module states consumer used to output to the drive subsytem
+                new PIDConstants(1.2, 0.0, 0.0), // PID constants to correct for translation error (used to create the X
+                                                 // and Y PID controllers)
+                new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the
+                                                 // rotation controller)
+                (SwerveModuleState[] desiredStates) -> swerveSubsystem.setModuleStates(desiredStates, true), // Module
+                                                                                                             // states
+                                                                                                             // consumer
+                                                                                                             // used to
+                                                                                                             // output
+                                                                                                             // to the
+                                                                                                             // drive
+                                                                                                             // subsytem
                 eventMap,
-                true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-                swerveSubsystem // The drive subsystem. Used to properly set the requirements of path following commands
+                true, // Should the path be automatically mirrored depending on alliance color.
+                      // Optional, defaults to true
+                swerveSubsystem // The drive subsystem. Used to properly set the requirements of path following
+                                // commands
         );
-
-
 
         superRotationAutoBuilder = new SwerveAutoBuilder(
                 swerveSubsystem::getPose, // Pose2d supplier
                 swerveSubsystem::resetPoseEstimator, // Pose2d consumer, used to reset odometry at the beginning of auto
                 DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-                new PIDConstants(1.2, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-                new PIDConstants(0.7, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
-                (SwerveModuleState[] desiredStates) -> swerveSubsystem.setModuleStates(desiredStates, true), // Module states consumer used to output to the drive subsytem
+                new PIDConstants(1.2, 0.0, 0.0), // PID constants to correct for translation error (used to create the X
+                                                 // and Y PID controllers)
+                new PIDConstants(0.7, 0.0, 0.0), // PID constants to correct for rotation error (used to create the
+                                                 // rotation controller)
+                (SwerveModuleState[] desiredStates) -> swerveSubsystem.setModuleStates(desiredStates, true), // Module
+                                                                                                             // states
+                                                                                                             // consumer
+                                                                                                             // used to
+                                                                                                             // output
+                                                                                                             // to the
+                                                                                                             // drive
+                                                                                                             // subsytem
                 eventMap,
-                true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-                swerveSubsystem // The drive subsystem. Used to properly set the requirements of path following commands
+                true, // Should the path be automatically mirrored depending on alliance color.
+                      // Optional, defaults to true
+                swerveSubsystem // The drive subsystem. Used to properly set the requirements of path following
+                                // commands
         );
 
         Supplier<CommandBase> nonSubMobilityPathCommand = () -> autoBuilder.fullAuto(nonSubMobilityPath);
         Supplier<CommandBase> subMobilityPathCommand = () -> autoBuilder.fullAuto(subMobilityPath);
         Supplier<CommandBase> balancePathCommand = () -> superRotationAutoBuilder.fullAuto(balancePath);
 
-        //Adds a smartdashboard widget that will allow us to select the autonomous we want to use.
+        // Adds a smartdashboard widget that will allow us to select the autonomous we
+        // want to use.
         m_chooser = new SendableChooser<>();
 
         m_chooser.addOption("Score High", generateScoreHighCmd());
@@ -150,7 +171,9 @@ public class RobotContainer {
                         Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 1)),
                         generateScoreHighCmd(),
                         Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 2)),
-                        new ParallelDeadlineGroup(new WaitUntilConditionForTimeCmd(() -> swerveSubsystem.getRoll() > 14, 1), balancePathCommand.get(), Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0.2)))
+                        new ParallelDeadlineGroup(
+                                new WaitUntilConditionForTimeCmd(() -> swerveSubsystem.getRoll() > 14, 1),
+                                balancePathCommand.get(), Commands.runOnce(() -> grabberSubsystem.setMotorVoltage(0.2)))
                                 .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 3)))
                                 .andThen(new VeloAutoBalanceCmd(swerveSubsystem))
                                 .andThen(Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 4)))
@@ -160,7 +183,6 @@ public class RobotContainer {
 
                 ));
 
-
         SmartDashboard.putData(m_chooser);
 
         configureBindings();
@@ -168,8 +190,11 @@ public class RobotContainer {
 
     public void setMechanismDefaultCommands() {
         horizontalElevatorSubsystem.setDefaultCommand(new HoldHorizontalElevatorInCmd(horizontalElevatorSubsystem));
-        verticalElevatorSubsystem.setDefaultCommand(new ManualVerticalElevatorController(verticalElevatorSubsystem, () -> -operatorController.getRightY())); // TODO: Test
-        grabberSubsystem.setDefaultCommand(new GrabberJoystickControlCmd(grabberSubsystem, () -> -operatorController.getLeftY()));
+        verticalElevatorSubsystem.setDefaultCommand(
+                new ManualVerticalElevatorController(verticalElevatorSubsystem, () -> -operatorController.getRightY())); // TODO:
+                                                                                                                         // Test
+        grabberSubsystem.setDefaultCommand(
+                new GrabberJoystickControlCmd(grabberSubsystem, () -> -operatorController.getLeftY()));
     }
 
     public void removeMechanismDefaultCommands() {
@@ -182,16 +207,15 @@ public class RobotContainer {
         driverController.y().onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
         driverController.a().whileTrue(new CrossWheelsCmd(swerveSubsystem));
         driverController.x().whileTrue(new SequentialCommandGroup(
-//                new AutoBackupToTippedCmd(swerveSubsystem),
+                // new AutoBackupToTippedCmd(swerveSubsystem),
                 new VeloAutoBalanceCmd(swerveSubsystem),
-                new CrossWheelsCmd(swerveSubsystem)
-        ));
+                new CrossWheelsCmd(swerveSubsystem)));
 
         driverController.leftTrigger(0.4).whileTrue(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(1)));
         driverController.leftTrigger(0.4).onFalse(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(2)));
         driverController.rightTrigger(0.4).whileTrue(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(3)));
         driverController.rightTrigger(0.4).onFalse(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(2)));
-//    driverController.x().whileTrue(new CrossWheelsCmd(swerveSubsystem));
+        // driverController.x().whileTrue(new CrossWheelsCmd(swerveSubsystem));
         operatorController.leftBumper().whileTrue(new ClampGrabberCmd(pneumaticsSubsystem));
         operatorController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));
         operatorController.leftTrigger(0.4).whileTrue(new ShootPieceCmd(rollerSubsystem, 0.10));
@@ -202,7 +226,6 @@ public class RobotContainer {
 
         scoreCubeHighButton.whileTrue(generateScoreHighCmd());
         scoreCubeMidButton.whileTrue(generateScoreCubeMidCmd());
-
 
         setDefaultCommandsButton.onTrue(Commands.runOnce(this::setMechanismDefaultCommands));
 

@@ -20,7 +20,12 @@ public class VerticalElevatorToSetpointCmd extends CommandBase {
     public VerticalElevatorToSetpointCmd(VerticalElevatorSubsystem verticalElevatorSubsystem, double setpointMeters) {
         this.verticalElevatorSubsystem = verticalElevatorSubsystem;
 
-        this.tunableProfiledPIDController = new TunableProfiledPIDController("vertElevatorFixer",ElevatorConstants.kPVerticalElevator, ElevatorConstants.kIVerticalElevator, ElevatorConstants.kDVerticalElevator, new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVelocityVerticalElevator, ElevatorConstants.kMaxAccelerationVerticalElevator),verticalElevatorSubsystem::getVerticalElevatorPosition);
+        this.tunableProfiledPIDController = new TunableProfiledPIDController("vertElevatorFixer",
+                ElevatorConstants.kPVerticalElevator, ElevatorConstants.kIVerticalElevator,
+                ElevatorConstants.kDVerticalElevator,
+                new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVelocityVerticalElevator,
+                        ElevatorConstants.kMaxAccelerationVerticalElevator),
+                verticalElevatorSubsystem::getVerticalElevatorPosition);
         this.profiledPIDController = tunableProfiledPIDController.getController();
 
         this.profiledPIDController.setGoal(setpointMeters);
@@ -39,19 +44,20 @@ public class VerticalElevatorToSetpointCmd extends CommandBase {
         SmartDashboard.putNumber("[VERT] Setpoint Goal Position", profiledPIDController.getGoal().position);
         SmartDashboard.putString("[VERT] Status", "running");
 
-
-
         double pidOut = profiledPIDController.calculate(verticalElevatorSubsystem.getVerticalElevatorPosition());
-        SmartDashboard.putNumber("[VERT] Intermediate setpoint position (meters)", profiledPIDController.getSetpoint().position);
-        SmartDashboard.putNumber("[VERT] Intermediate setpoint velocity (meters per second)", profiledPIDController.getSetpoint().velocity);
+        SmartDashboard.putNumber("[VERT] Intermediate setpoint position (meters)",
+                profiledPIDController.getSetpoint().position);
+        SmartDashboard.putNumber("[VERT] Intermediate setpoint velocity (meters per second)",
+                profiledPIDController.getSetpoint().velocity);
         double ffOut = verticalElevatorSubsystem.calculateFeedforward(profiledPIDController.getSetpoint().velocity);
 
         SmartDashboard.putNumber("[VERT] PID Out", pidOut);
         SmartDashboard.putNumber("[VERT] FF Out", ffOut);
-        SmartDashboard.putNumber("[VERT] Theoretical Voltage", pidOut+ffOut);
-        SmartDashboard.putNumber("[VERT] Error", Math.abs(verticalElevatorSubsystem.getVerticalElevatorPosition()-profiledPIDController.getGoal().position));
+        SmartDashboard.putNumber("[VERT] Theoretical Voltage", pidOut + ffOut);
+        SmartDashboard.putNumber("[VERT] Error", Math.abs(
+                verticalElevatorSubsystem.getVerticalElevatorPosition() - profiledPIDController.getGoal().position));
 
-        verticalElevatorSubsystem.setVerticalElevatorVoltage(pidOut+ffOut);
+        verticalElevatorSubsystem.setVerticalElevatorVoltage(pidOut + ffOut);
     }
 
     @Override
@@ -70,7 +76,8 @@ public class VerticalElevatorToSetpointCmd extends CommandBase {
     // TODO: Add position tolerance
     @Override
     public boolean isFinished() {
-        return Math.abs(verticalElevatorSubsystem.getVerticalElevatorPosition()-profiledPIDController.getGoal().position) <= Units.inchesToMeters(.75);
+        return Math.abs(verticalElevatorSubsystem.getVerticalElevatorPosition()
+                - profiledPIDController.getGoal().position) <= Units.inchesToMeters(.75);
     }
 
 }

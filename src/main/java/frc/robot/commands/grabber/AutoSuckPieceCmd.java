@@ -31,11 +31,9 @@ public class AutoSuckPieceCmd extends CommandBase {
     @Override
     public void execute() {
         robotTime = Timer.getFPGATimestamp();
-        if(robotTime < shootOutTime){
-        rollerSubsystem.setRollerSpeedPercentage(-.15);
-        }
-        else
-        {
+        if (robotTime < shootOutTime) {
+            rollerSubsystem.setRollerSpeedPercentage(-.15);
+        } else {
             isDone = true;
         }
     }
@@ -47,6 +45,6 @@ public class AutoSuckPieceCmd extends CommandBase {
 
     @Override
     public boolean isFinished() {
-      return isDone;
+        return isDone;
     }
 }

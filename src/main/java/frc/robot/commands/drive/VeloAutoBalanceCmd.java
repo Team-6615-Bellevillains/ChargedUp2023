@@ -26,15 +26,15 @@ public class VeloAutoBalanceCmd extends CommandBase {
         finished = false;
         currRoll = swerveSubsystem.getRoll();
     }
-    
+
     @Override
     public void execute() {
         double updatedRoll = swerveSubsystem.getRoll();
-        double yVelo = (updatedRoll-currRoll)/0.02;
+        double yVelo = (updatedRoll - currRoll) / 0.02;
         SmartDashboard.putNumber("Y Velo", yVelo);
         SmartDashboard.putNumber("Curr Roll", currRoll);
         SmartDashboard.putNumber("Updated Roll", updatedRoll);
-        SmartDashboard.putNumber("Diff", updatedRoll-currRoll);
+        SmartDashboard.putNumber("Diff", updatedRoll - currRoll);
 
         currRoll = updatedRoll;
         if (finished || yVelo < balancingAccelThreshold) {
@@ -44,7 +44,8 @@ public class VeloAutoBalanceCmd extends CommandBase {
             swerveSubsystem.stopModules();
         } else {
             SmartDashboard.putString("Balance Status", "Balancing");
-            ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(0.3, 0, 0, swerveSubsystem.getRotation2d());
+            ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(0.3, 0, 0,
+                    swerveSubsystem.getRotation2d());
 
             swerveSubsystem.setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds), false);
         }

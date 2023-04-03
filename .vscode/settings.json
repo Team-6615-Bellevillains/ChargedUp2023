@@ -15,6 +15,7 @@
     "**/*~": true
   },
   "formatFiles.extensionsToInclude": ".java",
+  "editor.formatOnSave": true,
   "java.test.config": [
     {
       "name": "WPIlibUnitTests",

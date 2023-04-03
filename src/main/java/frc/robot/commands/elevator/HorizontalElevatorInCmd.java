@@ -11,7 +11,6 @@ public class HorizontalElevatorInCmd extends CommandBase {
 
     private SimpleMotorFeedforward simpleMotorFeedforward = new SimpleMotorFeedforward(1.5, 1);
 
-
     public HorizontalElevatorInCmd(HorizontalElevatorSubsystem horizontalElevatorSubsystem) {
         this.horizontalElevatorSubsystem = horizontalElevatorSubsystem;
 
@@ -25,7 +24,8 @@ public class HorizontalElevatorInCmd extends CommandBase {
     @Override
     public void execute() {
         if (!this.isFinished()) {
-            horizontalElevatorSubsystem.setHorizontalElevatorVoltage(horizontalElevatorSubsystem.calculateFeedforward(-ElevatorConstants.kHorizontalElevatorFFInput));
+            horizontalElevatorSubsystem.setHorizontalElevatorVoltage(
+                    horizontalElevatorSubsystem.calculateFeedforward(-ElevatorConstants.kHorizontalElevatorFFInput));
         }
     }
 
@@ -36,7 +36,8 @@ public class HorizontalElevatorInCmd extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return horizontalElevatorSubsystem.getHorizontalElevatorPosition() <= ElevatorConstants.kHorizontalElevatorInThreshold;
+        return horizontalElevatorSubsystem
+                .getHorizontalElevatorPosition() <= ElevatorConstants.kHorizontalElevatorInThreshold;
     }
 
 }

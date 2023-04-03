@@ -10,7 +10,7 @@ public class OpenGrabberCmd extends CommandBase {
 
     public OpenGrabberCmd(PneumaticsSubsystem pneumaticsSubsystem) {
         this.pneumaticsSubsystem = pneumaticsSubsystem;
-        
+
         addRequirements(pneumaticsSubsystem);
     }
 

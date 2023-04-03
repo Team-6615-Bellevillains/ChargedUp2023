@@ -15,7 +15,7 @@ public class HoldHorizontalElevatorInCmd extends CommandBase {
 
         addRequirements(horizontalElevatorSubsystem);
     }
-    
+
     // TODO: Remove, shouldn't be needed
     @Override
     public void initialize() {
@@ -27,7 +27,8 @@ public class HoldHorizontalElevatorInCmd extends CommandBase {
     public void execute() {
         SmartDashboard.putBoolean("Horizontal Holding", holding);
         horizontalElevatorSubsystem.setHorizontalElevatorSpeed(-0.4);
-        if (horizontalElevatorSubsystem.getHorizontalElevatorStatorCurrent() <= ElevatorConstants.kHorizontalMotorHoldingStatorCurrentThreshold) {
+        if (horizontalElevatorSubsystem
+                .getHorizontalElevatorStatorCurrent() <= ElevatorConstants.kHorizontalMotorHoldingStatorCurrentThreshold) {
             holding = true;
             horizontalElevatorSubsystem.setHorizontalElevatorCurrentLimitState(true);
         }

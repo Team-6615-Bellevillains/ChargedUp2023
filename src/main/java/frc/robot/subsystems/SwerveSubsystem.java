@@ -63,9 +63,13 @@ public class SwerveSubsystem extends SubsystemBase {
             getRotation2d(), getModulePositions(), new Pose2d());
 
     private double lastKnownCorrectHeadingRadians;
-    private final ProfiledPIDController thetaCorrectionPID = new ProfiledPIDController(DriveConstants.kPThetaCorrection, DriveConstants.kIThetaCorrection, DriveConstants.kDThetaCorrection, new TrapezoidProfile.Constraints(DriveConstants.kMaxVelocityThetaCorrection, DriveConstants.kMaxAccelerationThetaCorrection));
-    private static final TunableSimpleMotorFeedforward driveFeedforward = new TunableSimpleMotorFeedforward("drive", 0.440000, 2.350000);
-    private static final TunableSimpleMotorFeedforward steerFeedforward = new TunableSimpleMotorFeedforward("steer", 1.112500, 1.300000);
+    private final ProfiledPIDController thetaCorrectionPID = new ProfiledPIDController(DriveConstants.kPThetaCorrection,
+            DriveConstants.kIThetaCorrection, DriveConstants.kDThetaCorrection, new TrapezoidProfile.Constraints(
+                    DriveConstants.kMaxVelocityThetaCorrection, DriveConstants.kMaxAccelerationThetaCorrection));
+    private static final TunableSimpleMotorFeedforward driveFeedforward = new TunableSimpleMotorFeedforward("drive",
+            0.440000, 2.350000);
+    private static final TunableSimpleMotorFeedforward steerFeedforward = new TunableSimpleMotorFeedforward("steer",
+            1.112500, 1.300000);
     private double speedMultiplier = 2;
     private double gyroYawOffset = 0;
 
@@ -118,7 +122,6 @@ public class SwerveSubsystem extends SubsystemBase {
     public void periodic() {
         poseEstimator.update(getRotation2d(), getModulePositions());
 
-
         SmartDashboard.putNumber("Robot Heading", getRotation2d().getDegrees());
         SmartDashboard.putString("Robot Location",
                 getPose().getTranslation().toString());
@@ -130,35 +133,39 @@ public class SwerveSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Speed Multi", getSpeedMultiplier());
 
-//        SmartDashboard.putNumber("[0] Pos", frontLeft.getModuleRotation2dFromPGEncoder().getDegrees());
-//        SmartDashboard.putNumber("[1] Pos", frontRight.getModuleRotation2dFromPGEncoder().getDegrees());
-//        SmartDashboard.putNumber("[2] Pos", backLeft.getModuleRotation2dFromPGEncoder().getDegrees());
-//        SmartDashboard.putNumber("[3] Pos", backRight.getModuleRotation2dFromPGEncoder().getDegrees());
-//
-//        SmartDashboard.putNumber("[0] Counts", frontLeft.getLampreyOutput());
-//        SmartDashboard.putNumber("[1] Counts", frontRight.getLampreyOutput());
-//        SmartDashboard.putNumber("[2] Counts", backLeft.getLampreyOutput());
-//        SmartDashboard.putNumber("[3] Counts", backRight.getLampreyOutput());
+        // SmartDashboard.putNumber("[0] Pos",
+        // frontLeft.getModuleRotation2dFromPGEncoder().getDegrees());
+        // SmartDashboard.putNumber("[1] Pos",
+        // frontRight.getModuleRotation2dFromPGEncoder().getDegrees());
+        // SmartDashboard.putNumber("[2] Pos",
+        // backLeft.getModuleRotation2dFromPGEncoder().getDegrees());
+        // SmartDashboard.putNumber("[3] Pos",
+        // backRight.getModuleRotation2dFromPGEncoder().getDegrees());
+        //
+        // SmartDashboard.putNumber("[0] Counts", frontLeft.getLampreyOutput());
+        // SmartDashboard.putNumber("[1] Counts", frontRight.getLampreyOutput());
+        // SmartDashboard.putNumber("[2] Counts", backLeft.getLampreyOutput());
+        // SmartDashboard.putNumber("[3] Counts", backRight.getLampreyOutput());
 
         // SmartDashboard.putNumber("[0] true speed", frontLeft.getVelocity());
         // SmartDashboard.putNumber("[1] true speed", frontRight.getVelocity());
         // SmartDashboard.putNumber("[2] true speed", backLeft.getVelocity());
         // SmartDashboard.putNumber("[3] true speed", backRight.getVelocity());
-//
-//        frontLeft.putAppliedOutput();
-//        frontRight.putAppliedOutput();
-//        backLeft.putAppliedOutput();
-//        backRight.putAppliedOutput();
-//
-//        frontLeft.putOutputCurrent();
-//        frontRight.putOutputCurrent();
-//        backLeft.putOutputCurrent();
-//        backRight.putOutputCurrent();
-//
-//        frontLeft.putBusVoltage();
-//        frontRight.putBusVoltage();
-//        backLeft.putBusVoltage();
-//        backRight.putBusVoltage();
+        //
+        // frontLeft.putAppliedOutput();
+        // frontRight.putAppliedOutput();
+        // backLeft.putAppliedOutput();
+        // backRight.putAppliedOutput();
+        //
+        // frontLeft.putOutputCurrent();
+        // frontRight.putOutputCurrent();
+        // backLeft.putOutputCurrent();
+        // backRight.putOutputCurrent();
+        //
+        // frontLeft.putBusVoltage();
+        // frontRight.putBusVoltage();
+        // backLeft.putBusVoltage();
+        // backRight.putBusVoltage();
 
     }
 
@@ -178,26 +185,31 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     // TODO: Reimplement
-//    public ChassisSpeeds calculateChassisSpeedsWithDriftCorrection(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, boolean isFieldOriented) {
-//        if ((Math.abs(vxMetersPerSecond) > 0 || Math.abs(vyMetersPerSecond) > 0) && omegaRadiansPerSecond == 0) {
-//            double input = getRotation2d().getRadians();
-//            SmartDashboard.putNumber("Theta correction input", input);
-//            omegaRadiansPerSecond = thetaCorrectionPID.calculate(input, lastKnownCorrectHeadingRadians);
-//            SmartDashboard.putNumber("Theta correction PID", omegaRadiansPerSecond);
-//        } else {
-//            lastKnownCorrectHeadingRadians = getRotation2d().getRadians();
-//            thetaCorrectionPID.reset(lastKnownCorrectHeadingRadians);
-//        }
-//
-//        if (isFieldOriented) {
-//            return ChassisSpeeds.fromFieldRelativeSpeeds(vxMetersPerSecond, vyMetersPerSecond,
-//                    omegaRadiansPerSecond,
-//                    getRotation2d());
-//        } else {
-//            return new ChassisSpeeds(vxMetersPerSecond, vyMetersPerSecond,
-//                    omegaRadiansPerSecond);
-//        }
-//    }
+    // public ChassisSpeeds calculateChassisSpeedsWithDriftCorrection(double
+    // vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond,
+    // boolean isFieldOriented) {
+    // if ((Math.abs(vxMetersPerSecond) > 0 || Math.abs(vyMetersPerSecond) > 0) &&
+    // omegaRadiansPerSecond == 0) {
+    // double input = getRotation2d().getRadians();
+    // SmartDashboard.putNumber("Theta correction input", input);
+    // omegaRadiansPerSecond = thetaCorrectionPID.calculate(input,
+    // lastKnownCorrectHeadingRadians);
+    // SmartDashboard.putNumber("Theta correction PID", omegaRadiansPerSecond);
+    // } else {
+    // lastKnownCorrectHeadingRadians = getRotation2d().getRadians();
+    // thetaCorrectionPID.reset(lastKnownCorrectHeadingRadians);
+    // }
+    //
+    // if (isFieldOriented) {
+    // return ChassisSpeeds.fromFieldRelativeSpeeds(vxMetersPerSecond,
+    // vyMetersPerSecond,
+    // omegaRadiansPerSecond,
+    // getRotation2d());
+    // } else {
+    // return new ChassisSpeeds(vxMetersPerSecond, vyMetersPerSecond,
+    // omegaRadiansPerSecond);
+    // }
+    // }
 
     public static double calculateDriveFeedforward(double velocity) {
         return driveFeedforward.getController().calculate(velocity);
@@ -220,35 +232,38 @@ public class SwerveSubsystem extends SubsystemBase {
         backRight.setDesiredState(desiredStates[3], ignoreLittle);
     }
 
-    //NEED TO ADD THE PID CONSTANTS
+    // NEED TO ADD THE PID CONSTANTS
     public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
         return new SequentialCommandGroup(
-             new InstantCommand(() -> {
-               // Reset odometry for the first path you run during auto
-               if(isFirstPath){
-                   //this.resetOdometry(traj.getInitialHolonomicPose());
-               }
-             }),
-             new PPSwerveControllerCommand(
-                 traj, 
-                 this::getPose, // Pose supplier
-                 DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-                 new PIDController(0, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-                 new PIDController(0, 0, 0), // Y controller (usually the same values as X controller)
-                 new PIDController(0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-                 (SwerveModuleState[] desiredStates) -> this.setModuleStates(desiredStates, true), // Module states consumer
-                 true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-                 this // Requires this drive subsystem
-             )
-         );
-     }
+                new InstantCommand(() -> {
+                    // Reset odometry for the first path you run during auto
+                    if (isFirstPath) {
+                        // this.resetOdometry(traj.getInitialHolonomicPose());
+                    }
+                }),
+                new PPSwerveControllerCommand(
+                        traj,
+                        this::getPose, // Pose supplier
+                        DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+                        new PIDController(0, 0, 0), // X controller. Tune these values for your robot. Leaving them 0
+                                                    // will only use feedforwards.
+                        new PIDController(0, 0, 0), // Y controller (usually the same values as X controller)
+                        new PIDController(0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving
+                                                    // them 0 will only use feedforwards.
+                        (SwerveModuleState[] desiredStates) -> this.setModuleStates(desiredStates, true), // Module
+                                                                                                          // states
+                                                                                                          // consumer
+                        true, // Should the path be automatically mirrored depending on alliance color.
+                              // Optional, defaults to true
+                        this // Requires this drive subsystem
+                ));
+    }
 
-    public double getPitch ()
-    {
+    public double getPitch() {
         return gyro.getPitch();
     }
-    public double getRoll ()
-    {
+
+    public double getRoll() {
         return gyro.getRoll();
     }
 }

@@ -27,23 +27,26 @@ public class GrabberJoystickControlCmd extends CommandBase {
 
     @Override
     public void execute() {
-        double joystickPower = MathUtil.applyDeadband(joystickPercentageFunction.get(), OIConstants.kOperatorControllerLeftYDeadband) * 1.5;
+        double joystickPower = MathUtil.applyDeadband(joystickPercentageFunction.get(),
+                OIConstants.kOperatorControllerLeftYDeadband) * 1.5;
 
         SmartDashboard.putNumber("[GRAB] Velocity Desired (rads per second)", joystickPower);
 
-        if (joystickPower == 0 && grabberSubsystem.getFlipEncoderPositionInRads() >= GrabberConstants.grabberRestThreshold) {
+        if (joystickPower == 0
+                && grabberSubsystem.getFlipEncoderPositionInRads() >= GrabberConstants.grabberRestThreshold) {
             grabberSubsystem.setMotorVoltage(0);
             grabberSubsystem.resetEncoderToHigh();
         } else {
-            grabberSubsystem.setMotorVoltage(grabberSubsystem.calculateFeedforward(grabberSubsystem.getFlipEncoderPositionInRads(), joystickPower));
+            grabberSubsystem.setMotorVoltage(grabberSubsystem
+                    .calculateFeedforward(grabberSubsystem.getFlipEncoderPositionInRads(), joystickPower));
         }
 
     }
 
     @Override
     public void end(boolean interrupted) {
-        grabberSubsystem.setMotorVoltage(grabberSubsystem.calculateFeedforward(grabberSubsystem.getFlipEncoderPositionInRads(), 0));
+        grabberSubsystem.setMotorVoltage(
+                grabberSubsystem.calculateFeedforward(grabberSubsystem.getFlipEncoderPositionInRads(), 0));
     }
-
 
 }

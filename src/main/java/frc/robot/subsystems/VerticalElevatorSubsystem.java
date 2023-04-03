@@ -19,7 +19,9 @@ public class VerticalElevatorSubsystem extends SubsystemBase {
 
     private final Encoder verticalElevatorEncoder;
 
-    private TunableElevatorFeedforward tunableElevatorFeedforward = new TunableElevatorFeedforward("vertelevator", ElevatorConstants.kSVerticalElevator, ElevatorConstants.kGVerticalElevator, ElevatorConstants.kVVerticalElevator);
+    private TunableElevatorFeedforward tunableElevatorFeedforward = new TunableElevatorFeedforward("vertelevator",
+            ElevatorConstants.kSVerticalElevator, ElevatorConstants.kGVerticalElevator,
+            ElevatorConstants.kVVerticalElevator);
 
     public VerticalElevatorSubsystem() {
         // The A motor has an encoder, the B motor does not.
@@ -28,7 +30,8 @@ public class VerticalElevatorSubsystem extends SubsystemBase {
 
         this.verticalMotorA.setInverted(true);
 
-        this.verticalElevatorEncoder = new Encoder(ElevatorConstants.verticalMotorAEncoderAPort, ElevatorConstants.verticalMotorAEncoderBPort);
+        this.verticalElevatorEncoder = new Encoder(ElevatorConstants.verticalMotorAEncoderAPort,
+                ElevatorConstants.verticalMotorAEncoderBPort);
         this.verticalElevatorEncoder.setReverseDirection(true);
 
         resetVerticalElevatorEncoder();
@@ -39,11 +42,13 @@ public class VerticalElevatorSubsystem extends SubsystemBase {
     }
 
     public void stopElevator() {
-        setVerticalElevatorVoltage(getVerticalElevatorPosition() <= ElevatorConstants.verticalRestThreshold ? 0 : calculateFeedforward(0));
+        setVerticalElevatorVoltage(
+                getVerticalElevatorPosition() <= ElevatorConstants.verticalRestThreshold ? 0 : calculateFeedforward(0));
     }
 
     public void lowerElevator() {
-        setVerticalElevatorVoltage(getVerticalElevatorPosition() <= ElevatorConstants.verticalRestThreshold ? 0 : ElevatorConstants.kVerticalSlowFallVoltage);
+        setVerticalElevatorVoltage(getVerticalElevatorPosition() <= ElevatorConstants.verticalRestThreshold ? 0
+                : ElevatorConstants.kVerticalSlowFallVoltage);
     }
 
     public void setVerticalElevatorVoltage(double voltage) {

@@ -20,7 +20,6 @@ public class TunableElevatorFeedforward {
     private ElevatorFeedforward elevatorFeedforward;
     private String identifier;
 
-
     private double lastUpdatedTS = Timer.getFPGATimestamp();
 
     public TunableElevatorFeedforward(String identifier, double ks, double kg, double kv) {
@@ -49,7 +48,8 @@ public class TunableElevatorFeedforward {
     }
 
     public void updateConstantsIfOutdated() {
-        if (Timer.getFPGATimestamp() - lastUpdatedTS < updateInterval) return;
+        if (Timer.getFPGATimestamp() - lastUpdatedTS < updateInterval)
+            return;
 
         double tableKS = tuningTable.getValue(appendIdentifier("ks")).getDouble();
         double tableKG = tuningTable.getValue(appendIdentifier("kg")).getDouble();

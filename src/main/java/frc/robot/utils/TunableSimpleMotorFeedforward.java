@@ -18,7 +18,6 @@ public class TunableSimpleMotorFeedforward {
     private SimpleMotorFeedforward simpleMotorFeedforward;
     private String identifier;
 
-
     private double lastUpdatedTS = Timer.getFPGATimestamp();
 
     public TunableSimpleMotorFeedforward(String identifier, double ks, double kv) {
@@ -46,7 +45,8 @@ public class TunableSimpleMotorFeedforward {
     }
 
     public void updateConstantsIfOutdated() {
-        if (Timer.getFPGATimestamp() - lastUpdatedTS < updateInterval) return;
+        if (Timer.getFPGATimestamp() - lastUpdatedTS < updateInterval)
+            return;
 
         double tableKS = tuningTable.getValue(appendIdentifier("ks")).getDouble();
         double tableKV = tuningTable.getValue(appendIdentifier("kv")).getDouble();

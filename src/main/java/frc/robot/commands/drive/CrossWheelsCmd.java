@@ -10,13 +10,8 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class CrossWheelsCmd extends CommandBase {
 
     /*
-    * Forms the following shape with the robot's wheels
-    * \                      /
-    *  \                    /
-    *
-    *  /                    \
-    * /                      \
-    * */
+     * Forms an X shape with the robot's wheels
+     */
 
     private SwerveSubsystem swerveSubsystem;
     private double initializeTS;
@@ -40,7 +35,7 @@ public class CrossWheelsCmd extends CommandBase {
 
     @Override
     public void execute() {
-        swerveSubsystem.setModuleStates(new SwerveModuleState[]{
+        swerveSubsystem.setModuleStates(new SwerveModuleState[] {
                 new SwerveModuleState(0, frontLeftWheelLockAngle),
                 new SwerveModuleState(0, frontRightWheelLockAngle),
                 new SwerveModuleState(0, backLeftWheelLockAngle),

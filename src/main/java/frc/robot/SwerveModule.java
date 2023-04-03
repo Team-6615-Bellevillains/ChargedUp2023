@@ -33,8 +33,9 @@ public class SwerveModule {
     private final int idx;
     private final double startingWheelRadians;
 
-    public SwerveModule(int idx, int driverMotorID, int steerMotorID, int steerEncoderAPort, int steerEncoderBPort, boolean isDriveMotorReversed,
-                        double absoluteEncoderOffsetCounts) {
+    public SwerveModule(int idx, int driverMotorID, int steerMotorID, int steerEncoderAPort, int steerEncoderBPort,
+            boolean isDriveMotorReversed,
+            double absoluteEncoderOffsetCounts) {
 
         this.idx = idx;
 
@@ -61,7 +62,8 @@ public class SwerveModule {
 
         this.steerPIDController = new ProfiledPIDController(SwerveModuleConstants.kPTurning,
                 SwerveModuleConstants.kITurning,
-                SwerveModuleConstants.kDTurning, new TrapezoidProfile.Constraints(SwerveModuleConstants.maxWheelVelocity, SwerveModuleConstants.maxWheelAcceleration));
+                SwerveModuleConstants.kDTurning, new TrapezoidProfile.Constraints(
+                        SwerveModuleConstants.maxWheelVelocity, SwerveModuleConstants.maxWheelAcceleration));
         this.steerPIDController.enableContinuousInput(0, 2 * Math.PI);
 
         this.driveEncoder.setPosition(0);
@@ -85,17 +87,20 @@ public class SwerveModule {
         return String.format("[%s] %s", idx, input);
     }
 
-//    public void putOutputCurrent() {
-//        SmartDashboard.putNumber(appendIdx("Output Current"), driveMotor.getOutputCurrent());
-//    }
-//
-//    public void putAppliedOutput() {
-//        SmartDashboard.putNumber(appendIdx("Applied Output"), driveMotor.getAppliedOutput());
-//    }
-//
-//    public void putBusVoltage() {
-//        SmartDashboard.putNumber(appendIdx("Bus Voltage"), driveMotor.getBusVoltage());
-//    }
+    // public void putOutputCurrent() {
+    // SmartDashboard.putNumber(appendIdx("Output Current"),
+    // driveMotor.getOutputCurrent());
+    // }
+    //
+    // public void putAppliedOutput() {
+    // SmartDashboard.putNumber(appendIdx("Applied Output"),
+    // driveMotor.getAppliedOutput());
+    // }
+    //
+    // public void putBusVoltage() {
+    // SmartDashboard.putNumber(appendIdx("Bus Voltage"),
+    // driveMotor.getBusVoltage());
+    // }
 
     public double getLampreyOutput() {
         return this.steerMotor.getSelectedSensorPosition();
@@ -116,7 +121,8 @@ public class SwerveModule {
     public Rotation2d getModuleRotation2dFromPGEncoder() {
         double encoderRadians = Math.IEEEremainder(steerEncoder.getDistance() + startingWheelRadians, 2 * Math.PI);
 
-        // We don't like negative values, so we convert to the equivalent positive angle.
+        // We don't like negative values, so we convert to the equivalent positive
+        // angle.
         if (encoderRadians < 0) {
             encoderRadians += 2 * Math.PI;
         }
@@ -130,8 +136,6 @@ public class SwerveModule {
             return;
         }
 
-
-
         state = SwerveModuleState.optimize(state, getModuleRotation2dFromPGEncoder());
 
         double steerPIDOut = steerPIDController.calculate(getModuleRotation2dFromPGEncoder().getRadians(),
@@ -139,8 +143,8 @@ public class SwerveModule {
 
         double feedforward = SwerveSubsystem.calculateSteerFeedforward(steerPIDController.getSetpoint().velocity);
 
-
-//        SmartDashboard.putNumber(appendIdx("wheel ffout"), SwerveSubsystem.calculateDriveFeedforward(state.speedMetersPerSecond));
+        // SmartDashboard.putNumber(appendIdx("wheel ffout"),
+        // SwerveSubsystem.calculateDriveFeedforward(state.speedMetersPerSecond));
 
         driveMotor.setVoltage(SwerveSubsystem.calculateDriveFeedforward(state.speedMetersPerSecond));
         steerMotor.setVoltage(steerPIDOut + feedforward);

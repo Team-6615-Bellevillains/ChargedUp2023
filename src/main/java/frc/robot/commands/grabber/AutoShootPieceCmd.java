@@ -34,11 +34,9 @@ public class AutoShootPieceCmd extends CommandBase {
     @Override
     public void execute() {
         robotTime = Timer.getFPGATimestamp();
-        if(robotTime < shootOutTime){
+        if (robotTime < shootOutTime) {
             rollerSubsystem.setRollerSpeedPercentage(power);
-        }
-        else
-        {
+        } else {
             isDone = true;
         }
     }
