@@ -1,12 +1,10 @@
 package frc.robot.utils;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Commands;
 
 import java.util.ArrayList;
 
