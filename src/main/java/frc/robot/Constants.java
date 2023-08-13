@@ -239,26 +239,6 @@ public final class Constants {
         public static double grabberOutSetpoint;
     }
 
-    public static final class LimelightConstants {
-        public static final String kCameraName = "asdoija";
-        public static final double cameraHeight = 0.858;
-        public static final double midHeight = 0;
-        public static final double topHeight = 0;
-        public static final double cameraPitchRadians = Units.degreesToRadians(0);
-        public static final double midGoalRange = 0;
-        public static final double distanceFromAprilTagToRung = Units.inchesToMeters(21.25);
-        public static final double cameraOffset = 0.308;
-        public static final double xCameraOffset = 0.350;
-        public static final double bumperOffset = 0.083;
-        public static Transform3d robotToCam = new Transform3d(
-                new Translation3d(-0.047, 0.331, 0.858),
-                new Rotation3d(
-                        0, 0,
-                        0)); // Cam mounted facing forward, -0.047 meters backwards of center, 0.858 meter up
-        // from center.
-
-    }
-
     public static final class AutoConstants {
         public static final double kAutoMaxSpeedMetersPerSecond = 1;
         public static final double kAutoMaxAccelerationMetersPerSecond = 0.5;
