@@ -136,41 +136,6 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Roll", gyro.getRoll());
 
         SmartDashboard.putNumber("Speed Multi", getSpeedMultiplier());
-
-        // SmartDashboard.putNumber("[0] Pos",
-        // frontLeft.getModuleRotation2dFromPGEncoder().getDegrees());
-        // SmartDashboard.putNumber("[1] Pos",
-        // frontRight.getModuleRotation2dFromPGEncoder().getDegrees());
-        // SmartDashboard.putNumber("[2] Pos",
-        // backLeft.getModuleRotation2dFromPGEncoder().getDegrees());
-        // SmartDashboard.putNumber("[3] Pos",
-        // backRight.getModuleRotation2dFromPGEncoder().getDegrees());
-        //
-        // SmartDashboard.putNumber("[0] Counts", frontLeft.getLampreyOutput());
-        // SmartDashboard.putNumber("[1] Counts", frontRight.getLampreyOutput());
-        // SmartDashboard.putNumber("[2] Counts", backLeft.getLampreyOutput());
-        // SmartDashboard.putNumber("[3] Counts", backRight.getLampreyOutput());
-
-        // SmartDashboard.putNumber("[0] true speed", frontLeft.getVelocity());
-        // SmartDashboard.putNumber("[1] true speed", frontRight.getVelocity());
-        // SmartDashboard.putNumber("[2] true speed", backLeft.getVelocity());
-        // SmartDashboard.putNumber("[3] true speed", backRight.getVelocity());
-        //
-        // frontLeft.putAppliedOutput();
-        // frontRight.putAppliedOutput();
-        // backLeft.putAppliedOutput();
-        // backRight.putAppliedOutput();
-        //
-        // frontLeft.putOutputCurrent();
-        // frontRight.putOutputCurrent();
-        // backLeft.putOutputCurrent();
-        // backRight.putOutputCurrent();
-        //
-        // frontLeft.putBusVoltage();
-        // frontRight.putBusVoltage();
-        // backLeft.putBusVoltage();
-        // backRight.putBusVoltage();
-
     }
 
     public void stopModules() {
@@ -187,33 +152,6 @@ public class SwerveSubsystem extends SubsystemBase {
     public void setSpeedMultiplier(double speedMultiplier) {
         this.speedMultiplier = speedMultiplier;
     }
-
-    // TODO: Reimplement
-    // public ChassisSpeeds calculateChassisSpeedsWithDriftCorrection(double
-    // vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond,
-    // boolean isFieldOriented) {
-    // if ((Math.abs(vxMetersPerSecond) > 0 || Math.abs(vyMetersPerSecond) > 0) &&
-    // omegaRadiansPerSecond == 0) {
-    // double input = getRotation2d().getRadians();
-    // SmartDashboard.putNumber("Theta correction input", input);
-    // omegaRadiansPerSecond = thetaCorrectionPID.calculate(input,
-    // lastKnownCorrectHeadingRadians);
-    // SmartDashboard.putNumber("Theta correction PID", omegaRadiansPerSecond);
-    // } else {
-    // lastKnownCorrectHeadingRadians = getRotation2d().getRadians();
-    // thetaCorrectionPID.reset(lastKnownCorrectHeadingRadians);
-    // }
-    //
-    // if (isFieldOriented) {
-    // return ChassisSpeeds.fromFieldRelativeSpeeds(vxMetersPerSecond,
-    // vyMetersPerSecond,
-    // omegaRadiansPerSecond,
-    // getRotation2d());
-    // } else {
-    // return new ChassisSpeeds(vxMetersPerSecond, vyMetersPerSecond,
-    // omegaRadiansPerSecond);
-    // }
-    // }
 
     public static double calculateDriveFeedforward(double velocity) {
         return driveFeedforward.getController().calculate(velocity);
