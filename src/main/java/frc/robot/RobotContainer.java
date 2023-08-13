@@ -17,22 +17,38 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.GrabberConstants;
 import frc.robot.Constants.OIConstants;
-//import frc.robot.commands.drive.AutoBackupToTippedCmd;
 import frc.robot.commands.WaitUntilConditionForTimeCmd;
 import frc.robot.commands.drive.VeloAutoBalanceCmd;
+import frc.robot.commands.elevator.HoldHorizontalElevatorInCmd;
+import frc.robot.commands.elevator.HorizontalElevatorInCmd;
+import frc.robot.commands.elevator.HorizontalElevatorOutCmd;
+import frc.robot.commands.elevator.ManualVerticalElevatorController;
+import frc.robot.commands.grabber.AutoShootPieceCmd;
+import frc.robot.commands.grabber.ClampGrabberCmd;
+import frc.robot.commands.grabber.GrabberJoystickControlCmd;
+import frc.robot.commands.grabber.GrabberToSetpointCmd;
+import frc.robot.commands.grabber.OpenGrabberCmd;
+import frc.robot.commands.grabber.ReEnableCompressorCmd;
+import frc.robot.commands.grabber.ShootPieceCmd;
+import frc.robot.subsystems.GrabberSubsystem;
+import frc.robot.subsystems.HorizontalElevatorSubsystem;
+import frc.robot.subsystems.PneumaticsSubsystem;
+import frc.robot.subsystems.RollerSubsystem;
+import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.VerticalElevatorSubsystem;
 import frc.robot.commands.drive.CrossWheelsCmd;
 import frc.robot.commands.drive.SwerveJoystickCmd;
-import frc.robot.commands.elevator.*;
-import frc.robot.commands.grabber.*;
-//import frc.robot.commands.operation.ScoreCubeLowCmd;
-//import frc.robot.commands.operation.ScoreCubeMidCmd;
-import frc.robot.subsystems.*;
 
 public class RobotContainer {
 
@@ -45,7 +61,6 @@ public class RobotContainer {
 
     private final HorizontalElevatorSubsystem horizontalElevatorSubsystem = new HorizontalElevatorSubsystem();
     private final VerticalElevatorSubsystem verticalElevatorSubsystem = new VerticalElevatorSubsystem();
-    private SendableChooser<Command> m_chooser;
 
     private final CommandXboxController driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
     private final CommandXboxController operatorController = new CommandXboxController(
@@ -59,8 +74,11 @@ public class RobotContainer {
     private final JoystickButton setGrabberEncoderToLowButton = new JoystickButton(buttonBox, 8);
 
     private SwerveAutoBuilder autoBuilder;
-    private SwerveAutoBuilder superRotationAutoBuilder;
+    private SwerveAutoBuilder heavyRotationCorrectionAutoBuilder;
     private HashMap<String, Command> eventMap = new HashMap<>();
+    private final SendableChooser<Command> autonChooser = new SendableChooser<>(); // Adds a smartdashboard widget that
+                                                                                   // will allow us to select the
+                                                                                   // autonomous we want to use.
 
     private Command generateScoreHighCmd() {
         return Commands.runOnce(() -> SmartDashboard.putString("Score High", "running"))
@@ -126,7 +144,7 @@ public class RobotContainer {
                                 // commands
         );
 
-        superRotationAutoBuilder = new SwerveAutoBuilder(
+        heavyRotationCorrectionAutoBuilder = new SwerveAutoBuilder(
                 swerveSubsystem::getPose, // Pose2d supplier
                 swerveSubsystem::resetPoseEstimator, // Pose2d consumer, used to reset odometry at the beginning of auto
                 DriveConstants.kDriveKinematics, // SwerveDriveKinematics
@@ -151,22 +169,18 @@ public class RobotContainer {
 
         Supplier<CommandBase> nonSubMobilityPathCommand = () -> autoBuilder.fullAuto(nonSubMobilityPath);
         Supplier<CommandBase> subMobilityPathCommand = () -> autoBuilder.fullAuto(subMobilityPath);
-        Supplier<CommandBase> balancePathCommand = () -> superRotationAutoBuilder.fullAuto(balancePath);
+        Supplier<CommandBase> balancePathCommand = () -> heavyRotationCorrectionAutoBuilder.fullAuto(balancePath);
 
-        // Adds a smartdashboard widget that will allow us to select the autonomous we
-        // want to use.
-        m_chooser = new SendableChooser<>();
-
-        m_chooser.addOption("Score High", generateScoreHighCmd());
-        m_chooser.addOption("[Non Sub] Score High + Mobility",
+        autonChooser.addOption("Score High", generateScoreHighCmd());
+        autonChooser.addOption("[Non Sub] Score High + Mobility",
                 new SequentialCommandGroup(
                         generateScoreHighCmd(),
                         nonSubMobilityPathCommand.get()));
-        m_chooser.addOption("[Sub] Score High and Mobility",
+        autonChooser.addOption("[Sub] Score High and Mobility",
                 new SequentialCommandGroup(
                         generateScoreHighCmd(),
                         subMobilityPathCommand.get()));
-        m_chooser.addOption("[Timed] 1 Score High and Balance",
+        autonChooser.addOption("[Timed] 1 Score High and Balance",
                 new SequentialCommandGroup(
                         Commands.runOnce(() -> SmartDashboard.putNumber("Crazy Stage", 1)),
                         generateScoreHighCmd(),
@@ -183,7 +197,7 @@ public class RobotContainer {
 
                 ));
 
-        SmartDashboard.putData(m_chooser);
+        SmartDashboard.putData(autonChooser);
 
         configureBindings();
     }
@@ -191,16 +205,9 @@ public class RobotContainer {
     public void setMechanismDefaultCommands() {
         horizontalElevatorSubsystem.setDefaultCommand(new HoldHorizontalElevatorInCmd(horizontalElevatorSubsystem));
         verticalElevatorSubsystem.setDefaultCommand(
-                new ManualVerticalElevatorController(verticalElevatorSubsystem, () -> -operatorController.getRightY())); // TODO:
-                                                                                                                         // Test
+                new ManualVerticalElevatorController(verticalElevatorSubsystem, () -> -operatorController.getRightY()));
         grabberSubsystem.setDefaultCommand(
                 new GrabberJoystickControlCmd(grabberSubsystem, () -> -operatorController.getLeftY()));
-    }
-
-    public void removeMechanismDefaultCommands() {
-        horizontalElevatorSubsystem.removeDefaultCommand();
-        verticalElevatorSubsystem.removeDefaultCommand();
-        grabberSubsystem.removeDefaultCommand();
     }
 
     private void configureBindings() {
@@ -215,7 +222,7 @@ public class RobotContainer {
         driverController.leftTrigger(0.4).onFalse(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(2)));
         driverController.rightTrigger(0.4).whileTrue(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(3)));
         driverController.rightTrigger(0.4).onFalse(Commands.runOnce(() -> swerveSubsystem.setSpeedMultiplier(2)));
-        // driverController.x().whileTrue(new CrossWheelsCmd(swerveSubsystem));
+
         operatorController.leftBumper().whileTrue(new ClampGrabberCmd(pneumaticsSubsystem));
         operatorController.rightBumper().whileTrue(new OpenGrabberCmd(pneumaticsSubsystem));
         operatorController.leftTrigger(0.4).whileTrue(new ShootPieceCmd(rollerSubsystem, 0.10));
@@ -236,6 +243,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return m_chooser.getSelected();
+        return autonChooser.getSelected();
     }
 }
