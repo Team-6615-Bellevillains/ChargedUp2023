@@ -63,10 +63,6 @@ public class GrabberSubsystem extends SubsystemBase {
     }
 
     public double getFlipEncoderPositionInDegrees() {
-        // if (flipEncoder.getPosition() >=
-        // GrabberConstants.kGrabberHighestPositionDegrees) {
-        // resetEncoderToHigh();
-        // }
         return flipEncoder.getPosition();
     }
 

@@ -62,10 +62,6 @@ public class SwerveJoystickCmd extends CommandBase {
         steerSpeed = steerLimiter.calculate(steerSpeed) * DriveConstants.kTeleOpMaxAngularSpeedRadiansPerSecond
                 * swerveSubsystem.getSpeedMultiplier();
 
-        // SmartDashboard.putNumber("X Commanded", xSpeed);
-        // SmartDashboard.putNumber("Y Commanded", ySpeed);
-        // SmartDashboard.putNumber("Steer Commanded", steerSpeed);
-
         /*
          * 4. Calculate ChassisSpeeds
          * WPILib does all the heavy lifting with our kinematics. This ChassisSpeeds
